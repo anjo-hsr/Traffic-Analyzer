@@ -108,3 +108,6 @@ venv.bak/
 **/target
 *.iml
 *.swp
+
+#temp disable bin folder
+bin/

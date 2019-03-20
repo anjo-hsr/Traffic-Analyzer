@@ -1,6 +1,7 @@
 FROM splunk/splunk:latest
 
-ARG WORKDIR
+ARG PCAP_DIR
+ARG CONFIG_DIR
 ARG PORT
 ARG SPLUNK_PASSWORD
 ARG SPLUNK_START_ARGS
@@ -8,11 +9,14 @@ ARG SPLUNK_START_ARGS
 EXPOSE $PORT
 
 
-RUN ["mkdir", "/tmp/pcaps"]
-ADD pcaps $WORKDIR
+RUN sudo mkdir -p PCAP_DIR
+ADD pcaps $PCAP_DIR
 
-RUN ["sudo", "apt", "update"]
-RUN ["sudo", "apt", "install", "tshark", "-y"]
+RUN sudo mkdir -p CONFIG_DIR
+ADD config $CONFIG_DIR
+
+RUN sudo apt update
+RUN sudo apt install tshark -y
 
 
 ENV PORT $PORT
