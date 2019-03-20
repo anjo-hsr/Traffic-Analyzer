@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  deployment:
+    container_name: "${CONTAINER_NAME}"
+    build:
+      context: "./${DEPLOYMENT_FOLDER}"
+      args:
+        PORT: $WEB_PORT
+        WORKDIR: $WORKDIR
+        SPLUNK_PASSWORD: $SPLUNK_PASSWORD
+        SPLUNK_START_ARGS: $SPLUNK_START_ARGS
+    restart: $RESTART_NODE
+    networks:
+      default:
+    ports:
+      - "8000:${WEB_PORT}"
