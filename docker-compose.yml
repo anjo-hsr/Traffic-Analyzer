@@ -15,4 +15,4 @@ services:
     networks:
       default:
     ports:
-      - "8000:${WEB_PORT}"
+      - "${WEB_PORT}:${WEB_PORT}"
