@@ -9,7 +9,7 @@ from bin.IPHelper import IPHelper
 class Locator:
     def __init__(self):
         self.locations = dict()
-        self.header = "dst_latitutde,dst_longitude,src_latitutde,src_longitude"
+        self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
     def check_request_load(self, limiter):
         current_time = Limiter.get_current_timestamp()
