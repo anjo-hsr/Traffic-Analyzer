@@ -22,12 +22,12 @@ def convert_mac_address(row):
 def write_rows(line_counter, output_file, row):
     if not is_header(line_counter):
         mac_address = convert_mac_address(row)
-        write_line(output_file, mac_address + ',"' + row[2] + '"\n')
+        write_line(output_file, mac_address + "," + '"{}"'.format(row[2]))
     return line_counter + 1
 
 
 def write_line(output_file, line):
-    output_file.write()
+    output_file.write(line + "\n")
 
 
 def main():
