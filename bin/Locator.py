@@ -11,18 +11,6 @@ class Locator:
         self.locations = dict()
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
-    def check_request_load(self, limiter):
-        current_time = Limiter.get_current_timestamp()
-        limiter.increase_counter()
-        waiting_time = limiter.get_period_time() - (current_time - limiter.get_period_timestamp())
-
-        if (limiter.counter == limiter.requests_per_period) and waiting_time > 0:
-            time.sleep(waiting_time)
-            limiter.reset_period_timestamp()
-
-        if waiting_time < 0:
-            limiter.reset_period_timestamp()
-
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long
 
@@ -35,7 +23,7 @@ class Locator:
             self.set_entry(ip_addr, lat_long)
             return
 
-        self.check_request_load(limiter)
+        limiter.check_request_load(limiter)
 
         try:
             lat_long = self.locate_ip(ip_addr)

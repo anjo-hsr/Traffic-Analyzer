@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 
 
 def get_current_timestamp():
@@ -30,3 +31,15 @@ class Limiter:
 
     def increase_counter(self):
         self.counter += 1
+
+    def check_request_load(self, limiter):
+        current_time = get_current_timestamp()
+        limiter.increase_counter()
+        waiting_time = limiter.get_period_time() - (current_time - limiter.get_period_timestamp())
+
+        if (limiter.counter == limiter.requests_per_period) and waiting_time > 0:
+            time.sleep(waiting_time)
+            limiter.reset_period_timestamp()
+
+        if waiting_time < 0:
+            limiter.reset_period_timestamp()
