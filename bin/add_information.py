@@ -1,5 +1,6 @@
 from bin.Locator import Locator
 from bin.NameResolver import NameResolver
+
 import csv
 
 
