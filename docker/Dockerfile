@@ -8,11 +8,10 @@ ARG SPLUNK_START_ARGS
 
 EXPOSE $PORT
 
-
-RUN sudo mkdir -p /tmp/pcaps
+RUN sudo mkdir -p $PCAP_DIR
 ADD pcaps $PCAP_DIR
 
-RUN sudo mkdir -p /opt/splunk/etc/apps/SplunkForPCAP/local/
+RUN sudo mkdir -p $CONFIG_DIR
 ADD config $CONFIG_DIR
 
 RUN sudo apt update
