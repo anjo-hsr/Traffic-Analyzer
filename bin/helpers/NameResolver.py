@@ -1,4 +1,6 @@
-from bin.IPHelper import IPHelper
+from bin.helpers.Combiner import Combiner
+from bin.helpers.IPHelper import IPHelper
+
 import socket
 
 
@@ -37,4 +39,4 @@ class NameResolver:
 
         self.get_fqdn(destination)
         self.get_fqdn(source)
-        return "{},{}".format(self.fqdns.get(destination), self.fqdns.get(source))
+        return Combiner.combine_fqdns(self.fqdns, destination, source)

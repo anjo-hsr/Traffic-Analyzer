@@ -1,7 +1,7 @@
-from bin.Locator import Locator
-from bin.NameResolver import NameResolver
-from bin.Timer import Timer
-from bin.Combiner import Combiner
+from bin.helpers.Locator import Locator
+from bin.helpers.NameResolver import NameResolver
+from bin.helpers.Timer import Timer
+from bin.helpers.Combiner import Combiner
 
 import csv
 

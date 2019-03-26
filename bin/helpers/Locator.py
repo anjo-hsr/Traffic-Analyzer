@@ -1,5 +1,6 @@
-from bin.IPHelper import IPHelper
-from bin import Limiter
+from bin.helpers.IPHelper import IPHelper
+from bin.helpers.Limiter import Limiter
+from bin.helpers.Combiner import Combiner
 
 import json
 import requests
@@ -50,10 +51,12 @@ class Locator:
         destination = dst_src[0]
         source = dst_src[1]
 
-        limiter = Limiter.Limiter(3, 1)
+        limiter = Limiter(3, 1)
         self.get_location(limiter, destination)
         self.get_location(limiter, source)
-        pos_dest = ','.join('"{}"'.format(cell) for cell in self.locations.get(destination))
-        pos_src = ','.join('"{}"'.format(cell) for cell in self.locations.get(source))
+        pos_dest = Combiner.combine_lat_long(self.locations, destination)
+        pos_src = Combiner.combine_lat_long(self.locations, source)
 
-        return "{},{}".format(pos_dest, pos_src)
+        return "{1}{0}{2}".format(Combiner.delimiter, pos_dest, pos_src)
+
+

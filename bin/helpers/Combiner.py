@@ -1,4 +1,6 @@
 class Combiner:
+    delimiter = ","
+
     @staticmethod
     def get_src_dst(packet):
         dst_ip_addr = packet[4]
@@ -23,9 +25,17 @@ class Combiner:
 
     @staticmethod
     def combine_fields(joined_default_cells, header_fqdn, header_location):
-        return "{},{},{}".format(joined_default_cells, header_fqdn, header_location)
+        return "{1}{0}{2}{0}{3}".format(Combiner.delimiter, joined_default_cells, header_fqdn, header_location)
 
     @staticmethod
     def join_default_cells(packet, csv_delimiter):
         joined_default_cells = csv_delimiter.join('"{}"'.format(cell) for cell in packet)
         return joined_default_cells
+
+    @staticmethod
+    def combine_fqdns(fqdns, destination, source):
+        return "{1}{0}{2}".format(Combiner.delimiter, fqdns.get(destination), fqdns.get(source))
+
+    @staticmethod
+    def combine_lat_long(locations, destination):
+        return Combiner.delimiter.join('"{}"'.format(cell) for cell in locations.get(destination))
