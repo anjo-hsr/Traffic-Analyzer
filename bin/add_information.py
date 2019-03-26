@@ -1,6 +1,7 @@
 from bin.Locator import Locator
 from bin.NameResolver import NameResolver
 from bin.Timer import Timer
+from bin.Combiner import Combiner
 
 import csv
 
@@ -13,8 +14,21 @@ def write_line(output_file, line):
     output_file.write(line + "\n")
 
 
-def combine_information(joined_default_cells, header_fqdn, header_location):
-    return "{},{},{}".format(joined_default_cells, header_fqdn, header_location)
+def loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file):
+    for index, packet in enumerate(csv_reader):
+        joined_default_cells = Combiner.join_default_cells(packet, csv_delimiter)
+        if is_header(index):
+            line = Combiner.combine_header(joined_default_cells, locator, name_resolver)
+
+        else:
+            line = Combiner.combine_packet_information(joined_default_cells, locator, name_resolver, packet)
+
+        write_line(output_file, line)
+
+
+def print_dicts(dicts):
+    for dict_element in dicts:
+        dict_element.print_fqdns()
 
 
 def main():
@@ -24,30 +38,15 @@ def main():
     with \
             open('test.csv', mode="r", encoding='utf-8') as capture, \
             open('enriched.csv', 'w', encoding='utf-8') as output_file:
-        csv_reader = csv.reader(capture, delimiter=',')
-        for index, packet in enumerate(csv_reader):
-            joined_default_cells = ','.join('"{}"'.format(cell) for cell in packet)
-            if is_header(index):
-                fqdn_header = name_resolver.header
-                location_header = locator.header
-                line = combine_information(joined_default_cells, fqdn_header, location_header)
+        csv_delimiter = ","
+        csv_reader = csv.reader(capture, delimiter=csv_delimiter)
 
-            else:
-                dst_ip_addr = packet[4]
-                src_ip_addr = packet[5]
-                src_dst = [dst_ip_addr, src_ip_addr]
-                fqdn_information = name_resolver.resolve(src_dst)
-                location_information = locator.locate(src_dst)
-                line = combine_information(joined_default_cells, fqdn_information, location_information)
+        loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file)
 
-            write_line(output_file, line)
-
-        locator.print_fqdns()
-        name_resolver.print_fqdns()
+        print_dicts([locator, name_resolver])
 
 
 timer = Timer()
 main()
 timer.set_end_time()
 timer.print_runtime()
-
