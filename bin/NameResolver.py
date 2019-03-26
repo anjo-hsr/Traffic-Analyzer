@@ -7,6 +7,13 @@ class NameResolver:
         self.fqdns = dict()
         self.header = "src_fqdn,dst_fqdn"
 
+    def print_fqdns(self):
+        print("Print out for all {} fqdn entries".format(self.fqdns.__len__()))
+        for fqdn_entry in self.fqdns:
+            print("{} --> {}".format(fqdn_entry, self.fqdns[fqdn_entry]))
+
+        print("\n\n")
+
     def get_fqdn(self, ip_addr):
         if ip_addr in self.fqdns:
             return

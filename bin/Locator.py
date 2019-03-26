@@ -11,6 +11,13 @@ class Locator:
         self.locations = dict()
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
+    def print_fqdns(self):
+        print("Print out for all {} location entries".format(self.locations.__len__()))
+        for location_entry in self.locations:
+            print("{} --> {}".format(location_entry, self.locations[location_entry]))
+
+        print("\n\n")
+
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long
 

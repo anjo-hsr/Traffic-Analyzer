@@ -1,5 +1,6 @@
 from bin.Locator import Locator
 from bin.NameResolver import NameResolver
+from bin.Timer import Timer
 
 import csv
 
@@ -41,5 +42,12 @@ def main():
 
             write_line(output_file, line)
 
+        locator.print_fqdns()
+        name_resolver.print_fqdns()
 
+
+timer = Timer()
 main()
+timer.set_end_time()
+timer.print_runtime()
+
