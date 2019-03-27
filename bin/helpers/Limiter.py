@@ -11,16 +11,10 @@ class Limiter:
         self.requests_per_period = requests_per_period
         self.period_time = period_time
         self.period_timestamp = get_current_timestamp()
-        self.counter = 2
+        self.counter = 0
 
     def get_requests_per_period(self):
         return self.requests_per_period
-
-    def get_period_time(self):
-        return self.period_time
-
-    def get_period_timestamp(self):
-        return self.period_timestamp
 
     def get_counter(self):
         return self.counter
@@ -35,7 +29,7 @@ class Limiter:
     def check_request_load(self, limiter):
         current_time = get_current_timestamp()
         limiter.increase_counter()
-        waiting_time = limiter.get_period_time() - (current_time - limiter.get_period_timestamp())
+        waiting_time = self.period_time - (current_time - limiter.period_timestamp)
 
         if (limiter.counter == limiter.requests_per_period) and waiting_time > 0:
             time.sleep(waiting_time)
