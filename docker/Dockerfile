@@ -16,6 +16,7 @@ ADD config $CONFIG_DIR
 
 RUN sudo apt update
 RUN sudo apt install tshark -y
+RUN sudo apt install python3 -y
 
 
 ENV PORT $PORT
