@@ -15,10 +15,7 @@ def write_line(output_file, line):
 
 
 def loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file):
-    timers = {}
-    timers["fqdn"] = Timer()
-    timers["location"] = Timer()
-    timers["file_writer"] = Timer()
+    timers = {"fqdn": Timer(), "location": Timer(), "file_writer": Timer()}
     for index, packet in enumerate(csv_reader):
         joined_default_cells = Combiner.join_default_cells(packet, csv_delimiter)
         if is_header(index):
