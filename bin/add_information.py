@@ -15,15 +15,25 @@ def write_line(output_file, line):
 
 
 def loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file):
+    timers = {}
+    timers["fqdn"] = Timer()
+    timers["location"] = Timer()
+    timers["file_writer"] = Timer()
     for index, packet in enumerate(csv_reader):
         joined_default_cells = Combiner.join_default_cells(packet, csv_delimiter)
         if is_header(index):
             line = Combiner.combine_header(joined_default_cells, locator, name_resolver)
 
         else:
-            line = Combiner.combine_packet_information(joined_default_cells, locator, name_resolver, packet)
+            line = Combiner.combine_packet_information(joined_default_cells, locator, name_resolver, packet, timers)
 
+        timers["file_writer"].start_lap()
         write_line(output_file, line)
+        timers["file_writer"].end_lap()
+
+    print(timers["fqdn"].print_time_sum())
+    print(timers["location"].print_time_sum())
+    print(timers["file_writer"].print_time_sum())
 
 
 def print_dicts(dicts):
@@ -36,8 +46,8 @@ def main():
     name_resolver = NameResolver()
 
     with \
-            open('test.csv', mode="r", encoding='utf-8') as capture, \
-            open('enriched.csv', 'w', encoding='utf-8') as output_file:
+            open('files/test.csv', mode="r", encoding='utf-8') as capture, \
+            open('files/enriched.csv', 'w', encoding='utf-8') as output_file:
         csv_delimiter = ","
         csv_reader = csv.reader(capture, delimiter=csv_delimiter)
 

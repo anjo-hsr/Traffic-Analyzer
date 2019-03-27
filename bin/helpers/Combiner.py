@@ -9,10 +9,17 @@ class Combiner:
         return src_dst
 
     @staticmethod
-    def combine_packet_information(joined_default_cells, locator, name_resolver, packet):
+    def combine_packet_information(joined_default_cells, locator, name_resolver, packet, timers):
         src_dst = Combiner.get_src_dst(packet)
+
+        timers["fqdn"].start_lap()
         fqdn_information = name_resolver.resolve(src_dst)
+        timers["fqdn"].end_lap()
+
+        timers["location"].start_lap()
         location_information = locator.locate(src_dst)
+        timers["location"].end_lap()
+
         line = Combiner.combine_fields(joined_default_cells, fqdn_information, location_information)
         return line
 
