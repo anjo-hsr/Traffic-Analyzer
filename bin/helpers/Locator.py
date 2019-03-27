@@ -40,11 +40,15 @@ class Locator:
             pass
 
     def locate_ip(self, ip_addr):
-        search_url = "https://tools.keycdn.com/geo.json?host=" + ip_addr
+        search_url = "https://geoip-db.com/json/" + ip_addr  # 8 Seconds
+        # 2 search_url = "https://ip.nf/" + ip_addr + ".json" # 24 Seconds
+        # 3 search_url = "https://tools.keycdn.com/geo.json?host=" + ip_addr # 40 Seconds
         response = requests.get(search_url)
         response_json = json.loads(response.content)
-        geo = response_json["data"]["geo"]
-        lat_long = [geo["latitude"], geo["longitude"]]
+        # 2 geo = response_json["ip"]
+        # 3 geo = response_json["data"]["geo"]
+        lat_long = [response_json["latitude"], response_json["longitude"]]
+        # 2 / 3 lat_long = [geo["latitude"], geo["longitude"]]
         return lat_long
 
     def locate(self, dst_src):
@@ -58,5 +62,3 @@ class Locator:
         pos_src = Combiner.combine_lat_long(self.locations, source)
 
         return "{1}{0}{2}".format(Combiner.delimiter, pos_dest, pos_src)
-
-
