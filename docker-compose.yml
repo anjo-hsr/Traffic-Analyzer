@@ -7,7 +7,7 @@ services:
       context: "./${DEPLOYMENT_FOLDER}"
       args:
         PORT: $WEB_PORT
-        PCAP_DIR: $PCAP_DIR
+        INIT_DIR: $INIT_DIR
         CONFIG_DIR: $CONFIG_DIR
         SPLUNK_PASSWORD: $SPLUNK_PASSWORD
         SPLUNK_START_ARGS: $SPLUNK_START_ARGS

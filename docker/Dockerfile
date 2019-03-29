@@ -1,6 +1,6 @@
 FROM splunk/splunk:latest
 
-ARG PCAP_DIR
+ARG INIT_DIR
 ARG CONFIG_DIR
 ARG PORT
 ARG SPLUNK_PASSWORD
@@ -8,8 +8,8 @@ ARG SPLUNK_START_ARGS
 
 EXPOSE $PORT
 
-RUN sudo mkdir -p $PCAP_DIR
-ADD pcaps $PCAP_DIR
+RUN sudo mkdir -p $INIT_DIR
+ADD init_files/ $INIT_DIR
 
 RUN sudo mkdir -p $CONFIG_DIR
 ADD config $CONFIG_DIR
