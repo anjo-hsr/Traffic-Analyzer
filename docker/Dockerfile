@@ -22,4 +22,4 @@ RUN sudo apt install python3 -y
 ENV PORT $PORT
 ENV SPLUNK_PASSWORD $SPLUNK_PASSWORD
 ENV SPLUNK_START_ARGS $SPLUNK_START_ARGS
-ENV SPLUNK_APPS_URL "https://files.orgelbauergoll.ch/pcap-analyzer-for-splunk_4110.tgz"
+ENV SPLUNK_APPS_URL "https://github.com/anjo-hsr/Traffic-Analyzer/raw/master/docker/splunk_apps/maps-for-splunk_207.tgz"
