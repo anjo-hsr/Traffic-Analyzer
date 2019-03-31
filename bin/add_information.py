@@ -1,4 +1,4 @@
-from bin.helpers.Detector import Detector
+from bin.helpers.Environment import Environment
 from bin.helpers.Locator import Locator
 from bin.helpers.NameResolver import NameResolver
 from bin.helpers.Timer import Timer
@@ -42,7 +42,7 @@ def print_dicts(dicts):
 
 
 def main():
-    run(Detector.get_environment())
+    run(Environment.get_environment())
 
 
 def run(environment_variables):

@@ -1,6 +1,6 @@
 import time
 
-from bin.helpers.Detector import Detector
+from bin.helpers.Environment import Environment
 import bin.helpers.Tshark as TsharkHelper
 
 import os
@@ -77,7 +77,6 @@ def is_pcap_file(file):
 def is_csv_file(file):
     return str(file).endswith(".csv")
 
-
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
     csv_path = environment_variables["csv_path"]
@@ -94,7 +93,8 @@ def run(environment_variables):
 
 
 def main():
-    run(Detector.get_environment())
+    run(Environment.get_environment())
+
 
 
 main()

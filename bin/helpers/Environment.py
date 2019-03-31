@@ -1,7 +1,7 @@
 from os import environ, path
 
 
-class Detector:
+class Environment:
     @staticmethod
     def get_environment():
         environment_variables = {}
