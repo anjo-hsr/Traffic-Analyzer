@@ -36,7 +36,7 @@ def main():
 
     with \
             open(file_name, mode="r", encoding='utf-8') as csv_file, \
-            open('test2.csv', 'w', encoding='utf-8') as output_file:
+            open('files/mac_vendor.csv', 'w', encoding='utf-8') as output_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
 
         write_line(output_file, "eth_short,vendor\n")
