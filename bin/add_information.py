@@ -4,6 +4,9 @@ from bin.helpers.Timer import Timer
 from bin.helpers.Combiner import Combiner
 
 import csv
+import re
+import platform
+from os import path, walk
 
 
 def is_header(line_number):
@@ -39,18 +42,28 @@ def print_dicts(dicts):
 
 
 def main():
-    locator = Locator()
-    name_resolver = NameResolver()
+    csv_path = path.join(".", "files")
 
-    with \
-            open('files/test.csv', mode="r", encoding='utf-8') as capture, \
-            open('files/enriched.csv', 'w', encoding='utf-8') as output_file:
-        csv_delimiter = ","
-        csv_reader = csv.reader(capture, delimiter=csv_delimiter)
+    for (dirpath, dirnames, filenames) in walk(csv_path):
+        for file in filenames:
+            if is_csv_file(file):
+                new_file = re.sub(".csv$", "-enriched.csv", str(file))
 
-        loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file)
+                locator = Locator()
+                name_resolver = NameResolver()
+                with \
+                        open(dirpath + file, mode="r", encoding='utf-8') as capture, \
+                        open(dirpath + new_file, 'w', encoding='utf-8') as output_file:
+                    csv_delimiter = ","
+                    csv_reader = csv.DictReader(capture, delimiter=csv_delimiter)
 
-        print_dicts([locator, name_resolver])
+                    loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file)
+
+                    print_dicts([locator, name_resolver])
+
+
+def is_csv_file(file):
+    return str(file).endswith(".csv")
 
 
 timer = Timer()
