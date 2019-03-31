@@ -50,7 +50,7 @@ def run(environment_variables):
 
     for (dirpath, dirnames, filenames) in walk(csv_path):
         for file in filenames:
-            if is_csv_file(file):
+            if is_normal_csv_file(file):
                 new_file = re.sub(".csv$", "-enriched.csv", str(file))
 
                 locator = Locator()
@@ -66,8 +66,8 @@ def run(environment_variables):
                     print_dicts([locator, name_resolver])
 
 
-def is_csv_file(file):
-    return str(file).startswith("capture") and str(file).endswith(".csv")
+def is_normal_csv_file(file):
+    return str(file).startswith("capture") and str(file).endswith(".csv") and not str(file).endswith("-enriched.csv")
 
 
 timer = Timer()
