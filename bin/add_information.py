@@ -67,7 +67,7 @@ def run(environment_variables):
 
 
 def is_csv_file(file):
-    return str(file).endswith(".csv")
+    return str(file).startswith("capture") and str(file).endswith(".csv")
 
 
 timer = Timer()
