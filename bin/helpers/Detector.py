@@ -1,4 +1,4 @@
-import os
+from os import environ, path
 
 
 class Detector:
@@ -6,12 +6,12 @@ class Detector:
     def get_environment():
         environment_variables = {}
 
-        if not os.environ['SPLUNK_HOME'] is None:
-            environment_variables["pcap_path"] = os.path.join("/tmp", "pcaps")
-            environment_variables["csv_path"] = os.path.join("/tmp", "csvs")
+        if environ.get("SPLUNK_HOME") is not None:
+            environment_variables["pcap_path"] = path.join("/tmp", "pcaps")
+            environment_variables["csv_path"] = path.join("/tmp", "csvs")
 
         else:
-            environment_variables["pcap_path"] = os.path.join("..", "docker", "init_files", "pcaps")
-            environment_variables["csv_path"] = os.path.join(".", "files")
+            environment_variables["pcap_path"] = path.join("..", "docker", "init_files", "pcaps")
+            environment_variables["csv_path"] = path.join(".", "files")
 
         return environment_variables
