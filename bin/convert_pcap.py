@@ -1,6 +1,9 @@
+import time
+
+from bin.helpers.Detector import Detector
 import bin.helpers.Tshark as TsharkHelper
 
-from os import path, remove, rename, walk
+import os
 import platform
 import re
 import subprocess
@@ -27,17 +30,17 @@ def run_thark(filename):
 
 
 def test_tshark_windows(tshark_x64, tshark_x86):
-    if path.isfile(tshark_x86):
+    if os.path.isfile(tshark_x86):
         return tshark_x86
 
-    elif path.isfile(tshark_x64):
+    elif os.path.isfile(tshark_x64):
         return tshark_x64
 
     return None
 
 
 def test_tshark_linux():
-    if path.isfile("tshark"):
+    if os.path.isfile("tshark"):
         return "tshark"
 
     return None
@@ -45,16 +48,16 @@ def test_tshark_linux():
 
 def start_tshark(filename, out_file, program_path):
     arguments = TsharkHelper.get_arguments(filename)
-    subprocess.Popen([program_path] + arguments, stdout=out_file)
+    subprocess.call([program_path] + arguments, stdout=out_file)
 
 
 def move_csv(old_path, new_path):
     try:
-        remove(new_path)
+        os.remove(new_path)
     except OSError:
         pass
 
-    rename(old_path, new_path)
+    os.rename(old_path, new_path)
 
 
 def get_new_filename(filename):
@@ -75,18 +78,23 @@ def is_csv_file(file):
     return str(file).endswith(".csv")
 
 
-def main():
-    pcap_path = path.join("..", "docker", "pcaps")
+def run(environment_variables):
+    pcap_path = environment_variables["pcap_path"]
+    csv_path = environment_variables["csv_path"]
 
-    for (dirpath, dirnames, filenames) in walk(pcap_path):
+    for (dirpath, dirnames, filenames) in os.walk(pcap_path):
         for file in filenames:
             if is_pcap_file(file):
-                run_thark(path.join(dirpath, file))
+                run_thark(os.path.join(dirpath, file))
 
-    for (dirpath, dirnames, filenames) in walk(pcap_path):
+    for (dirpath, dirnames, filenames) in os.walk(pcap_path):
         for file in filenames:
             if is_csv_file(file):
-                move_csv(path.join(dirpath, file), path.join(".", "files", file))
+                move_csv(os.path.join(dirpath, file), os.path.join(csv_path, file))
+
+
+def main():
+    run(Detector.get_environment())
 
 
 main()
