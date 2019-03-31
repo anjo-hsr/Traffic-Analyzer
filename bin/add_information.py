@@ -1,3 +1,4 @@
+from bin.helpers.Detector import Detector
 from bin.helpers.Locator import Locator
 from bin.helpers.NameResolver import NameResolver
 from bin.helpers.Timer import Timer
@@ -5,7 +6,6 @@ from bin.helpers.Combiner import Combiner
 
 import csv
 import re
-import platform
 from os import path, walk
 
 
@@ -42,7 +42,11 @@ def print_dicts(dicts):
 
 
 def main():
-    csv_path = path.join(".", "files")
+    run(Detector.get_environment())
+
+
+def run(environment_variables):
+    csv_path = environment_variables["csv_path"]
 
     for (dirpath, dirnames, filenames) in walk(csv_path):
         for file in filenames:
@@ -52,8 +56,8 @@ def main():
                 locator = Locator()
                 name_resolver = NameResolver()
                 with \
-                        open(dirpath + file, mode="r", encoding='utf-8') as capture, \
-                        open(dirpath + new_file, 'w', encoding='utf-8') as output_file:
+                        open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
+                        open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
                     csv_delimiter = ","
                     csv_reader = csv.DictReader(capture, delimiter=csv_delimiter)
 
