@@ -77,6 +77,11 @@ def is_pcap_file(file):
 def is_csv_file(file):
     return str(file).endswith(".csv")
 
+
+def main():
+    run(Environment.get_environment())
+
+
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
     csv_path = environment_variables["csv_path"]
@@ -90,11 +95,6 @@ def run(environment_variables):
         for file in filenames:
             if is_csv_file(file):
                 move_csv(os.path.join(dirpath, file), os.path.join(csv_path, file))
-
-
-def main():
-    run(Environment.get_environment())
-
 
 
 main()
