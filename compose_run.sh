@@ -9,4 +9,7 @@ docker rmi splunk_deployment
 echo -e "\nImages deleted\n"
 
 echo -e "Building with docker-compose"
+
+tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" -zcvf ./docker/init_files/traffic_analyzer/traffic-analyzer.tar.gz ./appserver ./bin ./default ./local ./lookups ./metadata ./static
+
 docker-compose up -d
