@@ -16,8 +16,8 @@ def get_arguments(filename):
                        " -e frame.time -e frame.cap_len" \
                        " -e eth.dst -e eth.src" \
                        " -e ip.dst -e ip.src -e ip.proto" \
-                       " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.payload" \
-                       " -e udp.srcport -e udp.srcport" \
+                       " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.len" \
+                       " -e udp.srcport -e udp.srcport -e udp.length" \
                        " -E header=y -E separator=, -E quote=d -E occurrence=f"
     arguments = shlex.split(export_arguments)
     combined_args = file_argumnets + arguments
