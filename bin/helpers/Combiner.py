@@ -3,8 +3,8 @@ class Combiner:
 
     @staticmethod
     def get_src_dst(packet):
-        dst_ip_addr = packet[4]
-        src_ip_addr = packet[5]
+        dst_ip_addr = packet["ip.dst"]
+        src_ip_addr = packet["ip.src"]
         src_dst = [dst_ip_addr, src_ip_addr]
         return src_dst
 
@@ -36,7 +36,7 @@ class Combiner:
 
     @staticmethod
     def join_default_cells(packet, csv_delimiter):
-        joined_default_cells = csv_delimiter.join('"{}"'.format(cell) for cell in packet)
+        joined_default_cells = csv_delimiter.join('"{}"'.format(packet[cell]) for cell in packet)
         return joined_default_cells
 
     @staticmethod

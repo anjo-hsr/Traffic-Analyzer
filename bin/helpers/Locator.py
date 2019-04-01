@@ -31,7 +31,7 @@ class Locator:
             self.set_entry(ip_addr, lat_long)
             return
 
-        limiter.check_request_load(limiter)
+        limiter.check_request_load()
 
         try:
             lat_long = self.locate_ip(ip_addr)
@@ -54,7 +54,6 @@ class Locator:
     def locate(self, dst_src):
         destination = dst_src[0]
         source = dst_src[1]
-
         limiter = Limiter(3, 1)
         self.get_location(limiter, destination)
         self.get_location(limiter, source)

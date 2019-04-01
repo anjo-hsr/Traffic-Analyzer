@@ -2,38 +2,37 @@ from datetime import datetime
 import time
 
 
-def get_current_timestamp():
-    return datetime.now().timestamp()
-
-
 class Limiter:
     def __init__(self, requests_per_period, period_time):
         self.requests_per_period = requests_per_period
         self.period_time = period_time
-        self.period_timestamp = get_current_timestamp()
+        self.period_start_timestamp = self.timestamp
         self.counter = 0
+
+    @property
+    def waiting_time(self):
+        return self.period_time - (self.timestamp - self.period_start_timestamp)
+
+    @property
+    def timestamp(self):
+        return datetime.now().timestamp()
 
     def get_requests_per_period(self):
         return self.requests_per_period
 
-    def get_counter(self):
-        return self.counter
-
     def reset_period_timestamp(self):
-        self.period_timestamp = get_current_timestamp()
+        self.period_start_timestamp = self.timestamp
         self.counter = 0
 
     def increase_counter(self):
         self.counter += 1
 
-    def check_request_load(self, limiter):
-        current_time = get_current_timestamp()
-        limiter.increase_counter()
-        waiting_time = self.period_time - (current_time - limiter.period_timestamp)
+    def check_request_load(self):
+        self.increase_counter()
 
-        if (limiter.counter == limiter.requests_per_period) and waiting_time > 0:
-            time.sleep(waiting_time)
-            limiter.reset_period_timestamp()
+        if (self.counter == self.requests_per_period) and self.waiting_time > 0:
+            time.sleep(self.waiting_time)
+            self.reset_period_timestamp()
 
-        if waiting_time < 0:
-            limiter.reset_period_timestamp()
+        if self.waiting_time < 0:
+            self.reset_period_timestamp()

@@ -1,58 +1,100 @@
-from os import path, walk
-import re
+import time
+
+from bin.helpers.Environment import Environment
+import bin.helpers.Tshark as TsharkHelper
+
+import os
 import platform
-import shlex
+import re
 import subprocess
 
 
-def run_thark_windows(filename):
-    x86_path = "C:\\Program Files (x86)\\Wireshark\\"
-    x64_path = "C:\\Program Files\\Wireshark\\"
-    program = "tshark"
+def run_thark(filename):
+    tshark_x64, tshark_x86 = TsharkHelper.get_windows_defaults()
 
-    file_argumnets = ["-r", filename]
-    export_arguments = " -T fields" \
-                       " -e frame.time -e frame.cap_len" \
-                       " -e eth.dst -e eth.src" \
-                       " -e ip.dst -e ip.src -e ip.proto" \
-                       " -e tcp.srcport -e tcp.dstport -e tcp.flags" \
-                       " -e udp.srcport -e udp.srcport" \
-                       " -E header=y -E separator=, -E quote=d -E occurrence=f"
-
-    arguments = shlex.split(export_arguments)
-
-    combined_args = file_argumnets + arguments
-
-    new_filename = re.sub("pcap(ng)?$", "csv", str(filename))
+    new_filename = get_new_filename(filename)
 
     with open(new_filename, "w") as out_file:
-        if path.isdir(x86_path):
-            subprocess.Popen([x86_path + program] + combined_args, stdout=out_file)
+        program_path = None
 
-        elif path.isdir(x64_path):
-            subprocess.Popen([x64_path + program] + combined_args, stdout=out_file)
+        if platform.system() == "Windows":
+            program_path = test_tshark_windows(tshark_x64, tshark_x86)
 
-        else:
-            print("No wireshark folder found. Please install Wireshark into the defined standard folder")
+        elif platform.system() == "Linux":
+            program_path = test_tshark_linux()
+
+        if program_path is None:
+            return print_error()
+
+        start_tshark(filename, out_file, program_path)
 
 
-def run_thark_unix():
-    pass
+def test_tshark_windows(tshark_x64, tshark_x86):
+    if os.path.isfile(tshark_x86):
+        return tshark_x86
+
+    elif os.path.isfile(tshark_x64):
+        return tshark_x64
+
+    return None
+
+
+def test_tshark_linux():
+    if os.path.isfile("tshark"):
+        return "tshark"
+
+    return None
+
+
+def start_tshark(filename, out_file, program_path):
+    arguments = TsharkHelper.get_arguments(filename)
+    subprocess.call([program_path] + arguments, stdout=out_file)
+
+
+def move_csv(old_path, new_path):
+    try:
+        os.remove(new_path)
+    except OSError:
+        pass
+
+    os.rename(old_path, new_path)
+
+
+def get_new_filename(filename):
+    new_filename = re.sub("pcap(ng)?$", "csv", str(filename))
+    return new_filename
+
+
+def print_error():
+    print("No wireshark folder found. Please install Wireshark into the standard folder")
+    return
+
+
+def is_pcap_file(file):
+    return str(file).endswith(".pcap") or str(file).endswith(".pcapng")
+
+
+def is_csv_file(file):
+    return str(file).endswith(".csv")
 
 
 def main():
-    os_vendor = platform.system()
+    run(Environment.get_environment())
 
-    directory_character = {
-        "Windows": "\\",
-        "Unix": "/"
-    }
 
-    pcap_path = "..{0}docker{0}pcaps".format(directory_character[os_vendor])
-    for (dirpath, dirnames, filenames) in walk(pcap_path):
+def run(environment_variables):
+    pcap_path = environment_variables["pcap_path"]
+    csv_path = environment_variables["csv_path"]
+
+    for (dirpath, dirnames, filenames) in os.walk(pcap_path):
         for file in filenames:
-            if str(file).endswith(".pcap") or str(file).endswith(".pcapng"):
-                run_thark_windows(dirpath + directory_character[os_vendor] + file)
+            if is_pcap_file(file):
+                run_thark(os.path.join(dirpath, file))
+
+    for (dirpath, dirnames, filenames) in os.walk(pcap_path):
+        for file in filenames:
+            if is_csv_file(file):
+                move_csv(os.path.join(dirpath, file), os.path.join(csv_path, file))
 
 
 main()

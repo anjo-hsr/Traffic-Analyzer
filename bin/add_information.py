@@ -1,9 +1,12 @@
+from bin.helpers.Environment import Environment
 from bin.helpers.Locator import Locator
 from bin.helpers.NameResolver import NameResolver
 from bin.helpers.Timer import Timer
 from bin.helpers.Combiner import Combiner
 
 import csv
+import re
+from os import path, walk
 
 
 def is_header(line_number):
@@ -39,18 +42,32 @@ def print_dicts(dicts):
 
 
 def main():
-    locator = Locator()
-    name_resolver = NameResolver()
+    run(Environment.get_environment())
 
-    with \
-            open('files/test.csv', mode="r", encoding='utf-8') as capture, \
-            open('files/enriched.csv', 'w', encoding='utf-8') as output_file:
-        csv_delimiter = ","
-        csv_reader = csv.reader(capture, delimiter=csv_delimiter)
 
-        loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file)
+def run(environment_variables):
+    csv_path = environment_variables["csv_path"]
 
-        print_dicts([locator, name_resolver])
+    for (dirpath, dirnames, filenames) in walk(csv_path):
+        for file in filenames:
+            if is_normal_csv_file(file):
+                new_file = re.sub(".csv$", "-enriched.csv", str(file))
+
+                locator = Locator()
+                name_resolver = NameResolver()
+                with \
+                        open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
+                        open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
+                    csv_delimiter = ","
+                    csv_reader = csv.DictReader(capture, delimiter=csv_delimiter)
+
+                    loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file)
+
+                    print_dicts([locator, name_resolver])
+
+
+def is_normal_csv_file(file):
+    return str(file).startswith("capture") and str(file).endswith(".csv") and not str(file).endswith("-enriched.csv")
 
 
 timer = Timer()
