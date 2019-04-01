@@ -1,4 +1,4 @@
-from main import Environment
+from main.helpers.Environment import Environment
 import main.helpers.Tshark as TsharkHelper
 
 import os

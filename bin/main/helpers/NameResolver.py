@@ -1,5 +1,5 @@
-from main import Combiner
-from main import IPHelper
+from main.helpers.Combiner import Combiner
+from main.helpers.IPHelper import IPHelper
 
 import socket
 

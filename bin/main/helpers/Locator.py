@@ -1,6 +1,6 @@
-from main import IPHelper
-from main import Limiter
-from main import Combiner
+from main.helpers.IPHelper import IPHelper
+from main.helpers.Limiter import Limiter
+from main.helpers.Combiner import Combiner
 
 import json
 import requests
