@@ -16,8 +16,10 @@ def get_arguments(filename):
                        " -e frame.time -e frame.cap_len" \
                        " -e eth.dst -e eth.src" \
                        " -e ip.dst -e ip.src -e ip.proto" \
-                       " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.len" \
+                       " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.len -e tcp.stream" \
                        " -e udp.srcport -e udp.srcport -e udp.length" \
+                       " -e http.request.method -e http.request.uri" \
+                       " -e tls.handshake.version -e tls.handshake.ciphersuite -e tls.handshake.ciphersuites" \
                        " -E header=y -E separator=, -E quote=d -E occurrence=f"
     arguments = shlex.split(export_arguments)
     combined_args = file_argumnets + arguments

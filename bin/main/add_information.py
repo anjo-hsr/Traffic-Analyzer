@@ -3,6 +3,7 @@ from bin.main.helpers.Locator import Locator
 from bin.main.helpers.NameResolver import NameResolver
 from bin.main.helpers.Timer import Timer
 from bin.main.helpers.Combiner import Combiner
+from bin.main.helpers.CipherSuites import CipherSuites
 
 import csv
 import re
@@ -17,28 +18,23 @@ def write_line(output_file, line):
     output_file.write(line + "\n")
 
 
-def loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file):
-    timers = {"fqdn": Timer(), "location": Timer(), "file_writer": Timer()}
+def loop_through_lines(csv_delimiter, csv_reader, helpers, output_file):
     for index, packet in enumerate(csv_reader):
-        joined_default_cells = Combiner.join_default_cells(packet, csv_delimiter)
         if is_header(index):
-            line = Combiner.combine_header(joined_default_cells, locator, name_resolver)
+            default_header = csv_reader.fieldnames
+            helper_headers = [helpers[helper_key].header for helper_key in helpers]
+            line = Combiner.combine_fields(default_header + helper_headers, False)
 
         else:
-            line = Combiner.combine_packet_information(joined_default_cells, locator, name_resolver, packet, timers)
+            joined_default_cells = Combiner.join_default_cells(packet, csv_delimiter)
+            line = Combiner.combine_packet_information(joined_default_cells, helpers, packet)
 
-        timers["file_writer"].start_lap()
         write_line(output_file, line)
-        timers["file_writer"].end_lap()
-
-    print(timers["fqdn"].print_time_sum())
-    print(timers["location"].print_time_sum())
-    print(timers["file_writer"].print_time_sum())
 
 
-def print_dicts(dicts):
-    for dict_element in dicts:
-        dict_element.print_fqdns()
+def print_dicts(helpers):
+    for helper_key in helpers:
+        helpers[helper_key].print_fqdns()
 
 
 def main():
@@ -50,27 +46,24 @@ def run(environment_variables):
 
     for (dirpath, dirnames, filenames) in walk(csv_path):
         for file in filenames:
+            helpers = {"locator": Locator(), "name_resolver": NameResolver(), "cipher_suites": CipherSuites()}
+
             if is_normal_csv_file(file):
                 new_file = re.sub(".csv$", "-enriched.csv", str(file))
 
-                locator = Locator()
-                name_resolver = NameResolver()
                 with \
                         open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
                         open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
                     csv_delimiter = ","
                     csv_reader = csv.DictReader(capture, delimiter=csv_delimiter)
 
-                    loop_through_lines(csv_delimiter, csv_reader, locator, name_resolver, output_file)
+                    loop_through_lines(csv_delimiter, csv_reader, helpers, output_file)
 
-                    print_dicts([locator, name_resolver])
+                    print_dicts(helpers)
 
 
 def is_normal_csv_file(file):
     return str(file).startswith("capture") and str(file).endswith(".csv") and not str(file).endswith("-enriched.csv")
 
 
-timer = Timer()
 main()
-timer.set_end_time()
-timer.print_runtime()
