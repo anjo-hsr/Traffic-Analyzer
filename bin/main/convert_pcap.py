@@ -1,5 +1,5 @@
-from main.helpers.Environment import Environment
-import main.helpers.Tshark as TsharkHelper
+from bin.main.helpers.Environment import Environment
+import bin.main.helpers.Tshark as TsharkHelper
 
 import os
 import platform

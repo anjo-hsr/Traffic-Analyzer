@@ -1,8 +1,8 @@
-from main.helpers.Environment import Environment
-from main.helpers.Locator import Locator
-from main.helpers.NameResolver import NameResolver
-from main.helpers.Timer import Timer
-from main.helpers.Combiner import Combiner
+from bin.main.helpers.Environment import Environment
+from bin.main.helpers.Locator import Locator
+from bin.main.helpers.NameResolver import NameResolver
+from bin.main.helpers.Timer import Timer
+from bin.main.helpers.Combiner import Combiner
 
 import csv
 import re
