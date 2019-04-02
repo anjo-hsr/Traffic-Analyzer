@@ -11,7 +11,7 @@ class Environment:
             environment_variables["csv_path"] = path.join("/tmp", "csvs")
 
         else:
-            environment_variables["pcap_path"] = path.join("..", "docker", "init_files", "pcaps")
+            environment_variables["pcap_path"] = path.join("..", "..", "docker", "init_files", "pcaps")
             environment_variables["csv_path"] = path.join("..", "files")
 
         return environment_variables
