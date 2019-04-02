@@ -9,30 +9,23 @@ class Combiner:
         return src_dst
 
     @staticmethod
-    def combine_packet_information(joined_default_cells, locator, name_resolver, packet, timers):
+    def combine_packet_information(joined_default_cells, helpers, packet):
         src_dst = Combiner.get_src_dst(packet)
 
-        timers["fqdn"].start_lap()
-        fqdn_information = name_resolver.resolve(src_dst)
-        timers["fqdn"].end_lap()
+        fqdn_information = helpers["name_resolver"].resolve(src_dst)
+        location_information = helpers["locator"].locate(src_dst)
+        cipher_suite_information = helpers["cipher_suites"].get_cipher_suite(packet)
 
-        timers["location"].start_lap()
-        location_information = locator.locate(src_dst)
-        timers["location"].end_lap()
-
-        line = Combiner.combine_fields(joined_default_cells, fqdn_information, location_information)
+        line = Combiner.combine_fields([joined_default_cells, fqdn_information, location_information, cipher_suite_information])
         return line
 
     @staticmethod
-    def combine_header(joined_default_cells, locator, name_resolver):
-        fqdn_header = name_resolver.header
-        location_header = locator.header
-        line = Combiner.combine_fields(joined_default_cells, fqdn_header, location_header)
-        return line
+    def combine_fields(fields, quotes_needed=False):
+        if quotes_needed:
+            return ",".join('"{}"'.format(field) for field in fields)
 
-    @staticmethod
-    def combine_fields(joined_default_cells, header_fqdn, header_location):
-        return "{1}{0}{2}{0}{3}".format(Combiner.delimiter, joined_default_cells, header_fqdn, header_location)
+        else:
+            return ",".join("{}".format(field) for field in fields)
 
     @staticmethod
     def join_default_cells(packet, csv_delimiter):

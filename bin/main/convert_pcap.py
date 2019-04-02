@@ -80,6 +80,7 @@ def main():
     run(Environment.get_environment())
 
 
+
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
     csv_path = environment_variables["csv_path"]
