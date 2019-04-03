@@ -1,12 +1,13 @@
-from os import path, remove
-import urllib.request
 import csv
 import re
+
+from os import path, remove
+from urllib import request
 
 
 def download_file(mac_vendor_url):
     file_name = mac_vendor_url.split("/")[-1]
-    urllib.request.urlretrieve(mac_vendor_url, file_name)
+    request.urlretrieve(mac_vendor_url, file_name)
     return file_name
 
 

@@ -1,6 +1,6 @@
-from bin.main.helpers.IPHelper import IPHelper
-
 import unittest
+
+from bin.main.helpers.IPHelper import IPHelper
 
 
 class TestIpHelperMethods(unittest.TestCase):
