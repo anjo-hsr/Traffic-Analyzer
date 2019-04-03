@@ -1,6 +1,6 @@
 import main.convert_pcap as convert_pcap
 
-from main.helpers import Environment
+from main.helpers.Environment import Environment
 
 
 def main():

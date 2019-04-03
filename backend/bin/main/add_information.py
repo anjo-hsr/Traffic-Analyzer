@@ -4,11 +4,11 @@ import re
 from os import path, walk
 
 
-from main.helpers import Environment
-from main.helpers import Locator
-from main.helpers import NameResolver
+from main.helpers.Environment import Environment
+from main.helpers.Locator import Locator
+from main.helpers.NameResolver import NameResolver
 from main.helpers.Combiner import Combiner
-from main.helpers import CipherSuites
+from main.helpers.CipherSuites import CipherSuites
 
 
 def is_header(line_number):
@@ -39,7 +39,7 @@ def print_dicts(helpers):
 
 
 def main():
-    run(Environment.get_environment())
+    run(Environment.Environment.get_environment())
 
 
 def run(environment_variables):

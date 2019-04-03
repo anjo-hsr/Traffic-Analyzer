@@ -2,7 +2,7 @@ import json
 import requests
 import socket
 
-from main.helpers import IPHelper
+from main.helpers.IPHelper import IPHelper
 from main.helpers.Limiter import Limiter
 from main.helpers.Combiner import Combiner
 

@@ -5,7 +5,7 @@ import subprocess
 
 import main.helpers.Tshark as TsharkHelper
 
-from main.helpers import Environment
+from main.helpers.Environment import Environment
 
 
 def run_thark(filename):
