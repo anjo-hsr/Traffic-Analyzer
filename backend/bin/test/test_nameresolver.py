@@ -1,6 +1,6 @@
 import unittest
 
-from bin.main.helpers.NameResolver import NameResolver
+from main.helpers.NameResolver import NameResolver
 
 
 class TestNameResolverMethods(unittest.TestCase):
