@@ -1,10 +1,10 @@
-from bin.main.helpers.IPHelper import IPHelper
-from bin.main.helpers.Limiter import Limiter
-from bin.main.helpers.Combiner import Combiner
-
 import json
 import requests
 import socket
+
+from bin.main.helpers.IPHelper import IPHelper
+from bin.main.helpers.Limiter import Limiter
+from bin.main.helpers.Combiner import Combiner
 
 
 class Locator:
@@ -40,15 +40,10 @@ class Locator:
             pass
 
     def locate_ip(self, ip_addr):
-        search_url = "https://geoip-db.com/json/" + ip_addr  # 8 Seconds
-        # 2 search_url = "https://ip.nf/" + ip_addr + ".json" # 24 Seconds
-        # 3 search_url = "https://tools.keycdn.com/geo.json?host=" + ip_addr # 40 Seconds
+        search_url = "https://geoip-db.com/json/{}".format(ip_addr)
         response = requests.get(search_url)
         response_json = json.loads(response.content)
-        # 2 geo = response_json["ip"]
-        # 3 geo = response_json["data"]["geo"]
         lat_long = [response_json["latitude"], response_json["longitude"]]
-        # 2 / 3 lat_long = [geo["latitude"], geo["longitude"]]
         return lat_long
 
     def locate(self, dst_src):

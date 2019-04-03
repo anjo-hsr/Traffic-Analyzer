@@ -1,10 +1,11 @@
-from bin.main.helpers.Environment import Environment
-import bin.main.helpers.Tshark as TsharkHelper
-
 import os
 import platform
 import re
 import subprocess
+
+import bin.main.helpers.Tshark as TsharkHelper
+
+from bin.main.helpers.Environment import Environment
 
 
 def run_thark(filename):
