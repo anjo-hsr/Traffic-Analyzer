@@ -12,9 +12,9 @@ class TestCombinerMethods(unittest.TestCase):
         cls.name_resolver = NameResolver()
 
         cls.source = "10.0.0.1"
-        cls.destination = "152.96.36.100"
+        cls.destination = "8.8.8.8"
 
-        cls.fqdns = {cls.destination: "www.hsr.ch", cls.source: ""}
+        cls.fqdns = {cls.destination: "google-public-dns-a.google.com", cls.source: ""}
         cls.locations = {cls.destination: "[8.1551, 47.144901]", cls.source: ""}
 
     def test_delimiter(self):
@@ -22,8 +22,8 @@ class TestCombinerMethods(unittest.TestCase):
         self.assertEqual(Combiner.delimiter, csv_delimiter)
 
     def test_get_src_dst(self):
-        packet = {"ip.dst": "152.96.36.100", "ip.src": "10.0.0.1"}
-        dst_src_list = {"dst": "152.96.36.100", "src": "10.0.0.1"}
+        packet = {"ip.dst": "8.8.8.8", "ip.src": "10.0.0.1"}
+        dst_src_list = {"dst": "8.8.8.8", "src": "10.0.0.1"}
 
         self.assertEqual(Combiner.get_dst_src(packet), dst_src_list)
 
