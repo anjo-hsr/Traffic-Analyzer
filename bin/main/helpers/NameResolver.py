@@ -8,7 +8,7 @@ from bin.main.helpers.IPHelper import IPHelper
 class NameResolver:
     def __init__(self):
         self.fqdns = dict()
-        self.header = "src_fqdn,dst_fqdn"
+        self.header = "dst_fqdn,src_fqdn"
 
     def print_fqdns(self):
         print("Print out for all {} fqdn entries".format(self.fqdns.__len__()))
@@ -35,8 +35,8 @@ class NameResolver:
         self.fqdns[ip_addr] = fqdn
 
     def resolve(self, dst_src):
-        destination = dst_src[0]
-        source = dst_src[1]
+        destination = dst_src["dst"]
+        source = dst_src["src"]
 
         self.get_fqdn(destination)
         self.get_fqdn(source)
