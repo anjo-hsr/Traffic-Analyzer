@@ -1,12 +1,14 @@
+import csv
+import re
+
+from os import path, walk
+
+
 from bin.main.helpers.Environment import Environment
 from bin.main.helpers.Locator import Locator
 from bin.main.helpers.NameResolver import NameResolver
 from bin.main.helpers.Combiner import Combiner
 from bin.main.helpers.CipherSuites import CipherSuites
-
-import csv
-import re
-from os import path, walk
 
 
 def is_header(line_number):

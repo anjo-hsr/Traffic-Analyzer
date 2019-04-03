@@ -1,8 +1,8 @@
+import unittest
+
 from bin.main.helpers.Combiner import Combiner
 from bin.main.helpers.Locator import Locator
 from bin.main.helpers.NameResolver import NameResolver
-
-import unittest
 
 
 class TestCombinerMethods(unittest.TestCase):
