@@ -12,7 +12,7 @@ class TestTsharkMethods(unittest.TestCase):
                 "-e", "tcp.srcport", "-e", "tcp.dstport", "-e", "tcp.flags", "-e", "tcp.len", "-e", "tcp.stream",
                 "-e", "udp.srcport", "-e", "udp.dstport", "-e", "udp.length",
                 "-e", "http.request.method", "-e", "http.request.uri",
-                "-e", "tls.handshake.version", "-e", "tls.handshake.ciphersuite", "-e", "tls.handshake.ciphersuites",
+                "-e", "tls.record.version", "-e", "tls.handshake.ciphersuite", "-e", "tls.handshake.ciphersuites",
                 "-E", "header=y", "-E", "separator=,", "-E", "quote=d", "-E", "occurrence=f"]
 
         self.assertEqual(Tshark.get_arguments(filename), args)
