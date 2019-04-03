@@ -1,12 +1,14 @@
 import shlex
+from os import path, environ
 
 
 def get_windows_defaults():
-    x86_path = "C:\\Program Files (x86)\\Wireshark\\"
-    x64_path = "C:\\Program Files\\Wireshark\\"
-    program = "tshark.exe"
-    tshark_x86 = x86_path + program
-    tshark_x64 = x64_path + program
+    system_drive = environ['SYSTEMDRIVE']
+
+    # environ["ProgramFiles"] could be used to simplify the variables but there is no guaranty
+    # that Wireshark x64 is installed on a x64 Windows
+    tshark_x86  = path.join(system_drive, "Program Files (x86)", "Wireshark", "tshark.exe")
+    tshark_x64 = path.join(system_drive, "Program Files", "Wireshark", "tshark.exe")
     return tshark_x64, tshark_x86
 
 
@@ -21,6 +23,7 @@ def get_arguments(filename):
                        " -e http.request.method -e http.request.uri" \
                        " -e tls.handshake.version -e tls.handshake.ciphersuite -e tls.handshake.ciphersuites" \
                        " -E header=y -E separator=, -E quote=d -E occurrence=f"
+
     arguments = shlex.split(export_arguments)
     combined_args = file_argumnets + arguments
     return combined_args
