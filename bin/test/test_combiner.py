@@ -23,9 +23,9 @@ class TestCombinerMethods(unittest.TestCase):
 
     def test_get_src_dst(self):
         packet = {"ip.dst": "152.96.36.100", "ip.src": "10.0.0.1"}
-        dst_src_list = ['152.96.36.100', '10.0.0.1']
+        dst_src_list = {"dst": "152.96.36.100", "src": "10.0.0.1"}
 
-        self.assertEqual(Combiner.get_src_dst(packet), dst_src_list)
+        self.assertEqual(Combiner.get_dst_src(packet), dst_src_list)
 
     def test_combine_fields(self):
         row = "number,name,description"
