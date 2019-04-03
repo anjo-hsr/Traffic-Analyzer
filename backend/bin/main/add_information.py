@@ -4,11 +4,11 @@ import re
 from os import path, walk
 
 
-from bin.main.helpers.Environment import Environment
-from bin.main.helpers.Locator import Locator
-from bin.main.helpers.NameResolver import NameResolver
-from bin.main.helpers.Combiner import Combiner
-from bin.main.helpers.CipherSuites import CipherSuites
+from main.helpers import Environment
+from main.helpers import Locator
+from main.helpers import NameResolver
+from main.helpers.Combiner import Combiner
+from main.helpers import CipherSuites
 
 
 def is_header(line_number):
