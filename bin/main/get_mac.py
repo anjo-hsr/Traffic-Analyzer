@@ -1,3 +1,4 @@
+from os import path, remove
 import urllib.request
 import csv
 import re
@@ -32,17 +33,20 @@ def write_line(output_file, line):
 
 def main():
     mac_vendor_url = "http://standards-oui.ieee.org/oui/oui.csv"
-    file_name = download_file(mac_vendor_url)
+    file_name = path.join(".", download_file(mac_vendor_url))
+    destination_file = path.join("..", "files", "mac_vendor.csv")
 
     with \
             open(file_name, mode="r", encoding='utf-8') as csv_file, \
-            open('files/mac_vendor.csv', 'w', encoding='utf-8') as output_file:
+            open(destination_file, 'w', encoding='utf-8') as output_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
 
         write_line(output_file, "eth_short,vendor\n")
         line_counter = 0
         for row in csv_reader:
             line_counter = write_rows(line_counter, output_file, row)
+
+    remove(file_name)
 
 
 main()
