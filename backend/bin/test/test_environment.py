@@ -5,7 +5,7 @@ from os import path
 from main.helpers.Environment import Environment
 
 
-class TestCombinerMethods(unittest.TestCase):
+class TestEnvironmentMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.development_variables = {
@@ -26,5 +26,5 @@ class TestCombinerMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCombinerMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnvironmentMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
