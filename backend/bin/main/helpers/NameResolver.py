@@ -1,8 +1,7 @@
 import socket
 
-from bin.main.helpers.Combiner import Combiner
-from bin.main.helpers.IPHelper import IPHelper
-
+from main.helpers.Combiner import Combiner
+from main.helpers.IPHelper import IPHelper
 
 
 class NameResolver:

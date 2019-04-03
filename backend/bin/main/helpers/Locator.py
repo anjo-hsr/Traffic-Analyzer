@@ -2,9 +2,9 @@ import json
 import requests
 import socket
 
-from bin.main.helpers.IPHelper import IPHelper
-from bin.main.helpers.Limiter import Limiter
-from bin.main.helpers.Combiner import Combiner
+from main.helpers.IPHelper import IPHelper
+from main.helpers.Limiter import Limiter
+from main.helpers.Combiner import Combiner
 
 
 class Locator:
@@ -47,8 +47,8 @@ class Locator:
         return lat_long
 
     def locate(self, dst_src):
-        destination = dst_src[0]
-        source = dst_src[1]
+        destination = dst_src["dst"]
+        source = dst_src["src"]
         limiter = Limiter(3, 1)
         self.get_location(limiter, destination)
         self.get_location(limiter, source)

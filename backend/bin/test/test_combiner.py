@@ -1,8 +1,8 @@
 import unittest
 
-from bin.main.helpers.Combiner import Combiner
-from bin.main.helpers.Locator import Locator
-from bin.main.helpers.NameResolver import NameResolver
+from main.helpers.Combiner import Combiner
+from main.helpers.Locator import Locator
+from main.helpers.NameResolver import NameResolver
 
 
 class TestCombinerMethods(unittest.TestCase):
@@ -23,20 +23,20 @@ class TestCombinerMethods(unittest.TestCase):
 
     def test_get_src_dst(self):
         packet = {"ip.dst": "152.96.36.100", "ip.src": "10.0.0.1"}
-        dst_src_list = ['152.96.36.100', '10.0.0.1']
+        dst_src_list = {"dst": "152.96.36.100", "src": "10.0.0.1"}
 
-        self.assertEqual(Combiner.get_src_dst(packet), dst_src_list)
+        self.assertEqual(Combiner.get_dst_src(packet), dst_src_list)
 
     def test_combine_fields(self):
         row = "number,name,description"
 
         fqdns_string = "{},{}".format(self.fqdns[self.destination], self.fqdns[self.source])
         locations_string = "{},{}".format(self.locations[self.destination], self.locations[self.source])
-        combined_line = "{},{},{}".format(row, fqdns_string, locations_string)
-        self.assertEqual(Combiner.combine_fields(row, fqdns_string, locations_string), combined_line)
+        combined_line = '{},{},{}'.format(row, fqdns_string, locations_string)
+        self.assertEqual(Combiner.combine_fields([row, fqdns_string, locations_string]), combined_line)
 
     def test_combine_fqdns(self):
-        combined_fqdns = "{},{}".format(self.fqdns[self.destination], self.fqdns[self.source])
+        combined_fqdns = '"{}","{}"'.format(self.fqdns[self.destination], self.fqdns[self.source])
         self.assertEqual(Combiner.combine_fqdns(self.fqdns, self.destination, self.source), combined_fqdns)
 
 

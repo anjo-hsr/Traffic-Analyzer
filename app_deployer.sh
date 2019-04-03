@@ -29,8 +29,9 @@ function create_tar() {
     tar --exclude="./docker" --exclude="bin/files" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
         -zcvf ./docker/init_files/traffic_analyzer/traffic_analyzer.tar.gz \
-        ./appserver ./bin ./default ./local ./lookups ./metadata ./static \
-        --transform s/./traffic_analyzer/
+        -C backend/ bin \
+        -C ../frontend/ appserver default local lookups metadata static
+
     echo -e "File traffic_analyzer.tar.gz file created"
 }
 

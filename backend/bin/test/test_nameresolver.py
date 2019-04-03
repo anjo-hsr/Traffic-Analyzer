@@ -1,6 +1,6 @@
 import unittest
 
-from bin.main.helpers.NameResolver import NameResolver
+from main.helpers.NameResolver import NameResolver
 
 
 class TestNameResolverMethods(unittest.TestCase):
@@ -16,8 +16,8 @@ class TestNameResolverMethods(unittest.TestCase):
         self.assertEqual(self.name_resolver.fqdns[self.destination_ip_address], self.destination_fqdn)
 
     def test_resolve(self):
-        dst_src = [self.destination_ip_address, self.source_ip_address]
-        resolved_fqdns = "{},{}".format(self.destination_fqdn, self.source_ip_address)
+        dst_src = {"dst": self.destination_ip_address, "src": self.source_ip_address}
+        resolved_fqdns = '"{}","{}"'.format(self.destination_fqdn, self.source_ip_address)
         self.assertEqual(self.name_resolver.resolve(dst_src), resolved_fqdns)
 
 

@@ -9,7 +9,7 @@ ARG SPLUNK_START_ARGS
 EXPOSE $PORT
 
 RUN sudo mkdir -p $INIT_DIR
-ADD init_files/ $INIT_DIR
+ADD init_files $INIT_DIR
 
 RUN sudo mkdir -p $CONFIG_DIR
 ADD config $CONFIG_DIR
