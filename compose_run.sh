@@ -11,7 +11,7 @@ echo -e "\nImages deleted\n"
 echo -e "Building with docker-compose"
 
 tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" -zcvf \
-    ./docker/init_files/traffic_analyzer/traffic-analyzer.tar.gz \
+    ./docker/init_files/traffic_analyzer/traffic_analyzer.tar.gz \
     ./appserver ./bin ./default ./local ./lookups ./metadata ./static \
     --transform s/./traffic_analyzer/
 
