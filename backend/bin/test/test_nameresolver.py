@@ -8,8 +8,8 @@ class TestNameResolverMethods(unittest.TestCase):
     def setUpClass(cls):
         cls.name_resolver = NameResolver()
         cls.source_ip_address = "10.0.0.1"
-        cls.destination_ip_address = "152.96.36.100"
-        cls.destination_fqdn = "lb-ext-web1.hsr.ch"
+        cls.destination_ip_address = "8.8.8.8"
+        cls.destination_fqdn = "google-public-dns-a.google.com"
 
     def test_get_fqdn(self):
         self.name_resolver.get_fqdn(self.destination_ip_address)
