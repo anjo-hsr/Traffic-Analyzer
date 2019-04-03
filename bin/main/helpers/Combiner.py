@@ -2,18 +2,16 @@ class Combiner:
     delimiter = ","
 
     @staticmethod
-    def get_src_dst(packet):
-        dst_ip_addr = packet["ip.dst"]
-        src_ip_addr = packet["ip.src"]
-        src_dst = [dst_ip_addr, src_ip_addr]
-        return src_dst
+    def get_dst_src(packet):
+        dst_src = {"dst": packet["ip.dst"], "src": packet["ip.src"]}
+        return dst_src
 
     @staticmethod
     def combine_packet_information(joined_default_cells, helpers, packet):
-        src_dst = Combiner.get_src_dst(packet)
+        dst_src = Combiner.get_dst_src(packet)
 
-        fqdn_information = helpers["name_resolver"].resolve(src_dst)
-        location_information = helpers["locator"].locate(src_dst)
+        fqdn_information = helpers["name_resolver"].resolve(dst_src)
+        location_information = helpers["locator"].locate(dst_src)
         cipher_suite_information = helpers["cipher_suites"].get_cipher_suite(packet)
         line = Combiner.combine_fields(
             [joined_default_cells, location_information, fqdn_information, cipher_suite_information])
