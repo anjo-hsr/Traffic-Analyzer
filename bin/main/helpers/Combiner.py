@@ -15,8 +15,8 @@ class Combiner:
         fqdn_information = helpers["name_resolver"].resolve(src_dst)
         location_information = helpers["locator"].locate(src_dst)
         cipher_suite_information = helpers["cipher_suites"].get_cipher_suite(packet)
-
-        line = Combiner.combine_fields([joined_default_cells, fqdn_information, location_information, cipher_suite_information])
+        line = Combiner.combine_fields(
+            [joined_default_cells, location_information, fqdn_information, cipher_suite_information])
         return line
 
     @staticmethod
@@ -34,7 +34,7 @@ class Combiner:
 
     @staticmethod
     def combine_fqdns(fqdns, destination, source):
-        return "{1}{0}{2}".format(Combiner.delimiter, fqdns.get(destination), fqdns.get(source))
+        return '"{1}"{0}"{2}"'.format(Combiner.delimiter, fqdns.get(destination), fqdns.get(source))
 
     @staticmethod
     def combine_lat_long(locations, destination):

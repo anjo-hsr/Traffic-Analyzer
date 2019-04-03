@@ -16,8 +16,7 @@ class CipherSuites:
             if stream in self.stream_to_suites:
                 return self.stream_to_suites[stream]
 
-
-        return ""
+        return '""'
 
     def print_fqdns(self):
         print("Print out for all {} stream to cipher suites entries".format(self.stream_to_suites.__len__()))
