@@ -32,11 +32,11 @@ class TestCombinerMethods(unittest.TestCase):
 
         fqdns_string = "{},{}".format(self.fqdns[self.destination], self.fqdns[self.source])
         locations_string = "{},{}".format(self.locations[self.destination], self.locations[self.source])
-        combined_line = "{},{},{}".format(row, fqdns_string, locations_string)
-        self.assertEqual(Combiner.combine_fields(row, fqdns_string, locations_string), combined_line)
+        combined_line = '{},{},{}'.format(row, fqdns_string, locations_string)
+        self.assertEqual(Combiner.combine_fields([row, fqdns_string, locations_string]), combined_line)
 
     def test_combine_fqdns(self):
-        combined_fqdns = "{},{}".format(self.fqdns[self.destination], self.fqdns[self.source])
+        combined_fqdns = '"{}","{}"'.format(self.fqdns[self.destination], self.fqdns[self.source])
         self.assertEqual(Combiner.combine_fqdns(self.fqdns, self.destination, self.source), combined_fqdns)
 
 
