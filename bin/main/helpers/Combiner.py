@@ -24,8 +24,7 @@ class Combiner:
         if quotes_needed:
             return ",".join('"{}"'.format(field) for field in fields)
 
-        else:
-            return ",".join("{}".format(field) for field in fields)
+        return ",".join("{}".format(field) for field in fields)
 
     @staticmethod
     def join_default_cells(packet, csv_delimiter):
