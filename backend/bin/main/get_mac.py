@@ -39,7 +39,7 @@ def main():
 
     with \
             open(file_name, mode="r", encoding='utf-8') as csv_file, \
-            open(destination_file, 'w', encoding='utf-8') as output_file:
+            open(destination_file, mode='w', encoding='utf-8') as output_file:
         csv_reader = csv.DictReader(csv_file, delimiter=',')
 
         write_line(output_file, "eth_short,vendor")
