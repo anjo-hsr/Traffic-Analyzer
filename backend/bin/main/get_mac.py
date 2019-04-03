@@ -16,7 +16,7 @@ def is_header(line_counter):
 
 
 def convert_mac_address(row):
-    vendor_part = row[1].lower()
+    vendor_part = row["Assignment"].lower()
     mac_address_array = re.findall("..?", vendor_part)
     return ":".join(mac_address_array)
 
@@ -24,7 +24,7 @@ def convert_mac_address(row):
 def write_rows(line_counter, output_file, row):
     if not is_header(line_counter):
         mac_address = convert_mac_address(row)
-        write_line(output_file, mac_address + "," + '"{}"'.format(row[2]))
+        write_line(output_file, mac_address + "," + '"{}"'.format(row["Organization Name"]))
     return line_counter + 1
 
 
@@ -39,10 +39,10 @@ def main():
 
     with \
             open(file_name, mode="r", encoding='utf-8') as csv_file, \
-            open(destination_file, 'w', encoding='utf-8') as output_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
+            open(destination_file, mode='w', encoding='utf-8') as output_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=',')
 
-        write_line(output_file, "eth_short,vendor\n")
+        write_line(output_file, "eth_short,vendor")
         line_counter = 0
         for row in csv_reader:
             line_counter = write_rows(line_counter, output_file, row)

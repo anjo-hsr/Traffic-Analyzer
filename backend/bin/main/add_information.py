@@ -39,7 +39,7 @@ def print_dicts(helpers):
 
 
 def main():
-    run(Environment.Environment.get_environment())
+    run(Environment.get_environment())
 
 
 def run(environment_variables):
