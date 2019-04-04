@@ -35,7 +35,7 @@ def loop_through_lines(csv_delimiter, csv_reader, helpers, output_file):
 
 def print_dicts(helpers):
     for helper_key in helpers:
-        helpers[helper_key].print_fqdns()
+        helpers[helper_key].print()
 
 
 def main():

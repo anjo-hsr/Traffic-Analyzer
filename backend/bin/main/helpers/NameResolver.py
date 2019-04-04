@@ -9,7 +9,7 @@ class NameResolver:
         self.fqdns = dict()
         self.header = "dst_fqdn,src_fqdn"
 
-    def print_fqdns(self):
+    def print(self):
         print("Print out for all {} fqdn entries".format(self.fqdns.__len__()))
         for fqdn_entry in self.fqdns:
             print("{} --> {}".format(fqdn_entry, self.fqdns[fqdn_entry]))
