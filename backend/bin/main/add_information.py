@@ -3,7 +3,6 @@ import re
 
 from os import path, walk
 
-
 from main.helpers.Environment import Environment
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
@@ -75,4 +74,5 @@ def enrich_file(dirpath, file, helpers, new_file):
         print_dicts(helpers)
 
 
-main()
+if __name__ == "__main__":
+    main()
