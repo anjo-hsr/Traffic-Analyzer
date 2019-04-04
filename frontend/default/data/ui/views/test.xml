@@ -4,6 +4,12 @@
     <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
   </search>
   <fieldset submitButton="false" autoRun="true">
+    <input type="radio" token="direction">
+      <label>Direction of traffic</label>
+      <choice value="out">outgoing</choice>
+      <choice value="in">incoming</choice>
+      <default>out</default>
+    </input>
     <input type="text" searchWhenChanged="true" token="limit">
       <label>Show top n results:</label>
       <default>5</default>
