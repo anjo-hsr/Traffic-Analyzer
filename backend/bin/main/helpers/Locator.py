@@ -12,7 +12,7 @@ class Locator:
         self.locations = dict()
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
-    def print_fqdns(self):
+    def print(self):
         print("Print out for all {} location entries".format(self.locations.__len__()))
         for location_entry in self.locations:
             print("{} --> {}".format(location_entry, self.locations[location_entry]))
@@ -22,7 +22,7 @@ class Locator:
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long
 
-    def get_location(self, limiter, ip_addr):
+    def get_location(self, ip_addr, limiter=Limiter(3, 1)):
         if ip_addr in self.locations:
             return
 
@@ -49,9 +49,8 @@ class Locator:
     def locate(self, dst_src):
         destination = dst_src["dst"]
         source = dst_src["src"]
-        limiter = Limiter(3, 1)
-        self.get_location(limiter, destination)
-        self.get_location(limiter, source)
+        self.get_location(destination)
+        self.get_location(source)
         pos_dest = Combiner.combine_lat_long(self.locations, destination)
         pos_src = Combiner.combine_lat_long(self.locations, source)
 
