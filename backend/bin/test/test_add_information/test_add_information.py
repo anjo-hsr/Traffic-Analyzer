@@ -4,13 +4,16 @@ import main.add_information as add_information
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
 from main.helpers.CipherSuites import CipherSuites
+from test.file_names import FileNames
 
 
 class TestAddInformation(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        filenames = FileNames.get_filenames()
+        cls.csv_filenames = filenames["csv_filenames"]
+        cls.csv_enriched_filenames = filenames["csv_enriched_filenames"]
 
     def test_create_helpers_classes(self):
         helpers = add_information.create_helpers()
@@ -28,6 +31,13 @@ class TestAddInformation(unittest.TestCase):
 
             else:
                 self.assertTrue(False)
+
+    def test_is_normal_csv(self):
+        for filename in self.csv_filenames:
+            self.assertTrue(add_information.is_normal_csv_file(filename))
+
+        for filename in self.csv_enriched_filenames:
+            self.assertFalse(add_information.is_normal_csv_file(filename))
 
     def test_create_helpers_is_dict(self):
         helpers = add_information.create_helpers()

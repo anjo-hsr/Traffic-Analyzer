@@ -5,16 +5,17 @@ import unittest
 from unittest.mock import patch
 
 import main.convert_pcap as convert_pcap
+from test.file_names import FileNames
 
 
 class TestConvertPcapMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.csv_filenames = ["test_lower.csv", "test_double_ending.py.csv", "test_upper.CSV", "test_camel.Csv"]
-        cls.pcap_filenames = ["test_lower.pcap", "test_double_ending.py.pcap", "test_upper.PCAP", "test_camel.Pcap"]
-        cls.pcapng_filenames = ["test_lower.pcapng", "test_double_ending.py.pcapng", "test_upper.PCAPNG",
-                                "test_camel.Pcapng"]
+        filenames = FileNames.get_filenames()
+        cls.csv_filenames = filenames["csv_filenames"]
+        cls.pcap_filenames = filenames["pcap_filenames"]
+        cls.pcapng_filenames = filenames["pcapng_filenames"]
 
     def test_csv_filenames(self):
         for filename in self.csv_filenames:
