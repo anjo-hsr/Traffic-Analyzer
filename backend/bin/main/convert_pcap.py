@@ -33,13 +33,13 @@ def detect_platform():
 
 
 def test_tshark_windows():
-    tshark_x64, tshark_x86 = TsharkHelper.get_windows_defaults()
+    windows_defaults = TsharkHelper.get_windows_defaults()
 
-    if os.path.isfile(tshark_x86):
-        return tshark_x86
+    if os.path.isfile(windows_defaults["x86"]):
+        return windows_defaults["x86"]
 
-    elif os.path.isfile(tshark_x64):
-        return tshark_x64
+    elif os.path.isfile(windows_defaults["x64"]):
+        return windows_defaults["x64"]
 
     return None
 
