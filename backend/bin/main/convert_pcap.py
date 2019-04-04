@@ -102,4 +102,5 @@ def run(environment_variables):
                 move_csv(os.path.join(dirpath, file), os.path.join(csv_path, file))
 
 
-main()
+if __name__ == "__main__":
+    main()
