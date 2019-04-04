@@ -1,7 +1,7 @@
 <form>
   <label>Test</label>
   <search id="base_search">
-    <query>source="capture-2019-03-19_06-31-46-utc-enriched.csv" </query>
+    <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
   </search>
   <fieldset submitButton="false" autoRun="true">
     <input type="text" searchWhenChanged="true" token="limit">
@@ -18,7 +18,7 @@
       <table>
         <title>Top $limit$ sources</title>
         <search>
-          <query>source="capture-2019-03-19_06-31-46-utc-enriched.csv" ip_dst=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</query>
+          <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" ip_dst=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</query>
         </search>
       </table>
     </panel>
@@ -26,7 +26,7 @@
       <table>
         <title>Top $limit$ destinations</title>
         <search>
-          <query>source="capture-2019-03-19_06-31-46-utc-enriched.csv" ip_src=$ip$ | stats sum(linecount) as "# of packages" by dst_fqdn | sort $limit$ -num("# of packages")</query>
+          <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" ip_src=$ip$ | stats sum(linecount) as "# of packages" by dst_fqdn | sort $limit$ -num("# of packages")</query>
         </search>
       </table>
     </panel>

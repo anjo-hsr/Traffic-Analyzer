@@ -1,0 +1,13 @@
+<form>
+  <label>Security</label>
+  <row>
+    <panel>
+      <table>
+        <title>Commonly used cipher suites</title>
+        <search>
+          <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" | stats dc(tcp_stream) by cipher_suite</query>
+        </search>
+      </table>
+    </panel>
+  </row>
+</form>
