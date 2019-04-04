@@ -8,6 +8,10 @@ import main.helpers.Tshark as TsharkHelper
 
 class TestConvertPcapPlatformMethod(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.windows_defaults = TsharkHelper.get_windows_defaults()
+
     @patch("platform.system", MagicMock(return_value="Linux"))
     @patch("os.path.isfile", MagicMock(return_value=True))
     def test_detect_platform_linux(self):
@@ -17,8 +21,7 @@ class TestConvertPcapPlatformMethod(unittest.TestCase):
     @patch("platform.system", MagicMock(return_value="Windows"))
     @patch("os.path.isfile", MagicMock(return_value=True))
     def test_detect_platform_windows_x86(self):
-        tshark_x64, tshark_x86 = TsharkHelper.get_windows_defaults()
-        self.assertEqual(convert_pcap.detect_platform(), tshark_x86)
+        self.assertEqual(convert_pcap.detect_platform(), self.windows_defaults["x86"])
 
     @patch("platform.system", MagicMock(return_value="Linux"))
     @patch("os.path.isfile", MagicMock(return_value=False))
