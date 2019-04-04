@@ -9,18 +9,10 @@ from main.helpers.Environment import Environment
 
 
 def run_thark(filename):
-    tshark_x64, tshark_x86 = TsharkHelper.get_windows_defaults()
-
     new_filename = get_new_filename(filename)
 
     with open(new_filename, "w") as out_file:
-        program_path = None
-
-        if platform.system() == "Windows":
-            program_path = test_tshark_windows(tshark_x64, tshark_x86)
-
-        elif platform.system() == "Linux":
-            program_path = test_tshark_linux()
+        program_path = detect_platform()
 
         if program_path is None:
             return print_error()
@@ -28,12 +20,26 @@ def run_thark(filename):
         start_tshark(filename, out_file, program_path)
 
 
-def test_tshark_windows(tshark_x64, tshark_x86):
-    if os.path.isfile(tshark_x86):
-        return tshark_x86
+def detect_platform():
+    program_path = None
 
-    elif os.path.isfile(tshark_x64):
-        return tshark_x64
+    if platform.system() == "Windows":
+        program_path = test_tshark_windows()
+
+    elif platform.system() == "Linux":
+        program_path = test_tshark_linux()
+
+    return program_path
+
+
+def test_tshark_windows():
+    windows_defaults = TsharkHelper.get_windows_defaults()
+
+    if os.path.isfile(windows_defaults["x86"]):
+        return windows_defaults["x86"]
+
+    elif os.path.isfile(windows_defaults["x64"]):
+        return windows_defaults["x64"]
 
     return None
 
@@ -60,7 +66,7 @@ def move_csv(old_path, new_path):
 
 
 def get_new_filename(filename):
-    new_filename = re.sub("pcap(ng)?$", "csv", str(filename))
+    new_filename = re.sub("pcap(ng)?$", "csv", str(filename).lower())
     return new_filename
 
 
@@ -70,16 +76,15 @@ def print_error():
 
 
 def is_pcap_file(file):
-    return str(file).endswith(".pcap") or str(file).endswith(".pcapng")
+    return str(file).lower().endswith(".pcap") or str(file).lower().endswith(".pcapng")
 
 
 def is_csv_file(file):
-    return str(file).endswith(".csv")
+    return str(file).lower().endswith(".csv")
 
 
 def main():
     run(Environment.get_environment())
-
 
 
 def run(environment_variables):
