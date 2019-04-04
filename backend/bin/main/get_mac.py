@@ -4,6 +4,8 @@ import re
 from os import path, remove
 from urllib import request
 
+from main.helpers import FileDownloader
+
 
 def download_file(mac_vendor_url):
     file_name = mac_vendor_url.split("/")[-1]
@@ -33,8 +35,8 @@ def write_line(output_file, line):
 
 
 def main():
-    mac_vendor_url = "http://standards-oui.ieee.org/oui/oui.csv"
-    file_name = path.join(".", download_file(mac_vendor_url))
+    url = "http://standards-oui.ieee.org/oui/oui.csv"
+    file_name = FileDownloader.download_file(url)
     destination_file = path.join("..", "files", "mac_vendor.csv")
 
     with \

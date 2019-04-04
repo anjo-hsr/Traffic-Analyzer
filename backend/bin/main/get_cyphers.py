@@ -1,10 +1,10 @@
 import csv
-import re
 
 from os import path, remove
 from urllib import request
 
 from main.helpers.Combiner import Combiner
+import main.helpers.FileDownloader as FileDownloader
 
 
 def download_file(mac_vendor_url):
@@ -41,8 +41,8 @@ def write_line(output_file, line):
 
 
 def main():
-    mac_vendor_url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
-    file_name = path.join(".", download_file(mac_vendor_url))
+    url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
+    file_name = FileDownloader.download_file(url)
     destination_file = path.join("..", "files", "cipher_suites.csv")
 
     with \
@@ -59,4 +59,5 @@ def main():
     remove(file_name)
 
 
-main()
+if __name__ == "__main__":
+    main()
