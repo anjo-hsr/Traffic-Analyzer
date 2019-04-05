@@ -1,13 +1,8 @@
-import csv
 import re
 
-from os import path, remove
+from os import path
 
-from main.helpers import FileDownloader
-
-
-def is_header(line_counter):
-    return line_counter == 0
+import main.downloaders.download_methods as download_methods
 
 
 def convert_mac_address(row):
@@ -17,32 +12,30 @@ def convert_mac_address(row):
 
 
 def write_rows(line_counter, output_file, row):
-    if not is_header(line_counter):
+    if not download_methods.is_header(line_counter):
         mac_address = convert_mac_address(row)
-        write_line(output_file, mac_address + "," + '"{}"'.format(row["Organization Name"]))
+        download_methods.write_line(output_file, mac_address + "," + '"{}"'.format(row["Organization Name"]))
     return line_counter + 1
-
-
-def write_line(output_file, line):
-    output_file.write(line + "\n")
 
 
 def main():
     url = "http://standards-oui.ieee.org/oui/oui.csv"
-    filename = FileDownloader.download_file(url)
+    filename = download_methods.download_file(url)
     destination_file = path.join("..", "files", "mac_vendor.csv")
 
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
             open(destination_file, mode='w', encoding='utf-8') as output_file:
-        csv_reader = csv.DictReader(csv_file, delimiter=',')
+        csv_reader = download_methods.get_csv_dict_reader(csv_file)
 
-        write_line(output_file, "eth_short,vendor")
+        header = "eth_short,vendor"
+        download_methods.write_line(output_file, header)
+
         line_counter = 0
         for row in csv_reader:
             line_counter = write_rows(line_counter, output_file, row)
 
-    remove(filename)
+    download_methods.remove_downloaded_file(filename)
 
 
 if __name__ == "__main__":

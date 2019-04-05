@@ -1,6 +1,6 @@
 import unittest
 
-import main.get_mac as get_mac
+import main.downloaders.get_mac as get_mac
 
 
 class TestGetMacMethods(unittest.TestCase):

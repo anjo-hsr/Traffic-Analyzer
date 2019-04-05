@@ -1,17 +1,9 @@
 import unittest
 
-import main.get_ciphers as get_ciphers
+import main.downloaders.get_ciphers as get_ciphers
 
 
 class TestGetCiphersMethods(unittest.TestCase):
-    def test_is_header(self):
-        header_dict = {
-            0: True,
-            1: False
-        }
-        for line_number in header_dict:
-            self.assertEqual(get_ciphers.is_header(line_number), header_dict[line_number])
-
     def test_calculate_hex(self):
         hex_dict = {
             "0x00,0x20": 32,

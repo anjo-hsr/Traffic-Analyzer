@@ -1,13 +1,7 @@
-import csv
-
-from os import path, remove
+from os import path
 
 from main.helpers.Combiner import Combiner
-import main.helpers.FileDownloader as FileDownloader
-
-
-def is_header(line_counter):
-    return line_counter == 0
+import main.downloaders.download_methods as download_methods
 
 
 def calculate_hex(hex_pair):
@@ -26,37 +20,34 @@ def combine_information(row):
 
 
 def write_rows(line_counter, output_file, row):
-    if not is_header(line_counter):
+    if not download_methods.is_header(line_counter):
         try:
             line = combine_information(row)
-            write_line(output_file, line)
+            download_methods.write_line(output_file, line)
         except ValueError:
             pass
 
     return line_counter + 1
 
 
-def write_line(output_file, line):
-    output_file.write(line + "\n")
-
-
 def main():
     url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
-    filename = FileDownloader.download_file(url)
+    filename = download_methods.download_file(url)
     destination_file = path.join("..", "files", "cipher_suites.csv")
 
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
             open(destination_file, mode='w', encoding='utf-8') as output_file:
-        csv_reader = csv.DictReader(csv_file, delimiter=',')
+        csv_reader = download_methods.get_csv_dict_reader(csv_file)
 
         header = "cipher_suite_number,description,recommended"
-        write_line(output_file, header)
+        download_methods.write_line(output_file, header)
+
         line_counter = 0
         for row in csv_reader:
             line_counter = write_rows(line_counter, output_file, row)
 
-    remove(filename)
+    download_methods.remove_downloaded_file(filename)
 
 
 if __name__ == "__main__":
