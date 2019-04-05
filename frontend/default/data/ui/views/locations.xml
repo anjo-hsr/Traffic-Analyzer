@@ -1,10 +1,30 @@
 <dashboard stylesheet="customStyle.css">
   <label>Locations</label>
+    <fieldset submitButton="false" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="true">
+      <label>Choose capture file:</label>
+      <default>capture-*</default>
+      <!-- The final value will be surrounded by prefix and suffix -->
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
+      <valuePrefix>source="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
+      <delimiter> OR </delimiter>
+      <choice value="capture-*">ALL</choice>
+      <fieldForLabel>source</fieldForLabel>
+      <fieldForValue>source</fieldForValue>
+      <search>
+        <query>source="capture-*" | dedup source | table source</query>
+      </search>
+    </input>
+  </fieldset>
   <row>
     <panel>
       <viz type="leaflet_maps_app.maps-plus">
         <search>
-          <query>source="capture-*" | dedup dst_fqdn | table dst_fqdn, dst_latitude, dst_longitude | where dst_latitude != "" and dst_longitude != "" | rename dst_latitude as latitude, dst_longitude as longitude</query>
+          <query>$source_token$ | dedup dst_fqdn | table dst_fqdn, dst_latitude, dst_longitude | where dst_latitude != "" and dst_longitude != "" | eval clusterGroup="default" | rename dst_fqdn as tooltip, dst_latitude as latitude, dst_longitude as longitude</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
