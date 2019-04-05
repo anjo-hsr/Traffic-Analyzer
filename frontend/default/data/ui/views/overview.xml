@@ -30,11 +30,11 @@
       <change>
         <condition value="in">
           <set token="directionHeader">sources</set>
-          <set token="searchString">source="capture-2019-04-03_09-59-38-UTC-enriched.csv" ip_dst=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</set>
+          <set token="searchString">$source_token$ ip_dst=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</set>
         </condition>
         <condition value="out">
           <set token="directionHeader">destination</set>
-          <set token="searchString">source="capture-2019-04-03_09-59-38-UTC-enriched.csv" ip_src=$ip$ | stats sum(linecount) as "# of packages" by dst_fqdn | sort $limit$ -num("# of packages")</set>
+          <set token="searchString">$source_token$ ip_src=$ip$ | stats sum(linecount) as "# of packages" by dst_fqdn | sort $limit$ -num("# of packages")</set>
         </condition>
       </change>
     </input>
