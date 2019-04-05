@@ -38,8 +38,6 @@ class TestGetMacMethods(unittest.TestCase):
         remove(test_file_path)
 
 
-
-
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestGetMacMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
