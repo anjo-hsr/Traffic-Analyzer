@@ -1,0 +1,49 @@
+<dashboard>
+  <label>Security</label>
+  <row>
+    <panel>
+      <single>
+        <title>Weakest used cipher suite</title>
+        <search>
+          <query>source="capture-2019-04-03_09-59-38-utc-enriched.csv" | eventstats max(cipher_suite)  by sourcetype, ciper_suite | dedup cipher_suite | table cipher_suite | top limit=1 cipher_suite | fields cipher_suite</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="showSparkline">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Amount of unsecured traffic</title>
+        <search>
+          <query>source="capture-2019-04-03_09-59-38-utc-enriched.csv" | eval issecure=if(cipher_suite=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Commonly used cipher suites</title>
+        <search>
+          <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" | stats dc(tcp_stream) by cipher_suite</query>
+        </search>
+      </table>
+    </panel>
+  </row>
+</dashboard>
