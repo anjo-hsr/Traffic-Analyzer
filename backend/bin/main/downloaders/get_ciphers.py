@@ -19,14 +19,17 @@ def combine_information(row):
     return line
 
 
-def write_rows(line_counter, output_file, row):
-    if not download_methods.is_header(line_counter):
-        try:
-            line = combine_information(row)
-            download_methods.write_line(output_file, line)
-        except ValueError:
-            pass
+def get_row(output_file, row):
+    try:
+        line = combine_information(row)
+        download_methods.write_line(output_file, line)
+    except ValueError:
+        pass
 
+
+def write_row(line_counter, output_file, row):
+    if not download_methods.is_header(line_counter):
+        get_row(output_file, row)
     return line_counter + 1
 
 
@@ -45,7 +48,7 @@ def main():
 
         line_counter = 0
         for row in csv_reader:
-            line_counter = write_rows(line_counter, output_file, row)
+            line_counter = write_row(line_counter, output_file, row)
 
     download_methods.remove_downloaded_file(filename)
 

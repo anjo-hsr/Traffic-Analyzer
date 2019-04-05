@@ -11,10 +11,15 @@ def convert_mac_address(row):
     return ":".join(mac_address_array)
 
 
-def write_rows(line_counter, output_file, row):
+def get_row(output_file, row):
+    mac_address = convert_mac_address(row)
+    line = mac_address + "," + '"{}"'.format(row["Organization Name"])
+    download_methods.write_line(output_file, line)
+
+
+def write_row(line_counter, output_file, row):
     if not download_methods.is_header(line_counter):
-        mac_address = convert_mac_address(row)
-        download_methods.write_line(output_file, mac_address + "," + '"{}"'.format(row["Organization Name"]))
+        get_row(output_file, row)
     return line_counter + 1
 
 
@@ -33,7 +38,7 @@ def main():
 
         line_counter = 0
         for row in csv_reader:
-            line_counter = write_rows(line_counter, output_file, row)
+            line_counter = write_row(line_counter, output_file, row)
 
     download_methods.remove_downloaded_file(filename)
 

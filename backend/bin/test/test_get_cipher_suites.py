@@ -23,6 +23,10 @@ class TestGetCiphersMethods(unittest.TestCase):
         actual_line = get_ciphers.combine_information(row_dict)
         self.assertEqual(actual_line, expected_line)
 
+    def test_write_row(self):
+        line_counter = 0
+        self.assertEqual(get_ciphers.write_row(line_counter, None, {}), line_counter + 1)
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestGetCiphersMethods)
