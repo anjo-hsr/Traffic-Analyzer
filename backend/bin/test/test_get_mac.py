@@ -1,19 +1,32 @@
 import unittest
 
-import main.get_mac as get_mac
+from os import path, remove
+
+import main.downloaders.get_mac as get_mac
 
 
 class TestGetMacMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.line = {
-            "Assignment": "FFFFFF",
-            "Organization Name": "Broadcast Corp"
+        cls.row_dict = {
+            "Assignment": "3CD92B",
+            "Organization Name": "Hewlett Packard"
         }
-        cls.vendor_mac = "ff:ff:ff"
+        cls.vendor_mac = "3c:d9:2b"
+        cls.expected_line = '3c:d9:2b,"Hewlett Packard"'
 
     def test_convert_to_vendor_mac(self):
-        self.assertEqual(get_mac.convert_mac_address(self.line), self.vendor_mac)
+        self.assertEqual(get_mac.convert_mac_address(self.row_dict), self.vendor_mac)
+
+    def test_write_row_successful(self):
+        test_file_path = path.join(".", "test.csv")
+        with open(test_file_path, mode="w") as test_file:
+            get_mac.write_row(test_file, self.row_dict)
+
+        with open(test_file_path) as test_file:
+            self.assertEqual(test_file.read(), self.expected_line + "\n")
+
+        remove(test_file_path)
 
 
 if __name__ == "__main__":

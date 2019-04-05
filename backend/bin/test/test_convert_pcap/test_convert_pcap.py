@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 import main.convert_pcap as convert_pcap
-from test.file_names import FileNames
+from test.filenames import FileNames
 
 
 class TestConvertPcapMethods(unittest.TestCase):
