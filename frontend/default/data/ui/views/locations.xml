@@ -4,13 +4,10 @@
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
       <default>capture-*</default>
-      <!-- The final value will be surrounded by prefix and suffix -->
       <prefix>(</prefix>
       <suffix>)</suffix>
-      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
-      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
       <delimiter> OR </delimiter>
       <choice value="capture-*">ALL</choice>
       <fieldForLabel>source</fieldForLabel>
