@@ -5,6 +5,7 @@
   </search>
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
+      <label>Choose capture file:</label>
       <default>ALL</default>
       <!-- The final value will be surrounded by prefix and suffix -->
       <prefix>(</prefix>
