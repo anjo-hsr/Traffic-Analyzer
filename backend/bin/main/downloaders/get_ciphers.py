@@ -19,7 +19,7 @@ def combine_information(row):
     return line
 
 
-def get_row(output_file, row):
+def write_row(output_file, row):
     try:
         line = combine_information(row)
         download_methods.write_line(output_file, line)
@@ -27,16 +27,10 @@ def get_row(output_file, row):
         pass
 
 
-def write_row(line_counter, output_file, row):
-    if not download_methods.is_header(line_counter):
-        get_row(output_file, row)
-    return line_counter + 1
-
-
 def main():
     url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
     filename = download_methods.download_file(url)
-    destination_file = path.join("..", "files", "cipher_suites.csv")
+    destination_file = path.join("..", "..", "files", "cipher_suites.csv")
 
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
@@ -46,9 +40,8 @@ def main():
         header = "cipher_suite_number,description,recommended"
         download_methods.write_line(output_file, header)
 
-        line_counter = 0
         for row in csv_reader:
-            line_counter = write_row(line_counter, output_file, row)
+            write_row(output_file, row)
 
     download_methods.remove_downloaded_file(filename)
 
