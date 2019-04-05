@@ -10,19 +10,25 @@ def is_header(line_counter):
     return line_counter == 0
 
 
-def calculate_hex(hex_list):
+def calculate_hex(hex_pair):
+    hex_list = hex_pair.split(",")
     first_value = int(hex_list[0], 16) * pow(16, 2)
     second_value = int(hex_list[1], 16)
     return first_value + second_value
 
 
+def combine_information(row):
+    cipher_suite_number = calculate_hex(row["Value"])
+    description = row["Description"]
+    recommended = row["Recommended"]
+    line = Combiner.combine_fields([cipher_suite_number, description, recommended])
+    return line
+
+
 def write_rows(line_counter, output_file, row):
     if not is_header(line_counter):
         try:
-            cipher_suite_number = calculate_hex(row["Value"].split(","))
-            description = row["Description"]
-            recommended = row["Recommended"]
-            line = Combiner.combine_fields([cipher_suite_number, description, recommended])
+            line = combine_information(row)
             write_line(output_file, line)
         except ValueError:
             pass
