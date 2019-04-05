@@ -1,11 +1,31 @@
-<dashboard>
+<form>
   <label>Security</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="true">
+      <label>Choose capture file:</label>
+      <default>capture-*</default>
+      <!-- The final value will be surrounded by prefix and suffix -->
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
+      <valuePrefix>source="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
+      <delimiter> OR </delimiter>
+      <choice value="capture-*">ALL</choice>
+      <fieldForLabel>source</fieldForLabel>
+      <fieldForValue>source</fieldForValue>
+      <search>
+        <query>source="capture-*" | dedup source | table source</query>
+      </search>
+    </input>
+  </fieldset>
   <row>
     <panel>
       <single>
         <title>Number of inadvisable cipher suites used</title>
         <search>
-          <query>source="capture-2019-04-03_09-59-38-utc-enriched.csv" | dedup cipher_suite | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, recommended | stats count as amount by recommended | where recommended="N" | table amount | appendpipe [stats count | where count=0]</query>
+          <query> $source_token$ | dedup cipher_suite | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, recommended | stats count as amount by recommended | where recommended="N" | table amount | appendpipe [stats count | where count=0]</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -21,7 +41,7 @@
       <single>
         <title>Amount of unsecured traffic</title>
         <search>
-          <query>source="capture-2019-04-03_09-59-38-utc-enriched.csv" | eval issecure=if(cipher_suite=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
+          <query> $source_token$ | eval issecure=if(cipher_suite=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -46,4 +66,4 @@
       </table>
     </panel>
   </row>
-</dashboard>
+</form>
