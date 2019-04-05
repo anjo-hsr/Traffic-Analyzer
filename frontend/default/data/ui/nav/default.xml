@@ -2,4 +2,5 @@
   <!-- Use the collection tag to create a list of items -->
   <view name="overview" default="true"  />
   <view name="security" />
+  <view name="locations" />
 </nav>
