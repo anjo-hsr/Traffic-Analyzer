@@ -66,4 +66,20 @@
       </table>
     </panel>
   </row>
+  <row depends="noshow">
+     <html>
+       <style>
+         .input-multiselect {
+           min-width: 350px !important;
+           width: 350px !important;
+           max-width: 350px !important;
+         }
+         .sc-jVODtj.cpKKED.sc-Rmtcm.fZMhOZ {
+           min-width: 340px !important;
+           width: 340px !important;
+           max-width: 340px !important;
+         }
+       </style>
+     </html>
+   </row>
 </form>
