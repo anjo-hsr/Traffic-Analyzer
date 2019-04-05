@@ -29,11 +29,11 @@ def write_line(output_file, line):
 
 def main():
     url = "http://standards-oui.ieee.org/oui/oui.csv"
-    file_name = FileDownloader.download_file(url)
+    filename = FileDownloader.download_file(url)
     destination_file = path.join("..", "files", "mac_vendor.csv")
 
     with \
-            open(file_name, mode="r", encoding='utf-8') as csv_file, \
+            open(filename, mode="r", encoding='utf-8') as csv_file, \
             open(destination_file, mode='w', encoding='utf-8') as output_file:
         csv_reader = csv.DictReader(csv_file, delimiter=',')
 
@@ -42,7 +42,7 @@ def main():
         for row in csv_reader:
             line_counter = write_rows(line_counter, output_file, row)
 
-    remove(file_name)
+    remove(filename)
 
 
 if __name__ == "__main__":
