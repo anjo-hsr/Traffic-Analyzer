@@ -2,15 +2,8 @@ import csv
 import re
 
 from os import path, remove
-from urllib import request
 
 from main.helpers import FileDownloader
-
-
-def download_file(mac_vendor_url):
-    file_name = mac_vendor_url.split("/")[-1]
-    request.urlretrieve(mac_vendor_url, file_name)
-    return file_name
 
 
 def is_header(line_counter):

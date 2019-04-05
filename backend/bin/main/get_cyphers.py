@@ -1,16 +1,9 @@
 import csv
 
 from os import path, remove
-from urllib import request
 
 from main.helpers.Combiner import Combiner
 import main.helpers.FileDownloader as FileDownloader
-
-
-def download_file(mac_vendor_url):
-    file_name = mac_vendor_url.split("/")[-1]
-    request.urlretrieve(mac_vendor_url, file_name)
-    return file_name
 
 
 def is_header(line_counter):
@@ -31,8 +24,9 @@ def write_rows(line_counter, output_file, row):
             recommended = row["Recommended"]
             line = Combiner.combine_fields([cipher_suite_number, description, recommended])
             write_line(output_file, line)
-        except:
+        except ValueError:
             pass
+        
     return line_counter + 1
 
 
