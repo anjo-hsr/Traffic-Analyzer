@@ -4,7 +4,7 @@ import main.add_information as add_information
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
 from main.helpers.CipherSuites import CipherSuites
-from test.file_names import FileNames
+from test.filenames import FileNames
 
 
 class TestAddInformation(unittest.TestCase):
