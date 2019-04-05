@@ -1,5 +1,5 @@
 <form>
-  <label>Test</label>
+  <label>Overview</label>
   <search id="base_search">
     <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
   </search>
