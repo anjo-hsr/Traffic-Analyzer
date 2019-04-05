@@ -1,4 +1,4 @@
-<form>
+<form stylesheet="customStyle.css">
   <label>Overview</label>
   <search id="base_search">
     <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
@@ -30,11 +30,11 @@
       <change>
         <condition value="in">
           <set token="directionHeader">sources</set>
-          <set token="searchString">source="capture-2019-04-03_09-59-38-UTC-enriched.csv" ip_dst=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</set>
+          <set token="searchString">$source_token$ ip_dst=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</set>
         </condition>
         <condition value="out">
           <set token="directionHeader">destination</set>
-          <set token="searchString">source="capture-2019-04-03_09-59-38-UTC-enriched.csv" ip_src=$ip$ | stats sum(linecount) as "# of packages" by dst_fqdn | sort $limit$ -num("# of packages")</set>
+          <set token="searchString">$source_token$ ip_src=$ip$ | stats sum(linecount) as "# of packages" by dst_fqdn | sort $limit$ -num("# of packages")</set>
         </condition>
       </change>
     </input>
@@ -57,20 +57,4 @@
       </table>
     </panel>
   </row>
-  <row depends="noshow">
-     <html>
-       <style>
-         .input-multiselect {
-           min-width: 350px !important;
-           width: 350px !important;
-           max-width: 350px !important;
-         }
-         .sc-jVODtj.cpKKED.sc-Rmtcm.fZMhOZ {
-           min-width: 340px !important;
-           width: 340px !important;
-           max-width: 340px !important;
-         }
-       </style>
-     </html>
-   </row>
 </form>

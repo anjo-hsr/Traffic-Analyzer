@@ -36,6 +36,11 @@ function create_tar() {
     echo -e "File traffic_analyzer.tar.gz file created"
 }
 
+function remove_traffic_analyzer() {
+    echo -e "Remove traffic_analyzer from docker container"
+    docker exec splunk bash -c 'sudo /opt/splunk/bin/splunk remove app traffic_analyzer -auth admin:AnJo-HSR'
+}
+
 function update_traffic_analyzer() {
     echo -e "Copy traffic_analyzer.tar.gz to docker container and restart splunk service"
     sleep 5
@@ -64,7 +69,13 @@ case "$1" in
         update_traffic_analyzer
         ;;
 
+    force-update)
+        create_tar
+        remove_traffic_analyzer
+        update_traffic_analyzer
+        ;;
+
     *)
-        echo $"Usage: $0 {start|update}"
+        echo $"Usage: $0 {start|update|force-update}"
         exit 1
 esac
