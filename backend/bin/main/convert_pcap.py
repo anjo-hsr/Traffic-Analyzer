@@ -47,7 +47,7 @@ def test_tshark_linux():
 
 def start_tshark(filename, out_file, program_path):
     arguments = TsharkHelper.get_arguments(filename)
-    subprocess.call([program_path] + arguments, stdout=out_file)
+    subprocess.run([program_path] + arguments, stdout=out_file)
 
 
 def move_csv(old_path, new_path):
