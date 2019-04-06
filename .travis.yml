@@ -38,4 +38,4 @@ jobs:
         - ./app_deployer.sh start
     - stage: sonar
       script:
-        - sonar-scanner
+        - sonar-scanner -Dsonar.branch=${TRAVIS_BRANCH}
