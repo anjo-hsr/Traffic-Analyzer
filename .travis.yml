@@ -15,7 +15,7 @@ services:
 addons:
   sonarcloud:
     token:
-      secure: $SONAR_TOKEN$
+      secure: $SONAR_TOKEN
 
 
 git:
@@ -38,4 +38,4 @@ jobs:
         - ./app_deployer.sh start
     - stage: sonar
       script:
-        - sonar-scanner -Dsonar.branch=${TRAVIS_BRANCH}
+        - sonar-scanner -Dsonar.branch=$TRAVIS_BRANCH
