@@ -1,0 +1,5 @@
+tls_record_version,description
+"0x0300","SSL3"
+"0x0301","TLS 1.0"
+"0x0302","TLS 1.1"
+"0x0303","TLS 1.2"
