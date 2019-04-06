@@ -3,7 +3,6 @@ import re
 
 from os import path, walk
 
-
 from main.helpers.Environment import Environment
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
@@ -35,7 +34,7 @@ def loop_through_lines(csv_delimiter, csv_reader, helpers, output_file):
 
 def print_dicts(helpers):
     for helper_key in helpers:
-        helpers[helper_key].print_fqdns()
+        helpers[helper_key].print()
 
 
 def main():
@@ -55,7 +54,8 @@ def run(environment_variables):
 
 
 def is_normal_csv_file(file):
-    return str(file).startswith("capture") and str(file).endswith(".csv") and not str(file).endswith("-enriched.csv")
+    file = str(file).lower()
+    return file.startswith("capture") and file.endswith(".csv") and not file.endswith("-enriched.csv")
 
 
 def create_helpers():
@@ -74,4 +74,5 @@ def enrich_file(dirpath, file, helpers, new_file):
         print_dicts(helpers)
 
 
-main()
+if __name__ == "__main__":
+    main()
