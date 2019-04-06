@@ -31,7 +31,7 @@ jobs:
       script:
         - cd ./backend
         - nosetests -v --with-xcoverage --cover-package=bin --cover-inclusive --cover-xml bin/test/ --cover-erase
-        - ./coverage.xml ./bin/test/
+        - mv ./coverage.xml ./bin/test/
     - stage: build
       script:
         - dos2unix ./app_deployer.sh
