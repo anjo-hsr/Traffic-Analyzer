@@ -18,6 +18,7 @@ class TestEnvironmentMethods(unittest.TestCase):
             "csv_path": path.join("/tmp", "csvs")
         }
 
+    @patch.dict("os.environ", {})
     def test_development_variables(self):
         self.assertEqual(Environment.get_environment(), self.development_variables)
 
