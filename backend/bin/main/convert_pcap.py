@@ -67,7 +67,6 @@ def move_csv(old_path, new_path):
 
 def get_new_filename(filename):
     new_filename = re.sub("^(.*[/\\\\])?(capture-)?(.*)pcap(ng)?$", "\g<1>capture-\g<3>csv", str(filename).lower())
-    print(new_filename)
     return new_filename
 
 
