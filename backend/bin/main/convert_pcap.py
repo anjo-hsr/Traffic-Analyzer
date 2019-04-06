@@ -53,7 +53,7 @@ def test_tshark_linux():
 
 def start_tshark(filename, out_file, program_path):
     arguments = TsharkHelper.get_arguments(filename)
-    subprocess.call([program_path] + arguments, stdout=out_file)
+    subprocess.run([program_path] + arguments, stdout=out_file)
 
 
 def move_csv(old_path, new_path):
@@ -66,7 +66,7 @@ def move_csv(old_path, new_path):
 
 
 def get_new_filename(filename):
-    new_filename = re.sub("pcap(ng)?$", "csv", str(filename).lower())
+    new_filename = re.sub("^(.*[/\\\\])?(capture-)?(.*)pcap(ng)?$", "\g<1>capture-\g<3>csv", str(filename).lower())
     return new_filename
 
 
