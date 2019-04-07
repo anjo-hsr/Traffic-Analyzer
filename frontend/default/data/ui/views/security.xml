@@ -69,7 +69,7 @@
       <table>
         <title>Commonly used SSL/TLS version</title>
         <search>
-          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by tls_version  | join tls_version [ search source=tls-versions.csv ] | table tls_version, description, "# of streams" | rename tls_version as "Version", description as Description</query>
+          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by tls_record_version  | join tls_record_version [ search source=tls-versions.csv ] | table tls_record_version, description, "# of streams" | rename tls_record_version as "Version", description as Description</query>
         </search>
       </table>
     </panel>
