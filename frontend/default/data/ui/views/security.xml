@@ -61,7 +61,15 @@
       <table>
         <title>Commonly used cipher suites</title>
         <search>
-          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by cipher_suite  | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, description, recommended, "# of streams" | rename cipher_suite as "Nr.", description as Description, recommended as Recommended</query>
+          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by cipher_suite  | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, description, recommended, "# of streams" | rename cipher_suite as "Nr.", description as Description, recommended as Recommended | sort "# of streams" desc</query>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Commonly used SSL/TLS version</title>
+        <search>
+          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by tls_record_version  | join tls_record_version [search source="/tmp/csv/tls-versions.csv"] | table tls_record_version, description, "# of streams" | rename tls_record_version as "Version", description as Description | sort "# of streams" desc</query>
         </search>
       </table>
     </panel>
