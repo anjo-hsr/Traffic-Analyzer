@@ -42,8 +42,9 @@ class Locator:
     def locate_ip(self, ip_addr):
         search_url = "https://geoip-db.com/json/{}".format(ip_addr)
         response = requests.get(search_url)
-        response_json = json.loads(response.content)
+        response_json = json.loads(response.content.decode("utf-8"))
         lat_long = [response_json["latitude"], response_json["longitude"]]
+
         return lat_long
 
     def locate(self, dst_src):
