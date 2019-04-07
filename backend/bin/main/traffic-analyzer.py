@@ -21,7 +21,7 @@ def run():
 
 def main():
     method = sys.argv[1]
-    print(method)
+    
     if method == "convert":
         convert()
     elif method == "enrich":
