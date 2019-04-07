@@ -7,7 +7,7 @@ from main.helpers.CipherSuites import CipherSuites
 from test.filenames import FileNames
 
 
-class TestAddInformation(unittest.TestCase):
+class TestEnrichCsv(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -56,5 +56,5 @@ class TestAddInformation(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestAddInformation)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrichCsv)
     unittest.TextTestRunner(verbosity=2).run(suite)
