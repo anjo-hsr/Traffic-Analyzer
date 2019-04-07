@@ -1,6 +1,6 @@
 import unittest
 
-import main.add_information as add_information
+import main.enrich_csv as add_information
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
 from main.helpers.CipherSuites import CipherSuites

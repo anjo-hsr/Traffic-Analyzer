@@ -1,7 +1,7 @@
 import sys
 
 import main.convert_pcap as convert_pcap
-import main.add_information as add_information
+import main.enrich_csv as add_information
 
 
 def convert():
