@@ -57,10 +57,6 @@ class TestEnrichCsv(unittest.TestCase):
         keys = [helper_key for helper_key in helpers]
         self.assertListEqual(keys, test_keys)
 
-    def test_is_header(self):
-        self.assertTrue(add_information.is_header(0))
-        self.assertFalse(add_information.is_header(1))
-
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrichCsv)
