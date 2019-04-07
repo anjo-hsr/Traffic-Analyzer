@@ -53,6 +53,7 @@ def run(environment_variables):
             if is_normal_csv_file(file):
                 new_file = re.sub(".csv$", "-enriched.csv", str(file))
                 enrich_file(dirpath, file, helpers, new_file)
+                remove(path.join(dirpath, file))
 
     for (dirpath, dirnames, filenames) in walk(csv_path):
         for file in filenames:
