@@ -39,6 +39,13 @@ class TestEnrichCsv(unittest.TestCase):
         for filename in self.csv_enriched_filenames:
             self.assertFalse(add_information.is_normal_csv_file(filename))
 
+    def test_is_enriched_csv(self):
+        for filename in self.csv_enriched_filenames:
+            self.assertTrue(add_information.is_enriched_csv_file(filename))
+
+        for filename in self.csv_filenames:
+            self.assertFalse(add_information.is_enriched_csv_file(filename))
+
     def test_create_helpers_is_dict(self):
         helpers = add_information.create_helpers()
         self.assertTrue(isinstance(helpers, dict))
