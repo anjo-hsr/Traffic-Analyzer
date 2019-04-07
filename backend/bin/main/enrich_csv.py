@@ -1,4 +1,3 @@
-import csv
 import re
 
 from os import path, walk, remove
