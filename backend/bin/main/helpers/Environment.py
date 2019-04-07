@@ -9,7 +9,7 @@ class Environment:
 
         if is_splunk_server is not None:
             environment_variables["pcap_path"] = path.join("/tmp", "pcaps")
-            environment_variables["csv_path"] = path.join("/tmp", "csvs")
+            environment_variables["csv_path"] = path.join("/tmp", "csv")
 
         else:
             environment_variables["pcap_path"] = path.join("..", "..", "..", "docker", "init_files", "pcaps")
