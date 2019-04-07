@@ -5,10 +5,12 @@ import main.add_information as add_information
 
 
 def convert():
+    print("Start converting")
     convert_pcap.main()
 
 
 def enrich():
+    print("Start enriching")
     add_information.main()
 
 
@@ -16,11 +18,19 @@ def run():
     convert()
     enrich()
 
-switcher = {
-    "convert": convert(),
-    "enrich": enrich(),
-    "run": run()
-}
+
+def main():
+    method = sys.argv[1]
+    print(method)
+    if method == "convert":
+        convert()
+    elif method == "enrich":
+        enrich()
+    elif method == "run":
+        run()
+    else:
+        print("Please use (convert|enrich|run)")
+
 
 if __name__ == "__main__":
-    switcher.get(sys.argv[0])
+    main()
