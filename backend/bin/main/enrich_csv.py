@@ -55,7 +55,12 @@ def run(environment_variables):
 
 def is_normal_csv_file(file):
     file = str(file).lower()
-    return file.startswith("capture") and file.endswith(".csv") and not file.endswith("-enriched.csv")
+    return file.startswith("capture-") and file.endswith(".csv") and not file.endswith("-enriched.csv")
+
+
+def is_enriched_csv_file(file):
+    file = str(file).lower()
+    return file.startswith("capture-") and file.endswith(".csv") and file.endswith("-enriched.csv")
 
 
 def create_helpers():
