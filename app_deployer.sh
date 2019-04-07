@@ -56,8 +56,8 @@ function update_traffic-analyzer() {
 }
 
 function import_csvs() {
-    echo -e "\nImport standard csv files from ./docker/init_files/csv"
-    docker exec ${containerName} bash -c 'for csv in /tmp/csv/*.csv; do sudo /opt/splunk/bin/splunk add oneshot "$csv" -auth admin:AnJo-HSR; done'
+    echo -e "\nImport standard csv files from ./docker/init_files/csvs"
+    docker exec ${containerName} bash -c 'for csv in /tmp/csvs/*.csv; do sudo /opt/splunk/bin/splunk add oneshot "$csv" -auth admin:AnJo-HSR; done'
 }
 
 containerName="splunk_traffic-analyzer"
