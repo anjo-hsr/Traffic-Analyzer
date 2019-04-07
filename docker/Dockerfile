@@ -16,6 +16,7 @@ RUN sudo apt install tshark -y
 RUN sudo apt install python3 python3-pip -y
 
 
+ENV PYTHONPATH "/opt/splunk/etc/apps/traffic-analyzer/bin"
 ENV PORT $PORT
 ENV SPLUNK_PASSWORD $SPLUNK_PASSWORD
 ENV SPLUNK_START_ARGS $SPLUNK_START_ARGS

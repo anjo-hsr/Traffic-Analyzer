@@ -19,7 +19,7 @@ class CipherSuites:
         return '""'
 
     def print(self):
-        print("Print out for all {} stream to cipher suites entries".format(self.stream_to_suites.__len__()))
+        print("Print out for all {} stream to cipher suites entries".format(len(self.stream_to_suites)))
         for location_entry in self.stream_to_suites:
             print("{} --> {}".format(location_entry, self.stream_to_suites[location_entry]))
 
