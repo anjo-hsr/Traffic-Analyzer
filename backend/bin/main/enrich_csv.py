@@ -2,6 +2,7 @@ import csv
 import re
 
 from os import path, walk, remove, rename
+from shutil import move
 
 from main.helpers.Environment import Environment
 from main.helpers.Locator import Locator
@@ -69,7 +70,7 @@ def move_csv(old_path, new_path):
     except OSError:
         pass
 
-    rename(old_path, new_path)
+    move(old_path, new_path)
 
 
 def is_normal_csv_file(file):
