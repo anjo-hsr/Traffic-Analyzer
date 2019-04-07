@@ -1,10 +1,26 @@
+import sys
+
 import main.convert_pcap as convert_pcap
+import main.add_information as add_information
 
-from main.helpers.Environment import Environment
+
+def convert():
+    convert_pcap.main()
 
 
-def main():
-    convert_pcap.run(Environment.get_environment())
+def enrich():
+    add_information.main()
 
-    # Current bug: Not waiting for tshark to be finished.
-    # add_information.main()
+
+def run():
+    convert()
+    enrich()
+
+switcher = {
+    "convert": convert(),
+    "enrich": enrich(),
+    "run": run()
+}
+
+if __name__ == "__main__":
+    switcher.get(sys.argv[0])
