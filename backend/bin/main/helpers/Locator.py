@@ -13,7 +13,7 @@ class Locator:
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
     def print(self):
-        print("Print out for all {} location entries".format(self.locations.__len__()))
+        print("Print out for all {} location entries".format(len(self.locations)))
         for location_entry in self.locations:
             print("{} --> {}".format(location_entry, self.locations[location_entry]))
 
