@@ -1,14 +1,13 @@
 version: "3.7"
 
 services:
-  deployment:
+  image:
     container_name: "${CONTAINER_NAME}"
     build:
       context: "./${DEPLOYMENT_FOLDER}"
       args:
         PORT: $WEB_PORT
         INIT_DIR: $INIT_DIR
-        CONFIG_DIR: $CONFIG_DIR
         SPLUNK_PASSWORD: $SPLUNK_PASSWORD
         SPLUNK_START_ARGS: $SPLUNK_START_ARGS
     restart: $RESTART_NODE
