@@ -45,7 +45,7 @@ def test_tshark_windows():
 
 
 def test_tshark_linux():
-    if os.path.isfile("tshark"):
+    if os.path.isfile("/usr/bin/tshark"):
         return "tshark"
 
     return None
