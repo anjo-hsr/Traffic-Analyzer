@@ -1,4 +1,4 @@
-tls_record_version,description
+tls.record.version,description
 "0x00000300","SSL3"
 "0x00000301","TLS 1.0"
 "0x00000302","TLS 1.1"
