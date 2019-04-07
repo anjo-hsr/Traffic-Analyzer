@@ -45,7 +45,7 @@ class TestLocatorMethods(unittest.TestCase):
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_print_empty_locations(self, mock_stdout):
-        print_text = "Print out for all {} location entries\n\n\n\n".format(self.locator.locations.__len__())
+        print_text = "Print out for all {} location entries\n\n\n\n".format(len(self.locator.locations))
         self.locator.print()
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
@@ -53,7 +53,7 @@ class TestLocatorMethods(unittest.TestCase):
     def test_print_full_locations(self, mock_stdout):
         self.locator.set_entry(self.private_ip_address, self.empty_location)
         print_text = "Print out for all {} location entries\n{} --> {}\n\n\n\n" \
-            .format(self.locator.locations.__len__(), self.private_ip_address, self.empty_location)
+            .format(len(self.locator.locations), self.private_ip_address, self.empty_location)
 
         self.locator.print()
         self.assertEqual(mock_stdout.getvalue(), print_text)
