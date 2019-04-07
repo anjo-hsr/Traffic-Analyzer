@@ -11,12 +11,9 @@ EXPOSE $PORT
 RUN sudo mkdir -p $INIT_DIR
 ADD init_files $INIT_DIR
 
-RUN sudo mkdir -p $CONFIG_DIR
-ADD config $CONFIG_DIR
-
 RUN sudo apt update
 RUN sudo apt install tshark -y
-RUN sudo apt install python3 -y
+RUN sudo apt install python3 python3-pip -y
 
 
 ENV PORT $PORT
