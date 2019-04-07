@@ -1,6 +1,6 @@
 <form stylesheet="customStyle.css">
   <label>Protocols</label>
-    <fieldset submitButton="false" autoRun="true">
+  <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
       <default>capture-*</default>
@@ -20,4 +20,15 @@
       </search>
     </input>
   </fieldset>
+  <row>
+    <panel>
+      <title>Protocols by packets</title>
+      <chart>
+        <search>
+          <query>source="capture-*" | table frame_time, ip_proto | join ip_proto [search source="/tmp/csv/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol | stats count by Keyword | rename count as packets</query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
 </form>
