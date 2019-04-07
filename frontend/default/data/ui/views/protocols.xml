@@ -30,5 +30,14 @@
         <option name="charting.chart">pie</option>
       </chart>
     </panel>
+    <panel>
+      <title>Protocols by packets</title>
+      <chart>
+        <search>
+          <query>source="capture-*" | table frame_time, ip_proto, frame_cap_len | join ip_proto [search source="/tmp/csv/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len | stats sum(frame_cap_len) as "traffic size" by Keyword</query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
   </row>
 </form>
