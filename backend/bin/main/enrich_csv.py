@@ -1,7 +1,7 @@
 import csv
 import re
 
-from os import path, walk
+from os import path, walk, remove, rename
 
 from main.helpers.Environment import Environment
 from main.helpers.Locator import Locator
@@ -43,6 +43,7 @@ def main():
 
 def run(environment_variables):
     csv_path = environment_variables["csv_path"]
+    csv_enriched_path = environment_variables["csv_enriched_path"]
 
     for (dirpath, dirnames, filenames) in walk(csv_path):
         for file in filenames:
@@ -51,6 +52,24 @@ def run(environment_variables):
             if is_normal_csv_file(file):
                 new_file = re.sub(".csv$", "-enriched.csv", str(file))
                 enrich_file(dirpath, file, helpers, new_file)
+
+    for (dirpath, dirnames, filenames) in walk(csv_path):
+        for file in filenames:
+            if is_enriched_csv_file(file):
+                print(file)
+                move_csv(
+                    path.join(dirpath, file),
+                    path.join(csv_enriched_path, file)
+                )
+
+
+def move_csv(old_path, new_path):
+    try:
+        remove(new_path)
+    except OSError:
+        pass
+
+    rename(old_path, new_path)
 
 
 def is_normal_csv_file(file):
