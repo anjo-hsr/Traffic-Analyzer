@@ -40,4 +40,19 @@
       </chart>
     </panel>
   </row>
+  <row>
+    <panel>
+      <title>Protokolle über Zeit</title>
+      <chart>
+        <search>
+          <query> äsource_token$ | join type=left ip_proto [search source="/tmp/csv/protocol-numbers.csv" | rename Decimal as ip_proto] | timechart span=1m count by ip_proto usenull=f | rename VALUE as Other</query>
+        </search>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+      </chart>
+    </panel>
+  </row>
 </form>
