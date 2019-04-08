@@ -37,6 +37,15 @@ class TestGetMacMethods(unittest.TestCase):
 
         remove(test_file_path)
 
+    def test_move_file(self):
+        source_path = path.join(".", "files", "expected", "mini_pcap.csv")
+        destination_path = path.join(".", "files", "expected", "mini_pcap-moved.csv")
+        self.assertTrue(path.isfile(source_path))
+        FileHelper.move_file(source_path, destination_path)
+        self.assertTrue(path.isfile(destination_path))
+        FileHelper.move_file(destination_path, source_path)
+        self.assertTrue(path.isfile(source_path))
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestGetMacMethods)

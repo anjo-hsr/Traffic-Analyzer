@@ -1,7 +1,6 @@
 import re
 
 from os import path, walk, remove
-from shutil import move
 
 import main.helpers.FileHelper as FileHelper
 
@@ -52,19 +51,10 @@ def run(environment_variables):
         for file in filenames:
             if is_enriched_csv_file(file):
                 print(file)
-                move_csv(
+                FileHelper.move_file(
                     path.join(dirpath, file),
                     path.join(csv_enriched_path, file)
                 )
-
-
-def move_csv(old_path, new_path):
-    try:
-        remove(new_path)
-    except OSError:
-        pass
-
-    move(old_path, new_path)
 
 
 def is_normal_csv_file(file):
