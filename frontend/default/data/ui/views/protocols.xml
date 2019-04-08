@@ -25,7 +25,7 @@
       <title>Protocols by packets</title>
       <chart>
         <search>
-          <query> $source_token$ | table frame_time, ip_proto | join ip_proto [search source="/tmp/csv/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol | stats count by Keyword | rename count as packets</query>
+          <query> $source_token$ | table frame_time, ip_proto | join ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol | stats count by Keyword | rename count as packets</query>
         </search>
         <option name="charting.chart">pie</option>
       </chart>
@@ -34,7 +34,7 @@
       <title>Protocols by packets</title>
       <chart>
         <search>
-          <query> $source_token$ | table frame_time, ip_proto, frame_cap_len | join ip_proto [search source="/tmp/csv/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len | stats sum(frame_cap_len) as "traffic size" by Keyword</query>
+          <query> $source_token$ | table frame_time, ip_proto, frame_cap_len | join ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len | stats sum(frame_cap_len) as "traffic size" by Keyword</query>
         </search>
         <option name="charting.chart">pie</option>
       </chart>
@@ -45,7 +45,7 @@
       <title>Protokolle über Zeit</title>
       <chart>
         <search>
-          <query> $source_token$ | join type=left ip_proto [search source="/tmp/csv/protocol-numbers.csv" | rename Decimal as ip_proto] | timechart span=1m count by ip_proto usenull=f | rename VALUE as Other</query>
+          <query> $source_token$ | join type=left ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | timechart span=1m count by ip_proto usenull=f | rename VALUE as Other</query>
         </search>
         <option name="charting.chart">area</option>
         <option name="charting.chart.nullValueMode">connect</option>
