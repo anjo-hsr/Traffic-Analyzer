@@ -13,7 +13,7 @@ class Locator:
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
     def print(self):
-        print("Print out for all {} location entries".format(self.locations.__len__()))
+        print("Print out for all {} location entries".format(len(self.locations)))
         for location_entry in self.locations:
             print("{} --> {}".format(location_entry, self.locations[location_entry]))
 
@@ -40,10 +40,12 @@ class Locator:
             pass
 
     def locate_ip(self, ip_addr):
-        search_url = "https://geoip-db.com/json/{}".format(ip_addr)
+        search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
         response = requests.get(search_url)
-        response_json = json.loads(response.content)
-        lat_long = [response_json["latitude"], response_json["longitude"]]
+        response_json = json.loads(response.content.decode("utf-8"))
+        data = response_json["data"]["geo"]
+        lat_long = [data["latitude"], data["longitude"]]
+
         return lat_long
 
     def locate(self, dst_src):

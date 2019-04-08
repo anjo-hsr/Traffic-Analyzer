@@ -52,12 +52,18 @@ function update_traffic-analyzer() {
     sleep 5
     docker cp ./docker/init_files/traffic-analyzer/traffic-analyzer.tar.gz ${containerName}:/tmp/traffic-analyzer/
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk install app /tmp/traffic-analyzer/traffic-analyzer.tar.gz -auth admin:AnJo-HSR -update 1'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type d -exec sudo chmod 755 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
+
+    #Must be done till tshark is updated to version 3.0.0 for debian
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type f -exec sed -i 's/tls./ssl./g' {} +'
+
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk restart splunkd'
 }
 
 function import_csvs() {
-    echo -e "\nImport standard csv files from ./docker/init_files/csv"
-    docker exec ${containerName} bash -c 'for csv in /tmp/csv/*.csv; do sudo /opt/splunk/bin/splunk add oneshot "$csv" -auth admin:AnJo-HSR; done'
+    echo -e "\nImport standard csv files from ./docker/init_files/csvs"
+    docker exec ${containerName} bash -c 'for csv in /tmp/csvs/*.csv; do sudo /opt/splunk/bin/splunk add oneshot "$csv" -auth admin:AnJo-HSR; done'
 }
 
 containerName="splunk_traffic-analyzer"

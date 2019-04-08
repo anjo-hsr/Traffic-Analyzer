@@ -32,12 +32,19 @@ class TestCombinerMethods(unittest.TestCase):
 
         fqdns_string = "{},{}".format(self.fqdns[self.destination], self.fqdns[self.source])
         locations_string = "{},{}".format(self.locations[self.destination], self.locations[self.source])
-        combined_line = '{},{},{}'.format(row, fqdns_string, locations_string)
-        self.assertEqual(Combiner.combine_fields([row, fqdns_string, locations_string]), combined_line)
+        combined_line_without_quotes = '{},{},{}'.format(row, fqdns_string, locations_string)
+        combined_line_with_quotes = '"{}","{}","{}"'.format(row, fqdns_string, locations_string)
+        self.assertEqual(Combiner.combine_fields([row, fqdns_string, locations_string], True), combined_line_with_quotes)
+        self.assertEqual(Combiner.combine_fields([row, fqdns_string, locations_string]), combined_line_without_quotes)
 
     def test_combine_fqdns(self):
         combined_fqdns = '"{}","{}"'.format(self.fqdns[self.destination], self.fqdns[self.source])
         self.assertEqual(Combiner.combine_fqdns(self.fqdns, self.destination, self.source), combined_fqdns)
+
+    def test_combine_default_fields(self):
+        packet = {"ip.dst": "8.8.8.8", "ip.src": "10.0.0.1"}
+        joined_cells = '"8.8.8.8","10.0.0.1"'
+        self.assertEqual(Combiner.join_default_cells(packet), joined_cells)
 
 
 if __name__ == "__main__":

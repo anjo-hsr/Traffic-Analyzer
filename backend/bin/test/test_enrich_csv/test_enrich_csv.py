@@ -1,13 +1,13 @@
 import unittest
 
-import main.add_information as add_information
+import main.enrich_csv as add_information
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
 from main.helpers.CipherSuites import CipherSuites
 from test.filenames import FileNames
 
 
-class TestAddInformation(unittest.TestCase):
+class TestEnrichCsv(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -39,6 +39,13 @@ class TestAddInformation(unittest.TestCase):
         for filename in self.csv_enriched_filenames:
             self.assertFalse(add_information.is_normal_csv_file(filename))
 
+    def test_is_enriched_csv(self):
+        for filename in self.csv_enriched_filenames:
+            self.assertTrue(add_information.is_enriched_csv_file(filename))
+
+        for filename in self.csv_filenames:
+            self.assertFalse(add_information.is_enriched_csv_file(filename))
+
     def test_create_helpers_is_dict(self):
         helpers = add_information.create_helpers()
         self.assertTrue(isinstance(helpers, dict))
@@ -50,11 +57,7 @@ class TestAddInformation(unittest.TestCase):
         keys = [helper_key for helper_key in helpers]
         self.assertListEqual(keys, test_keys)
 
-    def test_is_header(self):
-        self.assertTrue(add_information.is_header(0))
-        self.assertFalse(add_information.is_header(1))
-
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestAddInformation)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrichCsv)
     unittest.TextTestRunner(verbosity=2).run(suite)
