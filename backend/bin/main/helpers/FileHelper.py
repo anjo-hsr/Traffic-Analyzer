@@ -22,6 +22,13 @@ def get_csv_dict_reader(csv_file):
     return DictReader(csv_file, delimiter=',')
 
 
+def write_download_file(write_row, csv_file, output_file, header):
+    write_line(output_file, header)
+    csv_reader = get_csv_dict_reader(csv_file)
+    for row in csv_reader:
+        write_row(output_file, row)
+
+
 def move_file(old_path, new_path):
     try:
         remove(new_path)
