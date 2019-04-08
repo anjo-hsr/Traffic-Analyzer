@@ -64,13 +64,6 @@ class TestGetMacMethods(unittest.TestCase):
         self.assertFalse(path.isfile(source_path))
         self.assertFalse(path.isfile(destination_path))
 
-    def test_csv_filenames(self):
-        for filename in self.csv_filenames:
-            self.assertTrue(FileHelper.is_normal_csv_file(filename))
-
-        for filename in self.pcap_filenames_with_prefix:
-            self.assertFalse(FileHelper.is_normal_csv_file(filename))
-
     def test_pcap_pcapng_filenames(self):
         for filename in self.pcap_filenames_with_prefix:
             self.assertTrue(FileHelper.is_pcap_file(filename))
