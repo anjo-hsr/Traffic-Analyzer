@@ -18,6 +18,20 @@ class TestGetMacMethods(unittest.TestCase):
         cls.pcap_filenames_with_prefix = filenames["pcap_filenames_with_prefix"]
         cls.pcapng_filenames_with_prefix = filenames["pcapng_filenames_with_prefix"]
 
+    def test_get_dict_reader(self):
+        header1, header2 = "mac.vendor.part", "vendor"
+        value1, value2 = "3c:d9:2b", "Hewlett Packard"
+
+        csv_file = '{},{}\n{},"{}"'.format(header1, header2, value1, value2).splitlines()
+        dict_reader = FileHelper.get_csv_dict_reader(csv_file)
+
+        field_names = [header1, header2]
+        self.assertEqual(dict_reader.fieldnames, field_names)
+
+        for row in dict_reader:
+            self.assertEqual(row[header1], value1)
+            self.assertEqual(row[header2], value2)
+
     def test_download_and_remove(self):
         filename = "README.md"
         self.assertFalse(path.isfile(filename))
