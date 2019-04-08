@@ -11,12 +11,14 @@ class TestEnvironmentMethods(unittest.TestCase):
     def setUpClass(cls):
         cls.development_variables = {
             "pcap_path": path.join("..", "..", "..", "docker", "init_files", "pcaps"),
-            "csv_path": path.join("..", "files")
+            "csv_path": path.join("..", "files"),
+            "csv_enriched_path": path.join("..", "files")
         }
 
         cls.production_variables = {
             "pcap_path": path.join("/tmp", "pcaps"),
-            "csv_path": path.join("/tmp", "csvs")
+            "csv_path": path.join("/tmp", "csvs"),
+            "csv_enriched_path": path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "lookups")
         }
 
     @patch.dict("os.environ", {})

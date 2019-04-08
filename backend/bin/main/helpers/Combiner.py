@@ -25,8 +25,8 @@ class Combiner:
         return ",".join("{}".format(field) for field in fields)
 
     @staticmethod
-    def join_default_cells(packet, csv_delimiter):
-        joined_default_cells = csv_delimiter.join('"{}"'.format(packet[cell]) for cell in packet)
+    def join_default_cells(packet):
+        joined_default_cells = Combiner.delimiter.join('"{}"'.format(packet[cell]) for cell in packet)
         return joined_default_cells
 
     @staticmethod

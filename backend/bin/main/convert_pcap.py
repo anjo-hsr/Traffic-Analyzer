@@ -3,6 +3,7 @@ import platform
 import re
 import subprocess
 
+import main.helpers.FileHelper as FileHelper
 import main.helpers.Tshark as TsharkHelper
 
 from main.helpers.Environment import Environment
@@ -56,15 +57,6 @@ def start_tshark(filename, out_file, program_path):
     subprocess.run([program_path] + arguments, stdout=out_file)
 
 
-def move_csv(old_path, new_path):
-    try:
-        os.remove(new_path)
-    except OSError:
-        pass
-
-    os.rename(old_path, new_path)
-
-
 def get_new_filename(filename):
     new_filename = re.sub("^(.*[/\\\\])?(capture-)?(.*)pcap(ng)?$", "\g<1>capture-\g<3>csv", str(filename).lower())
     return new_filename
@@ -99,7 +91,7 @@ def run(environment_variables):
     for (dirpath, dirnames, filenames) in os.walk(pcap_path):
         for file in filenames:
             if is_csv_file(file):
-                move_csv(os.path.join(dirpath, file), os.path.join(csv_path, file))
+                FileHelper.move_file(os.path.join(dirpath, file), os.path.join(csv_path, file))
 
 
 if __name__ == "__main__":
