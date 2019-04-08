@@ -1,6 +1,7 @@
 <nav search_view="search" color="#3c444c">
   <!-- Use the collection tag to create a list of items -->
   <view name="overview" default="true"  />
+  <view name="protocols" />
   <view name="security" />
   <view name="locations" />
 </nav>
