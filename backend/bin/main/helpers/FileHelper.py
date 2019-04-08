@@ -40,3 +40,17 @@ def move_file(old_path, new_path):
 
 def remove_file(file_path):
     remove(file_path)
+
+
+def is_pcap_file(file):
+    return str(file).lower().endswith(".pcap") or str(file).lower().endswith(".pcapng")
+
+
+def is_normal_csv_file(file):
+    file = str(file).lower()
+    return file.startswith("capture-") and file.endswith(".csv") and not file.endswith("-enriched.csv")
+
+
+def is_enriched_csv_file(file):
+    file = str(file).lower()
+    return file.startswith("capture-") and file.endswith(".csv") and file.endswith("-enriched.csv")

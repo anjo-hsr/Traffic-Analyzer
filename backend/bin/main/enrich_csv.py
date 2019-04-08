@@ -30,6 +30,10 @@ def print_dicts(helpers):
         helpers[helper_key].print()
 
 
+def create_helpers():
+    return {"locator": Locator(), "name_resolver": NameResolver(), "cipher_suites": CipherSuites()}
+
+
 def main():
     run(Environment.get_environment())
 
@@ -42,33 +46,18 @@ def run(environment_variables):
         for file in filenames:
             helpers = create_helpers()
 
-            if is_normal_csv_file(file):
+            if FileHelper.is_normal_csv_file(file):
                 new_file = re.sub(".csv$", "-enriched.csv", str(file))
                 enrich_file(dirpath, file, helpers, new_file)
                 remove(path.join(dirpath, file))
 
     for (dirpath, dirnames, filenames) in walk(csv_path):
         for file in filenames:
-            if is_enriched_csv_file(file):
-                print(file)
+            if FileHelper.is_enriched_csv_file(file):
                 FileHelper.move_file(
                     path.join(dirpath, file),
                     path.join(csv_enriched_path, file)
                 )
-
-
-def is_normal_csv_file(file):
-    file = str(file).lower()
-    return file.startswith("capture-") and file.endswith(".csv") and not file.endswith("-enriched.csv")
-
-
-def is_enriched_csv_file(file):
-    file = str(file).lower()
-    return file.startswith("capture-") and file.endswith(".csv") and file.endswith("-enriched.csv")
-
-
-def create_helpers():
-    return {"locator": Locator(), "name_resolver": NameResolver(), "cipher_suites": CipherSuites()}
 
 
 def enrich_file(dirpath, file, helpers, new_file):

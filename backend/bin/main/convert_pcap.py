@@ -67,14 +67,6 @@ def print_error():
     return
 
 
-def is_pcap_file(file):
-    return str(file).lower().endswith(".pcap") or str(file).lower().endswith(".pcapng")
-
-
-def is_csv_file(file):
-    return str(file).lower().endswith(".csv")
-
-
 def main():
     run(Environment.get_environment())
 
@@ -85,13 +77,16 @@ def run(environment_variables):
 
     for (dirpath, dirnames, filenames) in os.walk(pcap_path):
         for file in filenames:
-            if is_pcap_file(file):
+            if FileHelper.is_pcap_file(file):
                 run_thark(os.path.join(dirpath, file))
 
     for (dirpath, dirnames, filenames) in os.walk(pcap_path):
         for file in filenames:
-            if is_csv_file(file):
-                FileHelper.move_file(os.path.join(dirpath, file), os.path.join(csv_path, file))
+            if FileHelper.is_normal_csv_file(file):
+                FileHelper.move_file(
+                    os.path.join(dirpath, file),
+                    os.path.join(csv_path, file)
+                )
 
 
 if __name__ == "__main__":
