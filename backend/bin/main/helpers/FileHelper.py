@@ -23,6 +23,9 @@ def get_csv_dict_reader(csv_file):
 
 
 def move_file(old_path, new_path):
+    if old_path == new_path:
+        return
+
     try:
         remove(new_path)
     except OSError:
