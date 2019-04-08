@@ -1,7 +1,8 @@
-import os
 import platform
 import re
 import subprocess
+
+from os import path, walk
 
 import main.helpers.FileHelper as FileHelper
 import main.helpers.Tshark as TsharkHelper
@@ -36,17 +37,17 @@ def detect_platform():
 def test_tshark_windows():
     windows_defaults = TsharkHelper.get_windows_defaults()
 
-    if os.path.isfile(windows_defaults["x86"]):
+    if path.isfile(windows_defaults["x86"]):
         return windows_defaults["x86"]
 
-    elif os.path.isfile(windows_defaults["x64"]):
+    elif path.isfile(windows_defaults["x64"]):
         return windows_defaults["x64"]
 
     return None
 
 
 def test_tshark_linux():
-    if os.path.isfile("/usr/bin/tshark"):
+    if path.isfile("/usr/bin/tshark"):
         return "tshark"
 
     return None
@@ -75,17 +76,17 @@ def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
     csv_path = environment_variables["csv_path"]
 
-    for (dirpath, dirnames, filenames) in os.walk(pcap_path):
+    for (dirpath, dirnames, filenames) in walk(pcap_path):
         for file in filenames:
             if FileHelper.is_pcap_file(file):
-                run_thark(os.path.join(dirpath, file))
+                run_thark(path.join(dirpath, file))
 
-    for (dirpath, dirnames, filenames) in os.walk(pcap_path):
+    for (dirpath, dirnames, filenames) in walk(pcap_path):
         for file in filenames:
             if FileHelper.is_normal_csv_file(file):
                 FileHelper.move_file(
-                    os.path.join(dirpath, file),
-                    os.path.join(csv_path, file)
+                    path.join(dirpath, file),
+                    path.join(csv_path, file)
                 )
 
 
