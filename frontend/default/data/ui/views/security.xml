@@ -55,7 +55,7 @@
     </panel>
     <panel>
       <single>
-        <title>Amount of unsecured traffic</title>
+        <title>Amount of unsecured traffic (by packets)</title>
         <search>
           <query> $source_token$ | eval issecure=if(cipher_suite=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
         </search>
