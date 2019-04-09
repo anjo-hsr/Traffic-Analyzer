@@ -18,9 +18,13 @@ def write_row(output_file, row):
 
 
 def main():
+    destination_file = path.join("..", "..", "files", "mac_vendor.csv")
+    run(destination_file)
+
+
+def run(destination_file):
     url = "http://standards-oui.ieee.org/oui/oui.csv"
     filename = FileHelper.download_file(url)
-    destination_file = path.join("..", "..", "files", "mac_vendor.csv")
 
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
