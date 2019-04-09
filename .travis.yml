@@ -42,7 +42,5 @@ jobs:
         - cd ./backend
         - nosetests -v --with-xcoverage --cover-package=bin --cover-inclusive --cover-xml bin/test/ --cover-erase
         - mv ./coverage.xml ./bin/test/
-        - cd ./bin
-        - pylint --rcfile=.pylintrc --exit-zero main > ./test/pylint-stat.txt
-        - cd ../..
+        - cd ..
         - sonar-scanner
