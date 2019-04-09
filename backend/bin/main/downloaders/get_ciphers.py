@@ -35,13 +35,8 @@ def main():
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
             open(destination_file, mode='w', encoding='utf-8') as output_file:
-        csv_reader = FileHelper.get_csv_dict_reader(csv_file)
-
         header = "cipher_suite_number,description,recommended"
-        FileHelper.write_line(output_file, header)
-
-        for row in csv_reader:
-            write_row(output_file, row)
+        FileHelper.write_download_file(write_row, csv_file, output_file, header)
 
     FileHelper.remove_file(filename)
 

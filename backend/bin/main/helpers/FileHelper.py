@@ -22,6 +22,13 @@ def get_csv_dict_reader(csv_file):
     return DictReader(csv_file, delimiter=',')
 
 
+def write_download_file(write_row, csv_file, output_file, header):
+    write_line(output_file, header)
+    csv_reader = get_csv_dict_reader(csv_file)
+    for row in csv_reader:
+        write_row(output_file, row)
+
+
 def move_file(old_path, new_path):
     if old_path == new_path:
         return
@@ -36,3 +43,17 @@ def move_file(old_path, new_path):
 
 def remove_file(file_path):
     remove(file_path)
+
+
+def is_pcap_file(file):
+    return str(file).lower().endswith(".pcap") or str(file).lower().endswith(".pcapng")
+
+
+def is_normal_csv_file(file):
+    file = str(file).lower()
+    return file.startswith("capture-") and file.endswith(".csv") and not file.endswith("-enriched.csv")
+
+
+def is_enriched_csv_file(file):
+    file = str(file).lower()
+    return file.startswith("capture-") and file.endswith(".csv") and file.endswith("-enriched.csv")

@@ -4,8 +4,34 @@ from os import path, remove
 
 import main.helpers.FileHelper as FileHelper
 
+from test.filenames import FileNames
+
 
 class TestGetMacMethods(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        filenames = FileNames.get_filenames()
+        cls.csv_filenames = filenames["csv_filenames"]
+        cls.csv_enriched_filenames = filenames["csv_enriched_filenames"]
+        cls.pcap_filenames_without_prefix = filenames["pcap_filenames_without_prefix"]
+        cls.pcapng_filenames_without_prefix = filenames["pcapng_filenames_without_prefix"]
+        cls.pcap_filenames_with_prefix = filenames["pcap_filenames_with_prefix"]
+        cls.pcapng_filenames_with_prefix = filenames["pcapng_filenames_with_prefix"]
+
+    def test_get_dict_reader(self):
+        header1, header2 = "mac.vendor.part", "vendor"
+        value1, value2 = "3c:d9:2b", "Hewlett Packard"
+
+        csv_file = '{},{}\n{},"{}"'.format(header1, header2, value1, value2).splitlines()
+        dict_reader = FileHelper.get_csv_dict_reader(csv_file)
+
+        field_names = [header1, header2]
+        self.assertEqual(dict_reader.fieldnames, field_names)
+
+        for row in dict_reader:
+            self.assertEqual(row[header1], value1)
+            self.assertEqual(row[header2], value2)
+
     def test_download_and_remove(self):
         filename = "README.md"
         self.assertFalse(path.isfile(filename))
@@ -51,6 +77,30 @@ class TestGetMacMethods(unittest.TestCase):
         FileHelper.remove(source_path)
         self.assertFalse(path.isfile(source_path))
         self.assertFalse(path.isfile(destination_path))
+
+    def test_pcap_pcapng_filenames(self):
+        for filename in self.pcap_filenames_with_prefix:
+            self.assertTrue(FileHelper.is_pcap_file(filename))
+
+        for filename in self.pcapng_filenames_with_prefix:
+            self.assertTrue(FileHelper.is_pcap_file(filename))
+
+        for filename in self.csv_filenames:
+            self.assertFalse(FileHelper.is_pcap_file(filename))
+
+    def test_is_normal_csv(self):
+        for filename in self.csv_filenames:
+            self.assertTrue(FileHelper.is_normal_csv_file(filename))
+
+        for filename in self.csv_enriched_filenames:
+            self.assertFalse(FileHelper.is_normal_csv_file(filename))
+
+    def test_is_enriched_csv(self):
+        for filename in self.csv_enriched_filenames:
+            self.assertTrue(FileHelper.is_enriched_csv_file(filename))
+
+        for filename in self.csv_filenames:
+            self.assertFalse(FileHelper.is_enriched_csv_file(filename))
 
 
 if __name__ == "__main__":
