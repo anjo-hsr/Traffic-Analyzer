@@ -56,7 +56,7 @@ function update_traffic-analyzer() {
     docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
 
     #Must be done till tshark is updated to version 3.0.0 for debian
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type f -exec sed -i 's/tls./ssl./g' {} +'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/lookups -type f -exec sed -i 's/tls\./ssl\./g' {} +'
 
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk restart splunkd'
 }
