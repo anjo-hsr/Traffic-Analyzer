@@ -19,23 +19,6 @@ class TestConvertPcapMethods(unittest.TestCase):
         cls.pcap_filenames_with_prefix = filenames["pcap_filenames_with_prefix"]
         cls.pcapng_filenames_with_prefix = filenames["pcapng_filenames_with_prefix"]
 
-    def test_csv_filenames(self):
-        for filename in self.csv_filenames:
-            self.assertTrue(convert_pcap.is_csv_file(filename))
-
-        for filename in self.pcap_filenames_with_prefix:
-            self.assertFalse(convert_pcap.is_csv_file(filename))
-
-    def test_pcap_pcapng_filenames(self):
-        for filename in self.pcap_filenames_with_prefix:
-            self.assertTrue(convert_pcap.is_pcap_file(filename))
-
-        for filename in self.pcapng_filenames_with_prefix:
-            self.assertTrue(convert_pcap.is_pcap_file(filename))
-
-        for filename in self.csv_filenames:
-            self.assertFalse(convert_pcap.is_pcap_file(filename))
-
     def test_get_new_filename_without_prefix(self):
         new_pcap_filenames = [
             convert_pcap.get_new_filename(filename) for filename in self.pcap_filenames_without_prefix
