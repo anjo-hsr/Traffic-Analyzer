@@ -23,6 +23,22 @@
   <row>
     <panel>
       <single>
+        <title>Total number of tcp streams</title>
+        <search>
+          <query>$source_token$ | table tcp_stream, cipher_suite | stats dc(tcp_stream) as "# of streams"</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
         <title>Number of inadvisable cipher suites used</title>
         <search>
           <query> $source_token$ | dedup cipher_suite | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, recommended | stats count as amount by recommended | where recommended="N" | table amount | appendpipe [stats count | where count=0]</query>
