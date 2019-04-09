@@ -18,7 +18,7 @@ def download():
     destination_cipher_csv = path.join("..", "files", "cipher_suites.csv")
     get_ciphers.run(destination_cipher_csv)
 
-    destination_mac_csv = path.join("..", "files", "cipher_suites.csv")
+    destination_mac_csv = path.join("..", "files", "mac_vendor.csv")
     get_mac.run(destination_mac_csv)
 
 
