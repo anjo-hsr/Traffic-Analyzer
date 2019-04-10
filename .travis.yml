@@ -31,7 +31,7 @@ jobs:
     - stage: test
       script:
         - cd ./backend
-        - nosetests -v --with-xcoverage --cover-package=bin --cover-inclusive --cover-xml bin/test/ --cover-erase
+        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml-file=test/nosetests-coverage.xml
         - mv ./coverage.xml ./bin/test/
     - stage: build
       script:
