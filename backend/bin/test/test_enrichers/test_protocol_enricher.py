@@ -20,6 +20,14 @@ class TestTlsEnricherMethods(unittest.TestCase):
         for protocol in self.protocols:
             self.assertEqual(protocol_enricher.get_protocol(self.protocols[protocol]), protocol)
 
+    def test_protocols_set(self):
+        protocol_enricher = ProtocolEnricher()
+        for protocol in self.protocols:
+            protocol_enricher.get_protocol(self.protocols[protocol])
+
+        expected_protocols = set([protocol for protocol in self.protocols if protocol != ""])
+        self.assertSetEqual(protocol_enricher.protocols, expected_protocols)
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestTlsEnricherMethods)
