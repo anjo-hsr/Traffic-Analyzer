@@ -28,9 +28,13 @@ def write_row(output_file, row):
 
 
 def main():
+    destination_file = path.join("..", "..", "files", "cipher_suites.csv")
+    run(destination_file)
+
+
+def run(destination_file):
     url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
     filename = FileHelper.download_file(url)
-    destination_file = path.join("..", "..", "files", "cipher_suites.csv")
 
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
