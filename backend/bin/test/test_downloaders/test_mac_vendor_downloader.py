@@ -5,7 +5,7 @@ from os import path, remove
 import main.downloaders.mac_vendor_downloader as get_mac
 
 
-class TestGetMacMethods(unittest.TestCase):
+class TestMacVendorDownloaderMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.row_dict = {
@@ -30,5 +30,5 @@ class TestGetMacMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGetMacMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestMacVendorDownloaderMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

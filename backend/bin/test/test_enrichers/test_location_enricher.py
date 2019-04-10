@@ -6,7 +6,7 @@ from unittest.mock import patch
 from main.enrichers.location_enricher import LocationEnricher
 
 
-class TestLocatorMethods(unittest.TestCase):
+class TestLocationEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.public_ip_address = "152.96.36.100"
@@ -63,5 +63,5 @@ class TestLocatorMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestLocatorMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestLocationEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

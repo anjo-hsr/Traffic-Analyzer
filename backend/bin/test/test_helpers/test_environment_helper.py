@@ -1,12 +1,12 @@
 import unittest
 
 from os import path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from main.helpers.environment_helper import EnvironmentHelper
 
 
-class TestEnvironmentMethods(unittest.TestCase):
+class TestEnrivonmentHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.development_variables = {
@@ -31,5 +31,5 @@ class TestEnvironmentMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnvironmentMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrivonmentHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

@@ -5,7 +5,7 @@ from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
 
 
-class TestCombinerMethods(unittest.TestCase):
+class TestCombineHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.locator = LocationEnricher()
@@ -48,5 +48,5 @@ class TestCombinerMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCombinerMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCombineHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

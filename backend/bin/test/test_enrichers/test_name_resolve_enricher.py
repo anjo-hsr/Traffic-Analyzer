@@ -3,7 +3,7 @@ import unittest
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
 
 
-class TestNameResolverMethods(unittest.TestCase):
+class TestNameResolveEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.name_resolver = NameResolverEnricher()
@@ -22,5 +22,5 @@ class TestNameResolverMethods(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestNameResolverMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestNameResolveEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

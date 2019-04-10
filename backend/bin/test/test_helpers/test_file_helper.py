@@ -2,15 +2,15 @@ import unittest
 
 from os import path, remove
 
-import main.helpers.file_helper as FileHelper
+import main.helpers.file_helper as file_helper
 
-from test.filenames import FileNames
+from test.filenames import Filenames
 
 
-class TestGetMacMethods(unittest.TestCase):
+class TestFileHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        filenames = FileNames.get_filenames()
+        filenames = Filenames.get_filenames()
         cls.csv_filenames = filenames["csv_filenames"]
         cls.csv_enriched_filenames = filenames["csv_enriched_filenames"]
         cls.pcap_filenames_without_prefix = filenames["pcap_filenames_without_prefix"]
@@ -23,7 +23,7 @@ class TestGetMacMethods(unittest.TestCase):
         value1, value2 = "3c:d9:2b", "Hewlett Packard"
 
         csv_file = '{},{}\n{},"{}"'.format(header1, header2, value1, value2).splitlines()
-        dict_reader = FileHelper.get_csv_dict_reader(csv_file)
+        dict_reader = file_helper.get_csv_dict_reader(csv_file)
 
         field_names = [header1, header2]
         self.assertEqual(dict_reader.fieldnames, field_names)
@@ -37,11 +37,11 @@ class TestGetMacMethods(unittest.TestCase):
         self.assertFalse(path.isfile(filename))
 
         url = "https://raw.githubusercontent.com/anjo-hsr/Traffic-Analyzer/master/README.md"
-        downloaded_filename = FileHelper.download_file(url)
+        downloaded_filename = file_helper.download_file(url)
         self.assertTrue(downloaded_filename, filename)
         self.assertTrue(path.isfile(filename))
 
-        FileHelper.remove_file(filename)
+        file_helper.remove_file(filename)
         self.assertFalse(path.isfile(filename))
 
     def test_is_header(self):
@@ -50,13 +50,13 @@ class TestGetMacMethods(unittest.TestCase):
             1: False
         }
         for key in line_dict:
-            self.assertEqual(FileHelper.is_header(key), line_dict[key])
+            self.assertEqual(file_helper.is_header(key), line_dict[key])
 
     def test_write_line(self):
         line = "test123"
         test_file_path = path.join(".", "test.csv")
         with open(test_file_path, mode="w") as test_file:
-            FileHelper.write_line(test_file, line)
+            file_helper.write_line(test_file, line)
 
         with open(test_file_path) as test_file:
             self.assertEqual(test_file.read(), line + "\n")
@@ -69,40 +69,40 @@ class TestGetMacMethods(unittest.TestCase):
         open(source_path, 'a').close()
 
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
-        FileHelper.move_file(source_path, destination_path)
+        file_helper.move_file(source_path, destination_path)
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
-        FileHelper.move_file(destination_path, source_path)
+        file_helper.move_file(destination_path, source_path)
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
 
-        FileHelper.remove(source_path)
+        file_helper.remove(source_path)
         self.assertFalse(path.isfile(source_path))
         self.assertFalse(path.isfile(destination_path))
 
     def test_pcap_pcapng_filenames(self):
         for filename in self.pcap_filenames_with_prefix:
-            self.assertTrue(FileHelper.is_pcap_file(filename))
+            self.assertTrue(file_helper.is_pcap_file(filename))
 
         for filename in self.pcapng_filenames_with_prefix:
-            self.assertTrue(FileHelper.is_pcap_file(filename))
+            self.assertTrue(file_helper.is_pcap_file(filename))
 
         for filename in self.csv_filenames:
-            self.assertFalse(FileHelper.is_pcap_file(filename))
+            self.assertFalse(file_helper.is_pcap_file(filename))
 
     def test_is_normal_csv(self):
         for filename in self.csv_filenames:
-            self.assertTrue(FileHelper.is_normal_csv_file(filename))
+            self.assertTrue(file_helper.is_normal_csv_file(filename))
 
         for filename in self.csv_enriched_filenames:
-            self.assertFalse(FileHelper.is_normal_csv_file(filename))
+            self.assertFalse(file_helper.is_normal_csv_file(filename))
 
     def test_is_enriched_csv(self):
         for filename in self.csv_enriched_filenames:
-            self.assertTrue(FileHelper.is_enriched_csv_file(filename))
+            self.assertTrue(file_helper.is_enriched_csv_file(filename))
 
         for filename in self.csv_filenames:
-            self.assertFalse(FileHelper.is_enriched_csv_file(filename))
+            self.assertFalse(file_helper.is_enriched_csv_file(filename))
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGetMacMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestFileHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

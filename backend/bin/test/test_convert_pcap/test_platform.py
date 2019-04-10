@@ -6,7 +6,7 @@ import main.convert_pcap as convert_pcap
 import main.helpers.tshark_helper as TsharkHelper
 
 
-class TestConvertPcapPlatformMethod(unittest.TestCase):
+class TestPlatformMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -39,5 +39,5 @@ class TestConvertPcapPlatformMethod(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestConvertPcapPlatformMethod)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestPlatformMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

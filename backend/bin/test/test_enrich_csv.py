@@ -1,9 +1,9 @@
 import unittest
 
 import main.enrich_csv as add_information
+from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
-from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 
 

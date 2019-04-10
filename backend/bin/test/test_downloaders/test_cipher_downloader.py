@@ -5,7 +5,7 @@ from os import path, remove
 import main.downloaders.cipher_downloader as get_ciphers
 
 
-class TestGetCiphersMethods(unittest.TestCase):
+class TestCipherDownloaderMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.row_dict = {
@@ -51,5 +51,5 @@ class TestGetCiphersMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGetCiphersMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCipherDownloaderMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
