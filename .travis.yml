@@ -9,6 +9,10 @@ language: python
 python:
   - "3.7"
 
+git:
+  quiet: true
+  depth: false
+
 services:
   - docker
 
@@ -17,10 +21,6 @@ addons:
     organization: "anjo-hsr"
     token:
       secure: $SONAR_TOKEN
-
-
-git:
-  quiet: true
 
 before_install:
   - sudo apt-get update
