@@ -12,3 +12,4 @@ class PrintHelper:
         print(text_with_placeholder.format(len(list_variable)))
         print_list = ", ".join(key for key in list_variable)
         print(print_list)
+        print("\n\n")
