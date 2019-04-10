@@ -10,7 +10,7 @@ import main.helpers.Tshark as TsharkHelper
 from main.helpers.Environment import Environment
 
 
-def run_thark(filename):
+def run_tshark(filename):
     new_filename = get_new_filename(filename)
 
     with open(new_filename, "w") as out_file:
@@ -79,7 +79,7 @@ def run(environment_variables):
     for (dirpath, dirnames, filenames) in walk(pcap_path):
         for file in filenames:
             if FileHelper.is_pcap_file(file):
-                run_thark(path.join(dirpath, file))
+                run_tshark(path.join(dirpath, file))
 
     for (dirpath, dirnames, filenames) in walk(pcap_path):
         for file in filenames:
