@@ -1,3 +1,6 @@
+from main.helpers.printer import Printer
+
+
 class TlsEnricher:
 
     def __init__(self):
@@ -23,8 +26,5 @@ class TlsEnricher:
         return '""'
 
     def print(self):
-        print("Print out for all {} stream to tls version entries".format(len(self.stream_to_handshake_version)))
-        for handshake_key in self.stream_to_handshake_version:
-            print("{} --> {}".format(handshake_key, self.stream_to_handshake_version[handshake_key]))
-
-        print("\n\n")
+        print_text = "Print out for all {} stream to tls version entries"
+        Printer.print_dict(self.stream_to_handshake_version, print_text)
