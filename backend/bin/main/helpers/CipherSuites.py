@@ -2,7 +2,7 @@ class CipherSuites:
 
     def __init__(self):
         self.stream_to_suites = {}
-        self.header = "cipher_suite"
+        self.header = "cipher_suite_number"
 
     def get_cipher_suite(self, packet):
         is_client_hello = packet["tls.handshake.ciphersuites"] == "1"
