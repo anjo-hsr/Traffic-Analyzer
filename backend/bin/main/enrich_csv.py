@@ -4,12 +4,12 @@ from os import path, walk, remove
 
 import main.helpers.file_helper as FileHelper
 
-from main.helpers.environment import Environment
-from main.enrichers.locator_enricher import Locator
-from main.enrichers.name_resolver_enricher import NameResolver
-from main.helpers.combiner import Combiner
-from main.enrichers.cipher_suites_enricher import CipherSuites
-from main.enrichers.tls_enricher_enricher import TlsEnricher
+from main.helpers.environment_helper import EnvironmentHelper
+from main.enrichers.location_enricher import LocationEnricher
+from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.helpers.combine_helper import CombineHelper
+from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
+from main.enrichers.tls_enricher import TlsEnricher
 
 
 def loop_through_lines(csv_reader, helpers, output_file):
@@ -17,11 +17,11 @@ def loop_through_lines(csv_reader, helpers, output_file):
         if FileHelper.is_header(index):
             default_header = csv_reader.fieldnames
             helper_headers = [helpers[helper_key].header for helper_key in helpers]
-            line = Combiner.combine_fields(default_header + helper_headers, False)
+            line = CombineHelper.combine_fields(default_header + helper_headers, False)
 
         else:
-            joined_default_cells = Combiner.join_default_cells(packet)
-            line = Combiner.combine_packet_information(joined_default_cells, helpers, packet)
+            joined_default_cells = CombineHelper.join_default_cells(packet)
+            line = CombineHelper.combine_packet_information(joined_default_cells, helpers, packet)
 
         FileHelper.write_line(output_file, line)
 
@@ -33,15 +33,15 @@ def print_dicts(helpers):
 
 def create_helpers():
     return {
-        "locator": Locator(),
-        "name_resolver": NameResolver(),
-        "cipher_suites": CipherSuites(),
+        "locator": LocationEnricher(),
+        "name_resolver": NameResolverEnricher(),
+        "cipher_suites": CipherSuiteEnricher(),
         "tls_ssl_version": TlsEnricher()
     }
 
 
 def main():
-    run(Environment.get_environment())
+    run(EnvironmentHelper.get_environment())
 
 
 def run(environment_variables):

@@ -2,7 +2,7 @@ import unittest
 
 from os import path, remove
 
-import main.downloaders.get_ciphers as get_ciphers
+import main.downloaders.cipher_downloader as get_ciphers
 
 
 class TestGetCiphersMethods(unittest.TestCase):

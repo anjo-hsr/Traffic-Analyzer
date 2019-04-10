@@ -1,4 +1,4 @@
-from main.helpers.printer import Printer
+from main.helpers.print_helper import PrintHelper
 
 
 class TlsEnricher:
@@ -27,4 +27,4 @@ class TlsEnricher:
 
     def print(self):
         print_text = "Print out for all {} stream to tls version entries"
-        Printer.print_dict(self.stream_to_handshake_version, print_text)
+        PrintHelper.print_dict(self.stream_to_handshake_version, print_text)

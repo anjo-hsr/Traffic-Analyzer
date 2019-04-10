@@ -1,7 +1,7 @@
-from main.helpers.printer import Printer
+from main.helpers.print_helper import PrintHelper
 
 
-class CipherSuites:
+class CipherSuiteEnricher:
 
     def __init__(self):
         self.stream_to_suites = {}
@@ -24,4 +24,4 @@ class CipherSuites:
 
     def print(self):
         print_text = "Print out for all {} stream to cipher suites entries"
-        Printer.print_dict(self.stream_to_suites, print_text)
+        PrintHelper.print_dict(self.stream_to_suites, print_text)

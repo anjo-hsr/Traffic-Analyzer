@@ -1,10 +1,10 @@
 import unittest
 
 import main.enrich_csv as add_information
-from main.enrichers.locator_enricher import Locator
-from main.enrichers.name_resolver_enricher import NameResolver
-from main.enrichers.cipher_suites_enricher import CipherSuites
-from main.enrichers.tls_enricher_enricher import TlsEnricher
+from main.enrichers.location_enricher import LocationEnricher
+from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
+from main.enrichers.tls_enricher import TlsEnricher
 
 
 class TestEnrichCsv(unittest.TestCase):
@@ -14,13 +14,13 @@ class TestEnrichCsv(unittest.TestCase):
 
         for key in keys:
             if key == "locator":
-                self.assertTrue(isinstance(helpers[key], Locator))
+                self.assertTrue(isinstance(helpers[key], LocationEnricher))
 
             elif key == "name_resolver":
-                self.assertTrue(isinstance(helpers[key], NameResolver))
+                self.assertTrue(isinstance(helpers[key], NameResolverEnricher))
 
             elif key == "cipher_suites":
-                self.assertTrue(isinstance(helpers[key], CipherSuites))
+                self.assertTrue(isinstance(helpers[key], CipherSuiteEnricher))
 
             elif key == "tls_ssl_version":
                 self.assertTrue(isinstance(helpers[key], TlsEnricher))

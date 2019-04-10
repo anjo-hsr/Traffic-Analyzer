@@ -3,7 +3,7 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-from main.enrichers.locator_enricher import Locator
+from main.enrichers.location_enricher import LocationEnricher
 
 
 class TestLocatorMethods(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestLocatorMethods(unittest.TestCase):
         cls.empty_location = ["", ""]
 
     def setUp(self):
-        self.locator = Locator()
+        self.locator = LocationEnricher()
 
     def assert_location(self, ip_address, location):
         self.locator.get_location(ip_address)

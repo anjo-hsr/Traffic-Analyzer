@@ -3,24 +3,24 @@ import requests
 import socket
 
 from main.helpers.ip_helper import IpHelper
-from main.helpers.limiter import Limiter
-from main.helpers.combiner import Combiner
-from main.helpers.printer import Printer
+from main.helpers.traffic_limit_helper import Traffic_Limit_Helper
+from main.helpers.combine_helper import CombineHelper
+from main.helpers.print_helper import PrintHelper
 
 
-class Locator:
+class LocationEnricher:
     def __init__(self):
         self.locations = dict()
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
     def print(self):
         print_text = "Print out for all {} location entries"
-        Printer.print_dict(self.locations, print_text)
+        PrintHelper.print_dict(self.locations, print_text)
 
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long
 
-    def get_location(self, ip_addr, limiter=Limiter(3, 1)):
+    def get_location(self, ip_addr, limiter=Traffic_Limit_Helper(3, 1)):
         if ip_addr in self.locations:
             return
 
@@ -51,7 +51,7 @@ class Locator:
         source = dst_src["src"]
         self.get_location(destination)
         self.get_location(source)
-        pos_dest = Combiner.combine_lat_long(self.locations, destination)
-        pos_src = Combiner.combine_lat_long(self.locations, source)
+        pos_dest = CombineHelper.combine_lat_long(self.locations, destination)
+        pos_src = CombineHelper.combine_lat_long(self.locations, source)
 
-        return "{1}{0}{2}".format(Combiner.delimiter, pos_dest, pos_src)
+        return "{1}{0}{2}".format(CombineHelper.delimiter, pos_dest, pos_src)

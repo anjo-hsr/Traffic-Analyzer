@@ -5,9 +5,9 @@ import subprocess
 from os import path, walk
 
 import main.helpers.file_helper as FileHelper
-import main.helpers.tshark as TsharkHelper
+import main.helpers.tshark_helper as TsharkHelper
 
-from main.helpers.environment import Environment
+from main.helpers.environment_helper import EnvironmentHelper
 
 
 def run_tshark(filename):
@@ -69,7 +69,7 @@ def print_error():
 
 
 def main():
-    run(Environment.get_environment())
+    run(EnvironmentHelper.get_environment())
 
 
 def run(environment_variables):

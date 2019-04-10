@@ -2,7 +2,7 @@ import unittest
 
 from os import path, remove
 
-import main.downloaders.get_mac as get_mac
+import main.downloaders.mac_vendor_downloader as get_mac
 
 
 class TestGetMacMethods(unittest.TestCase):

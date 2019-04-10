@@ -3,7 +3,7 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-from main.enrichers.cipher_suites_enricher import CipherSuites
+from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 
 
 class TestCipherSuitesMethod(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestCipherSuitesMethod(unittest.TestCase):
                 "tls.handshake.ciphersuite": "",
                 "tcp.stream": 1
             }}
-        cls.cipher_suites = CipherSuites()
+        cls.cipher_suites = CipherSuiteEnricher()
 
     def run_test_packet(self, expected_value, packet):
         if expected_value == "":

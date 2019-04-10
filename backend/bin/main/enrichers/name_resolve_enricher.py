@@ -1,18 +1,18 @@
 import socket
 
-from main.helpers.combiner import Combiner
+from main.helpers.combine_helper import CombineHelper
 from main.helpers.ip_helper import IpHelper
-from main.helpers.printer import Printer
+from main.helpers.print_helper import PrintHelper
 
 
-class NameResolver:
+class NameResolverEnricher:
     def __init__(self):
         self.fqdns = dict()
         self.header = "dst_fqdn,src_fqdn"
 
     def print(self):
         print_text = "Print out for all {} fqdn entries"
-        Printer.print_dict(self.fqdns, print_text)
+        PrintHelper.print_dict(self.fqdns, print_text)
 
     def get_fqdn(self, ip_addr):
         if ip_addr in self.fqdns:
@@ -37,4 +37,4 @@ class NameResolver:
 
         self.get_fqdn(destination)
         self.get_fqdn(source)
-        return Combiner.combine_fqdns(self.fqdns, destination, source)
+        return CombineHelper.combine_fqdns(self.fqdns, destination, source)
