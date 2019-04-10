@@ -11,15 +11,15 @@ class TestCipherSuitesMethod(unittest.TestCase):
     def setUpClass(cls):
         cls.packets = {
             "client_hello": {
-                "tls.handshake.ciphersuites": "1",
+                "tls.handshake.type": "1",
                 "tls.handshake.ciphersuite": "49200",
                 "tcp.stream": 1
             }, "server_hello": {
-                "tls.handshake.ciphersuites": "",
+                "tls.handshake.type": "2",
                 "tls.handshake.ciphersuite": "49200",
                 "tcp.stream": 1
             }, "first_packet": {
-                "tls.handshake.ciphersuites": "",
+                "tls.handshake.type": "",
                 "tls.handshake.ciphersuite": "",
                 "tcp.stream": 1
             }}
