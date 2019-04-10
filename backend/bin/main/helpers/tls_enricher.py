@@ -23,8 +23,8 @@ class TlsEnricher:
         return '""'
 
     def print(self):
-        print("Print out for all {} stream to cipher suites entries".format(len(self.stream_to_handshake_version)))
-        for location_entry in self.stream_to_handshake_version:
-            print("{} --> {}".format(location_entry, self.stream_to_handshake_version[location_entry]))
+        print("Print out for all {} stream to tls version entries".format(len(self.stream_to_handshake_version)))
+        for handshake_key in self.stream_to_handshake_version:
+            print("{} --> {}".format(handshake_key, self.stream_to_handshake_version[handshake_key]))
 
         print("\n\n")
