@@ -2,14 +2,14 @@ import re
 
 from os import path, walk, remove
 
-import main.helpers.FileHelper as FileHelper
+import main.helpers.file_helper as FileHelper
 
-from main.helpers.Environment import Environment
-from main.helpers.Locator import Locator
-from main.helpers.NameResolver import NameResolver
-from main.helpers.Combiner import Combiner
-from main.helpers.CipherSuites import CipherSuites
-from main.helpers.tls_enricher import TlsEnricher
+from main.helpers.environment import Environment
+from main.enrichers.locator_enricher import Locator
+from main.enrichers.name_resolver_enricher import NameResolver
+from main.helpers.combiner import Combiner
+from main.enrichers.cipher_suites_enricher import CipherSuites
+from main.enrichers.tls_enricher_enricher import TlsEnricher
 
 
 def loop_through_lines(csv_reader, helpers, output_file):

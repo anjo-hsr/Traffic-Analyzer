@@ -1,7 +1,7 @@
 from IPy import IP
 
 
-class IPHelper:
+class IpHelper:
 
     @staticmethod
     def is_public_ip(ip_addr):

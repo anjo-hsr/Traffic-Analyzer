@@ -1,7 +1,7 @@
 import socket
 
-from main.helpers.Combiner import Combiner
-from main.helpers.IPHelper import IPHelper
+from main.helpers.combiner import Combiner
+from main.helpers.ip_helper import IpHelper
 from main.helpers.printer import Printer
 
 
@@ -18,7 +18,7 @@ class NameResolver:
         if ip_addr in self.fqdns:
             return
 
-        if ip_addr == "" or not IPHelper.is_public_ip(ip_addr):
+        if ip_addr == "" or not IpHelper.is_public_ip(ip_addr):
             self.set_entry(ip_addr, ip_addr)
             return
 

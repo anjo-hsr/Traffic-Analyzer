@@ -1,10 +1,10 @@
 import unittest
 
 import main.enrich_csv as add_information
-from main.helpers.Locator import Locator
-from main.helpers.NameResolver import NameResolver
-from main.helpers.CipherSuites import CipherSuites
-from main.helpers.tls_enricher import TlsEnricher
+from main.enrichers.locator_enricher import Locator
+from main.enrichers.name_resolver_enricher import NameResolver
+from main.enrichers.cipher_suites_enricher import CipherSuites
+from main.enrichers.tls_enricher_enricher import TlsEnricher
 
 
 class TestEnrichCsv(unittest.TestCase):
