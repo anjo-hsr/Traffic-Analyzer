@@ -3,7 +3,7 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-from main.helpers.Locator import Locator
+from main.enrichers.locator_enricher import Locator
 
 
 class TestLocatorMethods(unittest.TestCase):
