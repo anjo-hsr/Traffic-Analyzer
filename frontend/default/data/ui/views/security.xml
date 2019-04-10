@@ -25,7 +25,7 @@
       <single>
         <title>Total number of tcp streams</title>
         <search>
-          <query>$source_token$ | table tcp_stream, cipher_suite | stats dc(tcp_stream) as "# of streams"</query>
+          <query>$source_token$ | table tcp_stream, cipher_suite_number | stats dc(tcp_stream) as "# of streams"</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -41,7 +41,7 @@
       <single>
         <title>Number of inadvisable cipher suites used</title>
         <search>
-          <query> $source_token$ | dedup cipher_suite | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, recommended | stats count as amount by recommended | where recommended="N" | table amount | appendpipe [stats count | where count=0]</query>
+          <query> $source_token$ | dedup cipher_suite_number | join cipher_suite_number [ search source=cipher_suites.csv ] | table cipher_suite_number, recommended | stats count as amount by recommended | where recommended="N" | table amount | appendpipe [stats count | where count=0]</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -57,7 +57,7 @@
       <single>
         <title>Amount of unsecured traffic (by packets)</title>
         <search>
-          <query> $source_token$ | eval issecure=if(cipher_suite=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
+          <query> $source_token$ | eval issecure=if(cipher_suite_number=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -77,7 +77,7 @@
       <table>
         <title>Commonly used cipher suites</title>
         <search>
-          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by cipher_suite  | join cipher_suite [ search source=cipher_suites.csv | rename cipher_suite_number as cipher_suite] | table cipher_suite, description, recommended, "# of streams" | rename cipher_suite as "Nr.", description as Description, recommended as Recommended | sort "# of streams" desc</query>
+          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by cipher_suite_number  | join cipher_suite_number [ search source=cipher_suites.csv ] | table cipher_suite_number, description, recommended, "# of streams" | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended | sort "# of streams" desc</query>
         </search>
       </table>
     </panel>
