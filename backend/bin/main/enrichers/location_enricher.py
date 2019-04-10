@@ -3,7 +3,7 @@ import requests
 import socket
 
 from main.helpers.ip_helper import IpHelper
-from main.helpers.traffic_limit_helper import Traffic_Limit_Helper
+from main.helpers.traffic_limit_helper import TrafficLimitHelper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.print_helper import PrintHelper
 
@@ -20,7 +20,7 @@ class LocationEnricher:
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long
 
-    def get_location(self, ip_addr, limiter=Traffic_Limit_Helper(3, 1)):
+    def get_location(self, ip_addr, limiter=TrafficLimitHelper(3, 1)):
         if ip_addr in self.locations:
             return
 

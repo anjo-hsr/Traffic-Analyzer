@@ -3,14 +3,14 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 import main.convert_pcap as convert_pcap
-import main.helpers.tshark_helper as TsharkHelper
+import main.helpers.tshark_helper as tshark_helper
 
 
 class TestPlatformMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.windows_defaults = TsharkHelper.get_windows_defaults()
+        cls.windows_defaults = tshark_helper.get_windows_defaults()
 
     @patch("platform.system", MagicMock(return_value="Linux"))
     @patch("os.path.isfile", MagicMock(return_value=True))

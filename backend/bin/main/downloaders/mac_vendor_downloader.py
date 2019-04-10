@@ -2,7 +2,7 @@ import re
 
 from os import path
 
-import main.helpers.file_helper as FileHelper
+import main.helpers.file_helper as file_helper
 
 
 def convert_mac_address(row):
@@ -14,7 +14,7 @@ def convert_mac_address(row):
 def write_row(output_file, row):
     mac_address = convert_mac_address(row)
     line = mac_address + "," + '"{}"'.format(row["Organization Name"])
-    FileHelper.write_line(output_file, line)
+    file_helper.write_line(output_file, line)
 
 
 def main():
@@ -24,15 +24,15 @@ def main():
 
 def run(destination_file):
     url = "http://standards-oui.ieee.org/oui/oui.csv"
-    filename = FileHelper.download_file(url)
+    filename = file_helper.download_file(url)
 
     with \
             open(filename, mode="r", encoding='utf-8') as csv_file, \
             open(destination_file, mode='w', encoding='utf-8') as output_file:
         header = "eth_short,vendor"
-        FileHelper.write_download_file(write_row, csv_file, output_file, header)
+        file_helper.write_download_file(write_row, csv_file, output_file, header)
 
-    FileHelper.remove_file(filename)
+    file_helper.remove_file(filename)
 
 
 if __name__ == "__main__":
