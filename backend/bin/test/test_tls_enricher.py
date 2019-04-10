@@ -6,7 +6,7 @@ from unittest.mock import patch
 from main.helpers.tls_enricher import TlsEnricher
 
 
-class TestCipherSuitesMethod(unittest.TestCase):
+class TestTlsEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.packets_tls1_2 = {
@@ -84,5 +84,5 @@ class TestCipherSuitesMethod(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCipherSuitesMethod)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestTlsEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
