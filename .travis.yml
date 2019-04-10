@@ -45,5 +45,5 @@ jobs:
         - cd ./bin
         - pylint --rcfile=.pylintrc --exit-zero main > ./test/pylint-stat.txt
         - cat ./test/pylint-stat.txt
-        - cd ..
+        - cd ../..
         - sonar-scanner
