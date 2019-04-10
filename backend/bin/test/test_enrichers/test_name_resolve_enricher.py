@@ -1,12 +1,12 @@
 import unittest
 
-from main.enrichers.name_resolver_enricher import NameResolver
+from main.enrichers.name_resolve_enricher import NameResolverEnricher
 
 
-class TestNameResolverMethods(unittest.TestCase):
+class TestNameResolveEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.name_resolver = NameResolver()
+        cls.name_resolver = NameResolverEnricher()
         cls.source_ip_address = "10.0.0.1"
         cls.destination_ip_address = "8.8.8.8"
         cls.destination_fqdn = "google-public-dns-a.google.com"
@@ -22,5 +22,5 @@ class TestNameResolverMethods(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestNameResolverMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestNameResolveEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

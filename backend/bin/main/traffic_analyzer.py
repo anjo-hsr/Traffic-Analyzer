@@ -4,8 +4,8 @@ from os import path
 
 import main.convert_pcap as convert_pcap
 import main.enrich_csv as add_information
-import main.downloaders.get_ciphers as get_ciphers
-import main.downloaders.get_mac as get_mac
+import main.downloaders.cipher_downloader as get_ciphers
+import main.downloaders.mac_vendor_downloader as get_mac
 
 
 def convert():

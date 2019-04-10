@@ -1,7 +1,7 @@
 from os import environ, path
 
 
-class Environment:
+class EnvironmentHelper:
     @staticmethod
     def get_environment():
         is_splunk_server = environ.get("SPLUNK_HOME")

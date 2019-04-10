@@ -3,7 +3,7 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-from main.enrichers.tls_enricher_enricher import TlsEnricher
+from main.enrichers.tls_enricher import TlsEnricher
 
 
 class TestTlsEnricherMethods(unittest.TestCase):

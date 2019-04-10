@@ -1,12 +1,12 @@
 import unittest
 
 from os import path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-from main.helpers.environment import Environment
+from main.helpers.environment_helper import EnvironmentHelper
 
 
-class TestEnvironmentMethods(unittest.TestCase):
+class TestEnrivonmentHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.development_variables = {
@@ -23,13 +23,13 @@ class TestEnvironmentMethods(unittest.TestCase):
 
     @patch.dict("os.environ", {})
     def test_development_variables(self):
-        self.assertEqual(Environment.get_environment(), self.development_variables)
+        self.assertEqual(EnvironmentHelper.get_environment(), self.development_variables)
 
     @patch.dict("os.environ", {"SPLUNK_HOME": "/opt/splunk"})
     def test_production_variables(self):
-        self.assertEqual(Environment.get_environment(), self.production_variables)
+        self.assertEqual(EnvironmentHelper.get_environment(), self.production_variables)
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnvironmentMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrivonmentHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

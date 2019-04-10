@@ -1,9 +1,9 @@
 import unittest
 
-import main.helpers.tshark as Tshark
+import main.helpers.tshark_helper as tshark_helper
 
 
-class TestTsharkMethods(unittest.TestCase):
+class TestTsharkHelperMethods(unittest.TestCase):
     def test_tshark_get_arguments(self):
         filename = "test.pcap"
         args = ["-r", filename, "-T", "fields", "-e", "frame.time", "-e", "frame.cap_len", "-e", "eth.dst", "-e",
@@ -13,9 +13,9 @@ class TestTsharkMethods(unittest.TestCase):
                 "-e", "tls.handshake.extensions.supported_version", "-e", "tls.handshake.ciphersuite", "-e",
                 "tls.handshake.type", "-E", "header=y", "-E", "separator=,", "-E", "quote=d", "-E", "occurrence=f"]
 
-        self.assertEqual(Tshark.get_arguments(filename), args)
+        self.assertEqual(tshark_helper.get_arguments(filename), args)
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestTsharkMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestTsharkHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

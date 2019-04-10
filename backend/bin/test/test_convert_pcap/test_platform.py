@@ -3,14 +3,14 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 import main.convert_pcap as convert_pcap
-import main.helpers.tshark as TsharkHelper
+import main.helpers.tshark_helper as tshark_helper
 
 
-class TestConvertPcapPlatformMethod(unittest.TestCase):
+class TestPlatformMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.windows_defaults = TsharkHelper.get_windows_defaults()
+        cls.windows_defaults = tshark_helper.get_windows_defaults()
 
     @patch("platform.system", MagicMock(return_value="Linux"))
     @patch("os.path.isfile", MagicMock(return_value=True))
@@ -39,5 +39,5 @@ class TestConvertPcapPlatformMethod(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestConvertPcapPlatformMethod)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestPlatformMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
