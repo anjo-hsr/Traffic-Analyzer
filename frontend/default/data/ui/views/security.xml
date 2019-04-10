@@ -25,7 +25,7 @@
       <single>
         <title>Total number of tcp streams</title>
         <search>
-          <query>$source_token$ | table tcp_stream, cipher_suite_number | stats dc(tcp_stream) as "# of streams"</query>
+          <query>$source_token$ | where tcp_stream!="" | table tcp_stream, cipher_suite | stats dc(tcp_stream) as "# of streams"</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
