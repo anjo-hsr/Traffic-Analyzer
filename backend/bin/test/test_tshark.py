@@ -1,6 +1,6 @@
 import unittest
 
-import main.helpers.Tshark as Tshark
+import main.helpers.tshark as Tshark
 
 
 class TestTsharkMethods(unittest.TestCase):

@@ -2,9 +2,9 @@ import json
 import requests
 import socket
 
-from main.helpers.IPHelper import IPHelper
-from main.helpers.Limiter import Limiter
-from main.helpers.Combiner import Combiner
+from main.helpers.ip_helper import IpHelper
+from main.helpers.limiter import Limiter
+from main.helpers.combiner import Combiner
 from main.helpers.printer import Printer
 
 
@@ -24,7 +24,7 @@ class Locator:
         if ip_addr in self.locations:
             return
 
-        if ip_addr == "" or not IPHelper.is_public_ip(ip_addr):
+        if ip_addr == "" or not IpHelper.is_public_ip(ip_addr):
             lat_long = ["", ""]
             self.set_entry(ip_addr, lat_long)
             return

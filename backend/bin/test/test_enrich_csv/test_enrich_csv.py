@@ -2,8 +2,8 @@ import unittest
 
 import main.enrich_csv as add_information
 from main.helpers.Locator import Locator
-from main.helpers.NameResolver import NameResolver
-from main.helpers.CipherSuites import CipherSuites
+from main.helpers.name_resolver import NameResolver
+from main.helpers.cipher_suites import CipherSuites
 from main.helpers.tls_enricher import TlsEnricher
 
 

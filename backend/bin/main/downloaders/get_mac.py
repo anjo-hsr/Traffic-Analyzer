@@ -2,7 +2,7 @@ import re
 
 from os import path
 
-import main.helpers.FileHelper as FileHelper
+import main.helpers.file_helper as FileHelper
 
 
 def convert_mac_address(row):

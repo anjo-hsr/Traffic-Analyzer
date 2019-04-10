@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 import main.convert_pcap as convert_pcap
-import main.helpers.Tshark as TsharkHelper
+import main.helpers.tshark as TsharkHelper
 
 
 class TestConvertPcapPlatformMethod(unittest.TestCase):

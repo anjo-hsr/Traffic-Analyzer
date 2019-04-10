@@ -3,7 +3,7 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-from main.helpers.CipherSuites import CipherSuites
+from main.helpers.cipher_suites import CipherSuites
 
 
 class TestCipherSuitesMethod(unittest.TestCase):

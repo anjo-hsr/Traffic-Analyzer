@@ -1,7 +1,7 @@
 from os import path
 
-from main.helpers.Combiner import Combiner
-import main.helpers.FileHelper as FileHelper
+from main.helpers.combiner import Combiner
+import main.helpers.file_helper as FileHelper
 
 
 def calculate_hex(hex_pair):

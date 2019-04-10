@@ -2,13 +2,13 @@ import re
 
 from os import path, walk, remove
 
-import main.helpers.FileHelper as FileHelper
+import main.helpers.file_helper as FileHelper
 
-from main.helpers.Environment import Environment
+from main.helpers.environment import Environment
 from main.helpers.Locator import Locator
-from main.helpers.NameResolver import NameResolver
-from main.helpers.Combiner import Combiner
-from main.helpers.CipherSuites import CipherSuites
+from main.helpers.name_resolver import NameResolver
+from main.helpers.combiner import Combiner
+from main.helpers.cipher_suites import CipherSuites
 from main.helpers.tls_enricher import TlsEnricher
 
 

@@ -3,7 +3,7 @@ import unittest
 from os import path
 from unittest.mock import patch, MagicMock
 
-from main.helpers.Environment import Environment
+from main.helpers.environment import Environment
 
 
 class TestEnvironmentMethods(unittest.TestCase):
