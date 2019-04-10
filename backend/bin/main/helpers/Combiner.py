@@ -13,8 +13,9 @@ class Combiner:
         fqdn_information = helpers["name_resolver"].resolve(dst_src)
         location_information = helpers["locator"].locate(dst_src)
         cipher_suite_information = helpers["cipher_suites"].get_cipher_suite(packet)
+        tls_ssl_version = helpers["tls_ssl_version"].get_tls_ssl_version(packet)
         line = Combiner.combine_fields(
-            [joined_default_cells, location_information, fqdn_information, cipher_suite_information])
+            [joined_default_cells, location_information, fqdn_information, cipher_suite_information, tls_ssl_version])
         return line
 
     @staticmethod
