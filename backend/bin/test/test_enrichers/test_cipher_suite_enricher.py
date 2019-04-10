@@ -6,7 +6,7 @@ from unittest.mock import patch
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 
 
-class TestCipherSuitesMethod(unittest.TestCase):
+class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.packets = {
@@ -54,5 +54,5 @@ class TestCipherSuitesMethod(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCipherSuitesMethod)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCipherSuiteEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

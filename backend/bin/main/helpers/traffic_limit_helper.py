@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 
 
-class Traffic_Limit_Helper:
+class TrafficLimitHelper:
     def __init__(self, requests_per_period, period_time):
         self.requests_per_period = requests_per_period
         self.period_time = period_time
