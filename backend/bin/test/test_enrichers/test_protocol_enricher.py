@@ -7,10 +7,12 @@ class TestTlsEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.protocols = {
-            "http": {"frame.protocols": ":http"},
-            "https": {"frame.protocols": ":https"},
-            "quic": {"frame.protocols": ":quic"},
-            "stp": {"frame.protocols": ":stp"}
+            "dhcp": {"frame.protocols": "eth:ethertype:ip:udp:dhcp"},
+            "http": {"frame.protocols": "eth:ethertype:ip:tcp:http"},
+            "tls": {"frame.protocols": "eth:ethertype:ip:tcp:tls"},
+            "stp": {"frame.protocols": "eth:llc:stp"},
+            "arp": {"frame.protocols": "eth:ethertype:arp"},
+            "": {"frame.protocols": ""}
         }
 
     def test_protocols(self):
