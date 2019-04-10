@@ -31,7 +31,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Protocols by packets</title>
+      <title>Protocols by traffic</title>
       <chart>
         <search>
           <query> $source_token$ | table frame_time, ip_proto, frame_cap_len | join ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len | stats sum(frame_cap_len) as "traffic size" by Keyword</query>
