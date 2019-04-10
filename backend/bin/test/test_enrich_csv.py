@@ -4,39 +4,43 @@ import main.enrich_csv as add_information
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.enrichers.protocol_enricher import ProtocolEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 
 
 class TestEnrichCsv(unittest.TestCase):
     def test_create_helpers_classes(self):
-        helpers = add_information.create_helpers()
-        keys = helpers.keys()
+        enrichers = add_information.create_enrichers()
+        keys = enrichers.keys()
 
         for key in keys:
-            if key == "locator":
-                self.assertTrue(isinstance(helpers[key], LocationEnricher))
+            if key == "location_enricher":
+                self.assertTrue(isinstance(enrichers[key], LocationEnricher))
 
-            elif key == "name_resolver":
-                self.assertTrue(isinstance(helpers[key], NameResolverEnricher))
+            elif key == "name_resolve_enricher":
+                self.assertTrue(isinstance(enrichers[key], NameResolverEnricher))
 
-            elif key == "cipher_suites":
-                self.assertTrue(isinstance(helpers[key], CipherSuiteEnricher))
+            elif key == "cipher_suite_enricher":
+                self.assertTrue(isinstance(enrichers[key], CipherSuiteEnricher))
 
-            elif key == "tls_ssl_version":
-                self.assertTrue(isinstance(helpers[key], TlsEnricher))
+            elif key == "tls_ssl_version_enricher":
+                self.assertTrue(isinstance(enrichers[key], TlsEnricher))
+
+            elif key == "protocol_enricher":
+                self.assertTrue(isinstance(enrichers[key], ProtocolEnricher))
 
             else:
                 self.assertTrue(False)
 
     def test_create_helpers_is_dict(self):
-        helpers = add_information.create_helpers()
-        self.assertTrue(isinstance(helpers, dict))
+        enrichers = add_information.create_enrichers()
+        self.assertTrue(isinstance(enrichers, dict))
 
     def test_create_helpers_keys(self):
-        test_keys = ["locator", "name_resolver", "cipher_suites", "tls_ssl_version"]
+        test_keys = ["location_enricher", "name_resolve_enricher", "cipher_suite_enricher", "tls_ssl_version_enricher", "protocol_enricher"]
 
-        helpers = add_information.create_helpers()
-        keys = [helper_key for helper_key in helpers]
+        enrichers = add_information.create_enrichers()
+        keys = [enricher_key for enricher_key in enrichers]
         self.assertListEqual(keys, test_keys)
 
 
