@@ -31,7 +31,6 @@ jobs:
     - stage: test
       script:
         - cd ./backend
-        - which pylint
         - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml bin/test
     - stage: build
       script:
