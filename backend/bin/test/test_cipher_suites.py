@@ -27,20 +27,19 @@ class TestCipherSuitesMethod(unittest.TestCase):
 
     def test_get_cipher_suites_client_hello(self):
         expected_value = ""
-        expected_cipher_suite = '"{}"'.format(expected_value)
-        cipher_suite_number = self.cipher_suites.get_cipher_suite(self.packets["client_hello"])
-        self.assertEqual(cipher_suite_number, expected_cipher_suite)
+        self.test_packet(expected_value, self.packets["client_hello"])
 
     def test_get_cipher_suites_server_hello(self):
         expected_value = 49200
-        expected_cipher_suite = '{}'.format(expected_value)
-        cipher_suite_number = self.cipher_suites.get_cipher_suite(self.packets["server_hello"])
-        self.assertEqual(cipher_suite_number, expected_cipher_suite)
+        self.test_packet(expected_value, self.packets["server_hello"])
 
     def test_get_cipher_suites_tls_packet(self):
         expected_value = 49200
+        self.test_packet(expected_value, self.packets["first_packet"])
+
+    def test_packet(self, expected_value, packet):
         expected_cipher_suite = '{}'.format(expected_value)
-        cipher_suite_number = self.cipher_suites.get_cipher_suite(self.packets["first_packet"])
+        cipher_suite_number = self.cipher_suites.get_cipher_suite(packet)
         self.assertEqual(cipher_suite_number, expected_cipher_suite)
 
     @patch("sys.stdout", new_callable=StringIO)
