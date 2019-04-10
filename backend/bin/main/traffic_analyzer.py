@@ -28,6 +28,7 @@ def enrich():
 
 
 def run():
+    download()
     convert()
     enrich()
 
