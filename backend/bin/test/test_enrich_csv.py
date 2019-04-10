@@ -9,7 +9,7 @@ from main.enrichers.tls_enricher import TlsEnricher
 
 class TestEnrichCsv(unittest.TestCase):
     def test_create_helpers_classes(self):
-        helpers = add_information.create_helpers()
+        helpers = add_information.create_enrichers()
         keys = helpers.keys()
 
         for key in keys:
@@ -29,13 +29,13 @@ class TestEnrichCsv(unittest.TestCase):
                 self.assertTrue(False)
 
     def test_create_helpers_is_dict(self):
-        helpers = add_information.create_helpers()
+        helpers = add_information.create_enrichers()
         self.assertTrue(isinstance(helpers, dict))
 
     def test_create_helpers_keys(self):
         test_keys = ["locator", "name_resolver", "cipher_suites", "tls_ssl_version"]
 
-        helpers = add_information.create_helpers()
+        helpers = add_information.create_enrichers()
         keys = [helper_key for helper_key in helpers]
         self.assertListEqual(keys, test_keys)
 
