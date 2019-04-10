@@ -5,6 +5,7 @@ import socket
 from main.helpers.IPHelper import IPHelper
 from main.helpers.Limiter import Limiter
 from main.helpers.Combiner import Combiner
+from main.helpers.printer import Printer
 
 
 class Locator:
@@ -13,11 +14,8 @@ class Locator:
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
     def print(self):
-        print("Print out for all {} location entries".format(len(self.locations)))
-        for location_entry in self.locations:
-            print("{} --> {}".format(location_entry, self.locations[location_entry]))
-
-        print("\n\n")
+        print_text = "Print out for all {} location entries"
+        Printer.print_dict(self.locations, print_text)
 
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long

@@ -4,7 +4,7 @@ import main.enrich_csv as add_information
 from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
 from main.helpers.CipherSuites import CipherSuites
-from test.filenames import FileNames
+from main.helpers.tls_enricher import TlsEnricher
 
 
 class TestEnrichCsv(unittest.TestCase):
@@ -22,6 +22,9 @@ class TestEnrichCsv(unittest.TestCase):
             elif key == "cipher_suites":
                 self.assertTrue(isinstance(helpers[key], CipherSuites))
 
+            elif key == "tls_ssl_version":
+                self.assertTrue(isinstance(helpers[key], TlsEnricher))
+
             else:
                 self.assertTrue(False)
 
@@ -30,7 +33,7 @@ class TestEnrichCsv(unittest.TestCase):
         self.assertTrue(isinstance(helpers, dict))
 
     def test_create_helpers_keys(self):
-        test_keys = ["locator", "name_resolver", "cipher_suites"]
+        test_keys = ["locator", "name_resolver", "cipher_suites", "tls_ssl_version"]
 
         helpers = add_information.create_helpers()
         keys = [helper_key for helper_key in helpers]

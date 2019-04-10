@@ -9,6 +9,7 @@ from main.helpers.Locator import Locator
 from main.helpers.NameResolver import NameResolver
 from main.helpers.Combiner import Combiner
 from main.helpers.CipherSuites import CipherSuites
+from main.helpers.tls_enricher import TlsEnricher
 
 
 def loop_through_lines(csv_reader, helpers, output_file):
@@ -31,7 +32,12 @@ def print_dicts(helpers):
 
 
 def create_helpers():
-    return {"locator": Locator(), "name_resolver": NameResolver(), "cipher_suites": CipherSuites()}
+    return {
+        "locator": Locator(),
+        "name_resolver": NameResolver(),
+        "cipher_suites": CipherSuites(),
+        "tls_ssl_version": TlsEnricher()
+    }
 
 
 def main():

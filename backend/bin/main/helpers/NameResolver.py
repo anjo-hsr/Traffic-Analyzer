@@ -2,6 +2,7 @@ import socket
 
 from main.helpers.Combiner import Combiner
 from main.helpers.IPHelper import IPHelper
+from main.helpers.printer import Printer
 
 
 class NameResolver:
@@ -10,11 +11,8 @@ class NameResolver:
         self.header = "dst_fqdn,src_fqdn"
 
     def print(self):
-        print("Print out for all {} fqdn entries".format(len(self.fqdns)))
-        for fqdn_entry in self.fqdns:
-            print("{} --> {}".format(fqdn_entry, self.fqdns[fqdn_entry]))
-
-        print("\n\n")
+        print_text = "Print out for all {} fqdn entries"
+        Printer.print_dict(self.fqdns, print_text)
 
     def get_fqdn(self, ip_addr):
         if ip_addr in self.fqdns:
