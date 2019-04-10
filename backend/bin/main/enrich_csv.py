@@ -27,9 +27,9 @@ def loop_through_lines(csv_reader, enrichers, output_file):
         file_helper.write_line(output_file, line)
 
 
-def print_dicts(helpers):
-    for helper_key in helpers:
-        helpers[helper_key].print()
+def print_dicts(enrichers):
+    for enricher_key in enrichers:
+        enrichers[enricher_key].print()
 
 
 def create_enrichers():

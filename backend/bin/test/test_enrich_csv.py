@@ -10,37 +10,37 @@ from main.enrichers.tls_enricher import TlsEnricher
 
 class TestEnrichCsv(unittest.TestCase):
     def test_create_helpers_classes(self):
-        helpers = add_information.create_enrichers()
-        keys = helpers.keys()
+        enrichers = add_information.create_enrichers()
+        keys = enrichers.keys()
 
         for key in keys:
             if key == "location_enricher":
-                self.assertTrue(isinstance(helpers[key], LocationEnricher))
+                self.assertTrue(isinstance(enrichers[key], LocationEnricher))
 
             elif key == "name_resolve_enricher":
-                self.assertTrue(isinstance(helpers[key], NameResolverEnricher))
+                self.assertTrue(isinstance(enrichers[key], NameResolverEnricher))
 
             elif key == "cipher_suite_enricher":
-                self.assertTrue(isinstance(helpers[key], CipherSuiteEnricher))
+                self.assertTrue(isinstance(enrichers[key], CipherSuiteEnricher))
 
             elif key == "tls_ssl_version_enricher":
-                self.assertTrue(isinstance(helpers[key], TlsEnricher))
+                self.assertTrue(isinstance(enrichers[key], TlsEnricher))
 
             elif key == "protocol_enricher":
-                self.assertTrue(isinstance(helpers[key], ProtocolEnricher))
+                self.assertTrue(isinstance(enrichers[key], ProtocolEnricher))
 
             else:
                 self.assertTrue(False)
 
     def test_create_helpers_is_dict(self):
-        helpers = add_information.create_enrichers()
-        self.assertTrue(isinstance(helpers, dict))
+        enrichers = add_information.create_enrichers()
+        self.assertTrue(isinstance(enrichers, dict))
 
     def test_create_helpers_keys(self):
         test_keys = ["location_enricher", "name_resolve_enricher", "cipher_suite_enricher", "tls_ssl_version_enricher", "protocol_enricher"]
 
-        helpers = add_information.create_enrichers()
-        keys = [helper_key for helper_key in helpers]
+        enrichers = add_information.create_enrichers()
+        keys = [enricher_key for enricher_key in enrichers]
         self.assertListEqual(keys, test_keys)
 
 
