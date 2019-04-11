@@ -15,11 +15,12 @@ def run_tshark(filename):
 
     with open(new_filename, "w") as out_file:
         program_path = detect_platform()
-
         if program_path is None:
             return print_error()
 
         start_tshark(filename, out_file, program_path)
+
+    return None
 
 
 def detect_platform():
@@ -42,8 +43,9 @@ def test_tshark_windows():
 
     elif path.isfile(windows_defaults["x64"]):
         return windows_defaults["x64"]
-
-    return None
+    
+    else:
+        return None
 
 
 def test_tshark_linux():
@@ -65,7 +67,6 @@ def get_new_filename(filename):
 
 def print_error():
     print("No wireshark folder found. Please install Wireshark into the standard folder")
-    return
 
 
 def main():
