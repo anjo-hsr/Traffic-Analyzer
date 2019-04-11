@@ -43,7 +43,7 @@ def test_tshark_windows():
 
     elif path.isfile(windows_defaults["x64"]):
         return windows_defaults["x64"]
-    
+
     else:
         return None
 
