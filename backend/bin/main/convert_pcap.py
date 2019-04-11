@@ -61,7 +61,10 @@ def start_tshark(filename, out_file, program_path):
 
 
 def get_new_filename(filename):
-    new_filename = re.sub("^(.*[/\\\\])?(capture-)?(.*)pcap(ng)?$", "\g<1>capture-\g<3>csv", str(filename).lower())
+    new_filename = re.sub(
+        r"^(.*[/\\])?(capture-)?(.*)pcap(ng)?$",
+        r"\g<1>capture-\g<3>csv",
+        str(filename).lower())
     return new_filename
 
 
