@@ -2,7 +2,8 @@ from IPy import IP
 
 
 class IpHelper:
+    def __init__(self):
+        self.public_identifier = "PUBLIC"
 
-    @staticmethod
-    def is_public_ip(ip_addr):
-        return IP(ip_addr).iptype() == "PUBLIC"
+    def is_public_ip(self, ip_addr):
+        return IP(ip_addr).iptype() == self.public_identifier

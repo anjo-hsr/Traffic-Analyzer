@@ -43,14 +43,15 @@ def create_enrichers():
 
 
 def main():
-    run(EnvironmentHelper.get_environment())
+    environment_helper = EnvironmentHelper()
+    run(environment_helper.get_environment())
 
 
 def run(environment_variables):
     csv_path = environment_variables["csv_path"]
     csv_enriched_path = environment_variables["csv_enriched_path"]
 
-    for (dirpath, dirnames, filenames) in walk(csv_path):
+    for dirpath, _, filenames in walk(csv_path):
         for file in filenames:
             enrichers = create_enrichers()
 
@@ -59,7 +60,7 @@ def run(environment_variables):
                 enrich_file(dirpath, file, enrichers, new_file)
                 remove(path.join(dirpath, file))
 
-    for (dirpath, dirnames, filenames) in walk(csv_path):
+    for dirpath, _, filenames in walk(csv_path):
         for file in filenames:
             if file_helper.is_enriched_csv_file(file):
                 file_helper.move_file(
