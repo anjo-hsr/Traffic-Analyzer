@@ -7,15 +7,17 @@ class CombineHelper:
         return dst_src
 
     @staticmethod
-    def combine_packet_information(joined_default_cells, helpers, packet):
+    def combine_packet_information(joined_default_cells, enrichers, packet):
         dst_src = CombineHelper.get_dst_src(packet)
 
-        fqdn_information = helpers["name_resolver"].resolve(dst_src)
-        location_information = helpers["locator"].locate(dst_src)
-        cipher_suite_information = helpers["cipher_suites"].get_cipher_suite(packet)
-        tls_ssl_version = helpers["tls_ssl_version"].get_tls_ssl_version(packet)
+        fqdn_information = enrichers["name_resolve_enricher"].resolve(dst_src)
+        location_information = enrichers["location_enricher"].locate(dst_src)
+        cipher_suite_information = enrichers["cipher_suite_enricher"].get_cipher_suite(packet)
+        tls_ssl_version = enrichers["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
+        protocol = enrichers["protocol_enricher"].get_protocol(packet)
         line = CombineHelper.combine_fields(
-            [joined_default_cells, location_information, fqdn_information, cipher_suite_information, tls_ssl_version])
+            [joined_default_cells, location_information, fqdn_information,
+             cipher_suite_information, tls_ssl_version, protocol])
         return line
 
     @staticmethod
