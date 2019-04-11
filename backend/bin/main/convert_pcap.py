@@ -70,7 +70,8 @@ def print_error():
 
 
 def main():
-    run(EnvironmentHelper.get_environment())
+    environment_helper = EnvironmentHelper()
+    run(environment_helper.get_environment())
 
 
 def run(environment_variables):
