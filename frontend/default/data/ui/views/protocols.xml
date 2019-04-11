@@ -18,7 +18,8 @@
       <search>
         <query>source="capture-*"
               | dedup source
-              | table source</query>
+              | table source
+        </query>
       </search>
     </input>
   </fieldset>
@@ -33,7 +34,8 @@
                 | rename Decimal as ip_proto]
                 | table frame_time, ip_proto, Keyword, Protocol
                 | stats count by Keyword
-                | rename count as packets</query>
+                | rename count as packets
+          </query>
         </search>
         <option name="charting.chart">pie</option>
       </chart>

@@ -19,7 +19,10 @@
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*" | dedup source | table source</query>
+        <query>source="capture-*"
+              | dedup source
+              | table source
+        </query>
       </search>
     </input>
     <input type="radio" token="direction" searchWhenChanged="true">
