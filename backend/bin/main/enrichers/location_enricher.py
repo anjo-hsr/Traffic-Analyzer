@@ -9,7 +9,7 @@ from main.helpers.combine_helper import CombineHelper
 from main.helpers.print_helper import PrintHelper
 
 
-class LocationEnricher(object):
+class LocationEnricher:
     def __init__(self):
         self.locations = dict()
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"

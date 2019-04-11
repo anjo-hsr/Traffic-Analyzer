@@ -1,7 +1,7 @@
 from os import environ, path
 
 
-class EnvironmentHelper(object):
+class EnvironmentHelper:
 
     def __init__(self):
         self.production_env_identifier = "SPLUNK_HOME"

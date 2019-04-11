@@ -1,7 +1,7 @@
 from main.helpers.print_helper import PrintHelper
 
 
-class TlsEnricher(object):
+class TlsEnricher:
 
     def __init__(self):
         self.stream_to_handshake_version = {}

@@ -1,4 +1,4 @@
-class CombineHelper(object):
+class CombineHelper:
     delimiter = ","
 
     @staticmethod
