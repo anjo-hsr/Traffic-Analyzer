@@ -15,11 +15,12 @@ def run_tshark(filename):
 
     with open(new_filename, "w") as out_file:
         program_path = detect_platform()
-
         if program_path is None:
             return print_error()
 
         start_tshark(filename, out_file, program_path)
+
+    return None
 
 
 def detect_platform():
@@ -43,7 +44,8 @@ def test_tshark_windows():
     elif path.isfile(windows_defaults["x64"]):
         return windows_defaults["x64"]
 
-    return None
+    else:
+        return None
 
 
 def test_tshark_linux():
@@ -59,29 +61,32 @@ def start_tshark(filename, out_file, program_path):
 
 
 def get_new_filename(filename):
-    new_filename = re.sub("^(.*[/\\\\])?(capture-)?(.*)pcap(ng)?$", "\g<1>capture-\g<3>csv", str(filename).lower())
+    new_filename = re.sub(
+        r"^(.*[/\\])?(capture-)?(.*)pcap(ng)?$",
+        r"\g<1>capture-\g<3>csv",
+        str(filename).lower())
     return new_filename
 
 
 def print_error():
     print("No wireshark folder found. Please install Wireshark into the standard folder")
-    return
 
 
 def main():
-    run(EnvironmentHelper.get_environment())
+    environment_helper = EnvironmentHelper()
+    run(environment_helper.get_environment())
 
 
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
     csv_path = environment_variables["csv_path"]
 
-    for (dirpath, dirnames, filenames) in walk(pcap_path):
+    for dirpath, _, filenames in walk(pcap_path):
         for file in filenames:
             if file_helper.is_pcap_file(file):
                 run_tshark(path.join(dirpath, file))
 
-    for (dirpath, dirnames, filenames) in walk(pcap_path):
+    for dirpath, _, filenames in walk(pcap_path):
         for file in filenames:
             if file_helper.is_normal_csv_file(file):
                 file_helper.move_file(

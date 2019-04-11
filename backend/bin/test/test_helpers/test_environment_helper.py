@@ -9,6 +9,7 @@ from main.helpers.environment_helper import EnvironmentHelper
 class TestEnrivonmentHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.environment_helper = EnvironmentHelper()
         cls.development_variables = {
             "pcap_path": path.join("..", "..", "..", "docker", "init_files", "pcaps"),
             "csv_path": path.join("..", "files"),
@@ -23,11 +24,11 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
 
     @patch.dict("os.environ", {})
     def test_development_variables(self):
-        self.assertEqual(EnvironmentHelper.get_environment(), self.development_variables)
+        self.assertEqual(self.environment_helper.get_environment(), self.development_variables)
 
     @patch.dict("os.environ", {"SPLUNK_HOME": "/opt/splunk"})
     def test_production_variables(self):
-        self.assertEqual(EnvironmentHelper.get_environment(), self.production_variables)
+        self.assertEqual(self.environment_helper.get_environment(), self.production_variables)
 
 
 if __name__ == "__main__":
