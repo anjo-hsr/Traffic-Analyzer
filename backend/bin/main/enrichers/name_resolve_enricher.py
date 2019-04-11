@@ -5,7 +5,7 @@ from main.helpers.ip_helper import IpHelper
 from main.helpers.print_helper import PrintHelper
 
 
-class NameResolverEnricher:
+class NameResolverEnricher(object):
     def __init__(self):
         self.fqdns = dict()
         self.header = "dst_fqdn,src_fqdn"

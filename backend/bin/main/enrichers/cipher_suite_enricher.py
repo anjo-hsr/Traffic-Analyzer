@@ -1,7 +1,7 @@
 from main.helpers.print_helper import PrintHelper
 
 
-class CipherSuiteEnricher:
+class CipherSuiteEnricher(object):
 
     def __init__(self):
         self.stream_to_suites = {}

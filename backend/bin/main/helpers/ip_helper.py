@@ -1,7 +1,7 @@
 from IPy import IP
 
 
-class IpHelper:
+class IpHelper(object):
     def __init__(self):
         self.public_identifier = "PUBLIC"
 

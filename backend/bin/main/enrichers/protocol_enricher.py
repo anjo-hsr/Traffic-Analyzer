@@ -1,7 +1,7 @@
 from main.helpers.print_helper import PrintHelper
 
 
-class ProtocolEnricher:
+class ProtocolEnricher(object):
     def __init__(self):
         self.header = "protocol"
         self.protocols = set([])

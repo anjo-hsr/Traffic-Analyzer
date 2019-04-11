@@ -1,4 +1,4 @@
-class PrintHelper:
+class PrintHelper(object):
     @staticmethod
     def print_dict(dict_variable, text_with_placeholder):
         print(text_with_placeholder.format(len(dict_variable)))

@@ -1,4 +1,4 @@
-class Filenames:
+class Filenames(object):
     @staticmethod
     def get_filenames():
         return {
