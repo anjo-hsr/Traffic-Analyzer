@@ -80,11 +80,6 @@ function fix_tshark() {
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/tls\.handshake/ssl\.handshake/g' {} +'
 }
 
-function import_csvs() {
-    echo -e "\nImport standard csv files from ./docker/init_files/csvs"
-    docker exec ${containerName} bash -c 'for csv in /tmp/csvs/*.csv; do sudo /opt/splunk/bin/splunk add oneshot "$csv" -auth admin:AnJo-HSR; done'
-}
-
 containerName="splunk_traffic-analyzer"
 imageName="${containerName}_image"
 
@@ -97,7 +92,6 @@ case "$1" in
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
-        import_csvs
         ;;
 
     update)
