@@ -52,13 +52,29 @@ function update_traffic-analyzer() {
     sleep 5
     docker cp ./docker/init_files/traffic-analyzer/traffic-analyzer.tar.gz ${containerName}:/tmp/traffic-analyzer/
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk install app /tmp/traffic-analyzer/traffic-analyzer.tar.gz -auth admin:AnJo-HSR -update 1'
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type d -exec sudo chmod 755 {} \;'
-    docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
 
-    #Must be done till tshark is updated to version 3.0.0 for debian
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/lookups -type f -exec sed -i 's/tls\./ssl\./g' {} +'
+    set_rights
+    fix_tshark
 
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk restart splunkd'
+}
+
+function set_rights() {
+    echo -e "\nSet rights on folders and files"
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type d -exec sudo chmod 775 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/lookups -type d -exec sudo chmod 777 {} \;'
+
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type f -exec sudo chmod 664 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/main/*.py -type f -exec sudo chmod 775 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/main/*/*.py -type f -exec sudo chmod 775 {} \;'
+
+    docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
+}
+
+function fix_tshark() {
+    #Must be done till tshark is updated to version 3.0.0 for debian
+    echo -e "\nReplace tls. with ssl for tshark versions 2.x"
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/tls\.handshake/ssl\.handshake/g' {} +'
 }
 
 function import_csvs() {
