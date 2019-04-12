@@ -1,23 +1,29 @@
 import sys
 
-import main.convert_pcap as convert_pcap
-import main.enrich_csv as add_information
-import main.downloaders.cipher_downloader as get_ciphers
-import main.downloaders.mac_vendor_downloader as get_mac
+from os import path
+
+sys.path.append(path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "bin"))
 
 
 def convert():
+    import main.convert_pcap as convert_pcap
+
     print("Start converting")
     convert_pcap.main()
 
 
 def download():
+    import main.downloaders.cipher_downloader as get_ciphers
+    import main.downloaders.mac_vendor_downloader as get_mac
+
     print("Start downloading infos")
     get_ciphers.main()
     get_mac.main()
 
 
 def enrich():
+    import main.enrich_csv as add_information
+
     print("Start enriching")
     add_information.main()
 
