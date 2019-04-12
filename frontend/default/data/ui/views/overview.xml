@@ -19,7 +19,10 @@
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*" | dedup source | table source</query>
+        <query>source="capture-*"
+              | dedup source
+              | table source
+        </query>
       </search>
     </input>
     <input type="radio" token="direction" searchWhenChanged="true">
@@ -52,7 +55,10 @@
       <table>
         <title>Top $limit$ $directionHeader$</title>
         <search>
-          <query>$source_token$ $src_dst_selector$=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</query>
+          <query>$source_token$ $src_dst_selector$=$ip$
+                | stats sum(linecount) as "# of packages" by src_fqdn
+                | sort $limit$ -num("# of packages")
+          </query>
         </search>
       </table>
     </panel>
