@@ -21,7 +21,7 @@ class LocationEnricher:
     def set_entry(self, ip_addr, lat_long):
         self.locations[ip_addr] = lat_long
 
-    def get_location(self, ip_addr, limiter=TrafficLimitHelper(3, 1)):
+    def get_location(self, ip_addr, limiter=TrafficLimitHelper(2, 1)):
         ip_helper = IpHelper()
         if ip_addr in self.locations:
             return
