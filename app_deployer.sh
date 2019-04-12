@@ -16,6 +16,9 @@ function delete_containers() {
 function building_splunk() {
     echo -e "\nBuilding with docker-compose"
     docker-compose up -d
+}
+
+function wait_till_container_is_running() {
     echo -e "Wait till docker container is running (~60s)"
 
     while [[ $(docker ps -q --filter health=starting --filter name=${containerName} --format "{{.Names}}" | grep ${containerName}) ]]
@@ -90,8 +93,9 @@ case "$1" in
         stop_splunk
         delete_containers
         building_splunk
-        install_requirements
         create_tar
+        wait_till_container_is_running
+        install_requirements
         update_traffic-analyzer
         import_csvs
         ;;
