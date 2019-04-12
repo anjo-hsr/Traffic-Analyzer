@@ -8,10 +8,10 @@ class EnvironmentHelper:
         self.splunk_app_folder = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer")
 
     def get_environment(self):
-        is_splunk_server = environ.get(self.production_env_identifier)
+        is_splunk_server = environ.get(self.production_env_identifier) is not None
         environment_variables = {}
 
-        if is_splunk_server is not None:
+        if is_splunk_server:
             environment_variables["pcap_path"] = path.join("/tmp", "pcaps")
             environment_variables["pcap_processed_path"] = path.join("/tmp", "pcaps_processed")
             environment_variables["csv_tmp_path"] = path.join("/tmp", "csvs")
