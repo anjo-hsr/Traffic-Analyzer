@@ -79,12 +79,17 @@ def main():
 
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
+    pcap_processed_path = environment_variables["pcap_processed_path"]
     csv_tmp_path = environment_variables["csv_tmp_path"]
 
     for dirpath, _, filenames in walk(pcap_path):
         for file in filenames:
             if file_helper.is_pcap_file(file):
                 run_tshark(path.join(dirpath, file))
+                file_helper.move_file(
+                    path.join(dirpath, file),
+                    path.join(pcap_processed_path, file)
+                )
 
     for dirpath, _, filenames in walk(pcap_path):
         for file in filenames:
