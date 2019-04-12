@@ -23,7 +23,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
                 "tls.handshake.ciphersuite": "",
                 "tcp.stream": 1
             }}
-        cls.cipher_suites = CipherSuiteEnricher()
+        cls.cipher_suite_enricher = CipherSuiteEnricher()
 
     def run_test_packet(self, expected_value, packet):
         if expected_value == "":
@@ -31,7 +31,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         else:
             expected_cipher_suite = '{}'.format(expected_value)
             
-        cipher_suite_number = self.cipher_suites.get_cipher_suite(packet)
+        cipher_suite_number = self.cipher_suite_enricher.get_cipher_suite(packet)
         self.assertEqual(cipher_suite_number, expected_cipher_suite)
 
     def test_get_cipher_suites_client_hello(self):
@@ -49,7 +49,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @patch("sys.stdout", new_callable=StringIO)
     def test_print_full_locations(self, mock_stdout):
         print_text = "Print out for all 1 stream to cipher suites entries\n1 --> 49200\n\n\n\n"
-        self.cipher_suites.print()
+        self.cipher_suite_enricher.print()
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
 
