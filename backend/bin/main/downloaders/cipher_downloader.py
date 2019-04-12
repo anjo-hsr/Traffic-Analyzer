@@ -32,7 +32,7 @@ def write_row(output_file, row):
 def main():
     environment_helper = EnvironmentHelper()
     environment_variables = environment_helper.get_environment()
-    destination_cipher_csv = path.join(environment_variables["csv_app_path"], "cipher_suites.csv")
+    destination_cipher_csv = path.join(environment_variables["csv_list_path"], "cipher_suites.csv")
     run(destination_cipher_csv)
 
 

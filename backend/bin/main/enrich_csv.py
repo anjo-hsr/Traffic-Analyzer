@@ -49,7 +49,7 @@ def main():
 
 def run(environment_variables):
     csv_tmp_path = environment_variables["csv_tmp_path"]
-    csv_app_path = environment_variables["csv_app_path"]
+    csv_capture_path = environment_variables["csv_capture_path"]
 
     for dirpath, _, filenames in walk(csv_tmp_path):
         for file in filenames:
@@ -65,7 +65,7 @@ def run(environment_variables):
             if file_helper.is_enriched_csv_file(file):
                 file_helper.move_file(
                     path.join(dirpath, file),
-                    path.join(csv_app_path, file)
+                    path.join(csv_capture_path, file)
                 )
 
 

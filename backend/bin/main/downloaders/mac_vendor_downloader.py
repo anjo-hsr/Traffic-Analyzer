@@ -22,7 +22,7 @@ def write_row(output_file, row):
 def main():
     environment_helper = EnvironmentHelper()
     environment_variables = environment_helper.get_environment()
-    destination_mac_csv = path.join(environment_variables["csv_app_path"], "mac_vendor.csv")
+    destination_mac_csv = path.join(environment_variables["csv_list_path"], "mac_vendor.csv")
     run(destination_mac_csv)
 
 

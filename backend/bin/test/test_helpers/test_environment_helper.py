@@ -19,7 +19,7 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
         cls.production_variables = {
             "pcap_path": path.join("/tmp", "pcaps"),
             "csv_path": path.join("/tmp", "csvs"),
-            "csv_enriched_path": path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "lookups")
+            "csv_enriched_path": path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "lookups", "captures")
         }
 
     @patch.dict("os.environ", {})
