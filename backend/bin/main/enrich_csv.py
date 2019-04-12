@@ -48,10 +48,10 @@ def main():
 
 
 def run(environment_variables):
-    csv_path = environment_variables["csv_path"]
-    csv_enriched_path = environment_variables["csv_enriched_path"]
+    csv_tmp_path = environment_variables["csv_tmp_path"]
+    csv_app_path = environment_variables["csv_app_path"]
 
-    for dirpath, _, filenames in walk(csv_path):
+    for dirpath, _, filenames in walk(csv_tmp_path):
         for file in filenames:
             enrichers = create_enrichers()
 
@@ -60,12 +60,12 @@ def run(environment_variables):
                 enrich_file(dirpath, file, enrichers, new_file)
                 remove(path.join(dirpath, file))
 
-    for dirpath, _, filenames in walk(csv_path):
+    for dirpath, _, filenames in walk(csv_tmp_path):
         for file in filenames:
             if file_helper.is_enriched_csv_file(file):
                 file_helper.move_file(
                     path.join(dirpath, file),
-                    path.join(csv_enriched_path, file)
+                    path.join(csv_app_path, file)
                 )
 
 

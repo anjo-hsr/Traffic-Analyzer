@@ -1,7 +1,9 @@
 from os import path
 
-from main.helpers.combine_helper import CombineHelper
 import main.helpers.file_helper as file_helper
+
+from main.helpers.combine_helper import CombineHelper
+from main.helpers.environment_helper import EnvironmentHelper
 
 
 def calculate_hex(hex_pair):
@@ -28,8 +30,10 @@ def write_row(output_file, row):
 
 
 def main():
-    destination_file = path.join("..", "..", "files", "cipher_suites.csv")
-    run(destination_file)
+    environment_helper = EnvironmentHelper()
+    environment_variables = environment_helper.get_environment()
+    destination_cipher_csv = path.join(environment_variables["csv_app_path"], "cipher_suites.csv")
+    run(destination_cipher_csv)
 
 
 def run(destination_file):

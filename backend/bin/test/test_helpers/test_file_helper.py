@@ -3,6 +3,7 @@ import unittest
 from os import path, remove
 
 import main.helpers.file_helper as file_helper
+from main.helpers.environment_helper import EnvironmentHelper
 
 from test.filenames import Filenames
 
@@ -33,7 +34,9 @@ class TestFileHelperMethods(unittest.TestCase):
             self.assertEqual(row[header2], value2)
 
     def test_download_and_remove(self):
-        filename = "README.md"
+        environment_helper = EnvironmentHelper()
+        environment_variables = environment_helper.get_environment()
+        filename = path.join(environment_variables["csv_tmp_path"], "README.md")
         self.assertFalse(path.isfile(filename))
 
         url = "https://raw.githubusercontent.com/anjo-hsr/Traffic-Analyzer/master/README.md"

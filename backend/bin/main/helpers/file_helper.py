@@ -3,9 +3,16 @@ from os import path, remove
 from shutil import move
 from urllib import request
 
+from main.helpers.environment_helper import EnvironmentHelper
+
 
 def download_file(url):
-    filename = url.split("/")[-1]
+    environment_helper = EnvironmentHelper()
+
+    url_filename = url.split("/")[-1]
+    environment_variables = environment_helper.get_environment()
+
+    filename = path.join(environment_variables["csv_tmp_path"], url_filename)
     request.urlretrieve(url, filename)
     return path.join(".", filename)
 

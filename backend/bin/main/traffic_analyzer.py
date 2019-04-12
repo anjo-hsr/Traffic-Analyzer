@@ -1,7 +1,5 @@
 import sys
 
-from os import path
-
 import main.convert_pcap as convert_pcap
 import main.enrich_csv as add_information
 import main.downloaders.cipher_downloader as get_ciphers
@@ -15,11 +13,8 @@ def convert():
 
 def download():
     print("Start downloading infos")
-    destination_cipher_csv = path.join("..", "files", "cipher_suites.csv")
-    get_ciphers.run(destination_cipher_csv)
-
-    destination_mac_csv = path.join("..", "files", "mac_vendor.csv")
-    get_mac.run(destination_mac_csv)
+    get_ciphers.main()
+    get_mac.main()
 
 
 def enrich():

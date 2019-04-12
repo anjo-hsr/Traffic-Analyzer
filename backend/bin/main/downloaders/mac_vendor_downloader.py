@@ -4,6 +4,8 @@ from os import path
 
 import main.helpers.file_helper as file_helper
 
+from main.helpers.environment_helper import EnvironmentHelper
+
 
 def convert_mac_address(row):
     vendor_part = row["Assignment"].lower()
@@ -18,8 +20,10 @@ def write_row(output_file, row):
 
 
 def main():
-    destination_file = path.join("..", "..", "files", "mac_vendor.csv")
-    run(destination_file)
+    environment_helper = EnvironmentHelper()
+    environment_variables = environment_helper.get_environment()
+    destination_mac_csv = path.join(environment_variables["csv_app_path"], "mac_vendor.csv")
+    run(destination_mac_csv)
 
 
 def run(destination_file):

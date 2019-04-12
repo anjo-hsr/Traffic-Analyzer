@@ -79,7 +79,7 @@ def main():
 
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
-    csv_path = environment_variables["csv_path"]
+    csv_tmp_path = environment_variables["csv_tmp_path"]
 
     for dirpath, _, filenames in walk(pcap_path):
         for file in filenames:
@@ -91,7 +91,7 @@ def run(environment_variables):
             if file_helper.is_normal_csv_file(file):
                 file_helper.move_file(
                     path.join(dirpath, file),
-                    path.join(csv_path, file)
+                    path.join(csv_tmp_path, file)
                 )
 
 
