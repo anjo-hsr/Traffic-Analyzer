@@ -1,5 +1,6 @@
 import json
 import socket
+import time
 
 import requests
 
@@ -39,14 +40,20 @@ class LocationEnricher:
         except socket.herror:
             pass
 
-    def locate_ip(self, ip_addr):
-        search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
-        response = requests.get(search_url)
-        response_json = json.loads(response.content.decode("utf-8"))
-        data = response_json["data"]["geo"]
-        lat_long = [data["latitude"], data["longitude"]]
+    def locate_ip(self, ip_addr, counter=0):
+        try:
+            search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
+            response = requests.get(search_url)
+            response_json = json.loads(response.content.decode("utf-8"))
+            data = response_json["data"]["geo"]
+            lat_long = [data["latitude"], data["longitude"]]
 
-        return lat_long
+            return lat_long
+
+        except socket.gaierror:
+            if counter < 5:
+                time.sleep(5)
+                self.locate_ip(ip_addr, counter + 1)
 
     def locate(self, dst_src):
         destination = dst_src["dst"]
