@@ -8,6 +8,7 @@ import main.helpers.file_helper as file_helper
 import main.helpers.tshark_helper as tshark_helper
 
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.print_helper import PrintHelper
 
 
 def run_tshark(filename):
@@ -16,7 +17,8 @@ def run_tshark(filename):
     with open(new_filename, "w") as out_file:
         program_path = detect_platform()
         if program_path is None:
-            return print_error()
+            error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
+            return PrintHelper.print_error(error_text)
 
         start_tshark(filename, out_file, program_path)
 
@@ -66,10 +68,6 @@ def get_new_filename(filename):
         r"\g<1>capture-\g<3>csv",
         str(filename).lower())
     return new_filename
-
-
-def print_error():
-    print("No wireshark folder found. Please install Wireshark into the standard folder")
 
 
 def main():
