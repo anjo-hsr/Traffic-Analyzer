@@ -28,8 +28,8 @@
           <query>$source_token$
                 | table frame_time, ip_proto
                 | join ip_proto
-                [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
-                | rename Decimal as ip_proto]
+                   [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
+                      | rename Decimal as ip_proto]
                 | table frame_time, ip_proto, Keyword, Protocol
                 | stats count by Keyword
                 | rename count as packets
