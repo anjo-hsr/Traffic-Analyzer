@@ -23,5 +23,5 @@ class CipherSuiteEnricher:
         return '""'
 
     def print(self):
-        print_text = "Print out for all {} stream to cipher suites entries"
+        print_text = "Print out for all {} streams to cipher suites entries"
         PrintHelper.print_dict(self.stream_to_suites, print_text)

@@ -16,7 +16,7 @@ class LocationEnricher:
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
 
     def print(self):
-        print_text = "Print out for all {} location entries"
+        print_text = "Print out for {} location entries"
         PrintHelper.print_dict(self.locations, print_text)
 
     def set_entry(self, ip_addr, lat_long):
