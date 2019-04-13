@@ -10,8 +10,8 @@ class CombineHelper:
     def combine_packet_information(joined_default_cells, enrichers, packet):
         dst_src = CombineHelper.get_dst_src(packet)
 
-        fqdn_information = enrichers["name_resolve_enricher"].resolve(dst_src)
         location_information = enrichers["location_enricher"].locate(dst_src)
+        fqdn_information = enrichers["name_resolve_enricher"].resolve(dst_src)
         cipher_suite_information = enrichers["cipher_suite_enricher"].get_cipher_suite(packet)
         tls_ssl_version = enrichers["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
         protocol = enrichers["protocol_enricher"].get_protocol(packet)
