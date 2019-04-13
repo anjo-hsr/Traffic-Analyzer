@@ -2,7 +2,7 @@ import platform
 import re
 import subprocess
 
-from os import path, walk
+from os import path
 
 import main.helpers.file_helper as file_helper
 import main.helpers.tshark_helper as tshark_helper
@@ -80,22 +80,18 @@ def run(environment_variables):
     pcap_processed_path = environment_variables["pcap_processed_path"]
     csv_tmp_path = environment_variables["csv_tmp_path"]
 
-    for dirpath, _, filenames in walk(pcap_path):
-        for file in filenames:
-            if file_helper.is_pcap_file(file):
-                run_tshark(path.join(dirpath, file))
-                file_helper.move_file(
-                    path.join(dirpath, file),
-                    path.join(pcap_processed_path, file)
-                )
+    for file_path in file_helper.get_files(pcap_path, file_helper.is_pcap_file):
+        run_tshark(path.join(file_path["path"], file_path["filename"]))
+        file_helper.move_file(
+            path.join(file_path["path"], file_path["filename"]),
+            path.join(pcap_processed_path, file_path["filename"])
+        )
 
-    for dirpath, _, filenames in walk(pcap_path):
-        for file in filenames:
-            if file_helper.is_normal_csv_file(file):
-                file_helper.move_file(
-                    path.join(dirpath, file),
-                    path.join(csv_tmp_path, file)
-                )
+    for file_path in file_helper.get_files(pcap_path, file_helper.is_normal_csv_file):
+        file_helper.move_file(
+            path.join(file_path["path"], file_path["filename"]),
+            path.join(csv_tmp_path, file_path["filename"])
+        )
 
 
 if __name__ == "__main__":

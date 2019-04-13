@@ -1,7 +1,7 @@
 import re
 from collections import OrderedDict
 
-from os import path, walk, remove
+from os import path, remove
 
 import main.helpers.file_helper as file_helper
 
@@ -54,22 +54,17 @@ def run(environment_variables):
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
 
-    for dirpath, _, filenames in walk(csv_tmp_path):
-        for file in filenames:
-            enrichers = create_enrichers()
+    for file_path in file_helper.get_files(csv_tmp_path, file_helper.is_normal_csv_file):
+        enrichers = create_enrichers()
+        new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
+        enrich_file(file_path["path"], file_path["filename"], enrichers, new_file)
+        remove(path.join(file_path["path"], file_path["filename"]))
 
-            if file_helper.is_normal_csv_file(file):
-                new_file = re.sub(".csv$", "-enriched.csv", str(file))
-                enrich_file(dirpath, file, enrichers, new_file)
-                remove(path.join(dirpath, file))
-
-    for dirpath, _, filenames in walk(csv_tmp_path):
-        for file in filenames:
-            if file_helper.is_enriched_csv_file(file):
-                file_helper.move_file(
-                    path.join(dirpath, file),
-                    path.join(csv_capture_path, file)
-                )
+    for file_path in file_helper.get_files(csv_tmp_path, file_helper.is_enriched_csv_file):
+        file_helper.move_file(
+            path.join(file_path["path"], file_path["filename"]),
+            path.join(csv_capture_path, file_path["filename"])
+        )
 
 
 def enrich_file(dirpath, file, enrichers, new_file):
