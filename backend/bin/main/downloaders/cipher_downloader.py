@@ -2,6 +2,7 @@ from os import path
 
 import main.helpers.file_helper as file_helper
 
+from main.helpers.download_helper import DownloadHelper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.environment_helper import EnvironmentHelper
 
@@ -38,14 +39,8 @@ def main():
 
 def run(destination_file):
     url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
-    filename = file_helper.download_file(url)
-
-    with \
-            open(filename, mode="r", encoding='utf-8') as csv_file, \
-            open(destination_file, mode='w', encoding='utf-8') as output_file:
-        header = "cipher_suite_number,description,recommended"
-        file_helper.write_download_file(write_row, csv_file, output_file, header)
-
+    header = "cipher_suite_number,description,recommended"
+    filename = DownloadHelper.download_file(destination_file, url, header, write_row)
     file_helper.remove_file(filename)
 
 
