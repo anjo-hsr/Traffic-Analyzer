@@ -28,9 +28,8 @@ class CombineHelper:
         return ",".join("{}".format(field) for field in fields)
 
     @staticmethod
-    def join_default_cells(packet):
-        joined_default_cells = CombineHelper.delimiter.join('"{}"'.format(packet[cell]) for cell in packet)
-        return joined_default_cells
+    def join_default_cells(packet, field_names):
+        return CombineHelper.delimiter.join('"{}"'.format(packet[field_name]) for field_name in field_names)
 
     @staticmethod
     def combine_fqdns(fqdns, destination, source):

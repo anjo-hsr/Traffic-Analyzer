@@ -22,7 +22,7 @@ def loop_through_lines(csv_reader, enrichers, output_file):
             line = CombineHelper.combine_fields(default_header + helper_headers, False)
 
         else:
-            joined_default_cells = CombineHelper.join_default_cells(packet)
+            joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
             line = CombineHelper.combine_packet_information(joined_default_cells, enrichers, packet)
 
         file_helper.write_line(output_file, line)
