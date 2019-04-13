@@ -1,4 +1,5 @@
 import re
+from collections import OrderedDict
 
 from os import path, walk, remove
 
@@ -33,13 +34,13 @@ def print_dicts(enrichers):
 
 
 def create_enrichers():
-    return {
-        "location_enricher": LocationEnricher(),
-        "name_resolve_enricher": NameResolverEnricher(),
-        "cipher_suite_enricher": CipherSuiteEnricher(),
-        "tls_ssl_version_enricher": TlsEnricher(),
-        "protocol_enricher": ProtocolEnricher()
-    }
+    return OrderedDict([
+        ("location_enricher", LocationEnricher()),
+        ("name_resolve_enricher", NameResolverEnricher()),
+        ("cipher_suite_enricher", CipherSuiteEnricher()),
+        ("tls_ssl_version_enricher", TlsEnricher()),
+        ("protocol_enricher", ProtocolEnricher())
+    ])
 
 
 def main():
@@ -63,6 +64,7 @@ def run(environment_variables):
     for dirpath, _, filenames in walk(csv_tmp_path):
         for file in filenames:
             if file_helper.is_enriched_csv_file(file):
+                pass
                 file_helper.move_file(
                     path.join(dirpath, file),
                     path.join(csv_capture_path, file)
