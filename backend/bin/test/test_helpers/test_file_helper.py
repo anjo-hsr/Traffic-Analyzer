@@ -36,16 +36,18 @@ class TestFileHelperMethods(unittest.TestCase):
     def test_download_and_remove(self):
         environment_helper = EnvironmentHelper()
         environment_variables = environment_helper.get_environment()
-        filename = path.join(environment_variables["csv_tmp_path"], "README.md")
-        self.assertFalse(path.isfile(filename))
+
+        filename = "README.md"
+        file_path = path.join(environment_variables["csv_tmp_path"], filename)
+        self.assertFalse(path.isfile(file_path))
 
         url = "https://raw.githubusercontent.com/anjo-hsr/Traffic-Analyzer/master/README.md"
         downloaded_filename = file_helper.download_file(url)
-        self.assertTrue(downloaded_filename, filename)
-        self.assertTrue(path.isfile(filename))
+        self.assertTrue(downloaded_filename, file_path)
+        self.assertTrue(path.isfile(file_path))
 
-        file_helper.remove_file(filename)
-        self.assertFalse(path.isfile(filename))
+        file_helper.remove_file(file_path)
+        self.assertFalse(path.isfile(file_path))
 
     def test_is_header(self):
         line_dict = {
