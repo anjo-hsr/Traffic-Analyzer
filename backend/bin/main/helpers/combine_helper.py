@@ -10,8 +10,8 @@ class CombineHelper:
     def combine_packet_information(joined_default_cells, enrichers, packet):
         dst_src = CombineHelper.get_dst_src(packet)
 
-        fqdn_information = enrichers["name_resolve_enricher"].resolve(dst_src)
         location_information = enrichers["location_enricher"].locate(dst_src)
+        fqdn_information = enrichers["name_resolve_enricher"].resolve(dst_src)
         cipher_suite_information = enrichers["cipher_suite_enricher"].get_cipher_suite(packet)
         tls_ssl_version = enrichers["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
         protocol = enrichers["protocol_enricher"].get_protocol(packet)
@@ -28,9 +28,8 @@ class CombineHelper:
         return ",".join("{}".format(field) for field in fields)
 
     @staticmethod
-    def join_default_cells(packet):
-        joined_default_cells = CombineHelper.delimiter.join('"{}"'.format(packet[cell]) for cell in packet)
-        return joined_default_cells
+    def join_default_cells(packet, field_names):
+        return CombineHelper.delimiter.join('"{}"'.format(packet[field_name]) for field_name in field_names)
 
     @staticmethod
     def combine_fqdns(fqdns, destination, source):
