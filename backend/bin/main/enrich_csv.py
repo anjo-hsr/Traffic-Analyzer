@@ -12,6 +12,7 @@ from main.enrichers.protocol_enricher import ProtocolEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.combine_helper import CombineHelper
+from main.helpers.print_helper import PrintHelper
 
 
 def loop_through_lines(csv_reader, enrichers, output_file):
@@ -32,11 +33,6 @@ def loop_through_lines(csv_reader, enrichers, output_file):
             line = CombineHelper.combine_packet_information(joined_default_cells, enrichers, packet)
 
         file_helper.write_line(output_file, line)
-
-
-def print_dicts(enrichers):
-    for enricher_key in enrichers:
-        enrichers[enricher_key].print()
 
 
 def create_enrichers():
@@ -84,7 +80,7 @@ def enrich_file(dirpath, file, enrichers, new_file):
 
         loop_through_lines(csv_reader, enrichers, output_file)
 
-        print_dicts(enrichers)
+        PrintHelper.print_enrichers(enrichers)
 
 
 if __name__ == "__main__":
