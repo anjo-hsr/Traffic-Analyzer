@@ -4,7 +4,7 @@
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
       <default>*</default>
-      <prefix>(</prefix>
+      <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
