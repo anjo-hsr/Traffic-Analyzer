@@ -68,9 +68,8 @@ function set_rights() {
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/lookups -type d -exec sudo chmod 777 {} \;'
 
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type f -exec sudo chmod 664 {} \;'
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/*.sh -type f -exec sudo chmod 775 {} \;'
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/main/*.py -type f -exec sudo chmod 775 {} \;'
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/main/*/*.py -type f -exec sudo chmod 775 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -name "*.sh" -type f -exec sudo chmod 775 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -name "*.py" -type f -exec sudo chmod 775 {} \;'
 
     docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
 }
