@@ -3,17 +3,17 @@
     <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
-      <default>capture-*</default>
-      <prefix>(</prefix>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
-      <choice value="capture-*">ALL</choice>
+      <choice value="*">ALL</choice>
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*"
+        <query>sourcetype=capture
               | dedup source
               | table source
         </query>
