@@ -27,7 +27,8 @@
         <search>
           <query>$source_token$
                 | table frame_time, ip_proto
-                | join ip_proto [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
+                | join ip_proto
+                [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
                 | rename Decimal as ip_proto]
                 | table frame_time, ip_proto, Keyword, Protocol
                 | stats count by Keyword
@@ -43,7 +44,8 @@
         <search>
           <query>$source_token$
                 | table frame_time, ip_proto, frame_cap_len
-                | join ip_proto [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
+                | join ip_proto
+                [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
                 | rename Decimal as ip_proto]
                 | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len
                 | stats sum(frame_cap_len) as "traffic size" by Keyword
@@ -59,7 +61,8 @@
       <chart>
         <search>
           <query>$source_token$
-                | join type=left ip_proto [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
+                | join type=left ip_proto
+                [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
                 | rename Decimal as ip_proto]
                 | timechart span=1m count by ip_proto usenull=f
                 | rename VALUE as Other
