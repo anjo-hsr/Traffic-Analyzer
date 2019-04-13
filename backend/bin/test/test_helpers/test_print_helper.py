@@ -30,6 +30,18 @@ class TestPrintHelperMethods(unittest.TestCase):
                      "Zurich --> Zurich\n\n\n\n".format(len(self.cantons))
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_print_error(self, mock_stdout):
+        error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
+
+        PrintHelper.print_error(error_text)
+
+        banner = "#" * 120
+        general_text = "An error occured:"
+        print_elements = [banner, general_text, error_text, banner]
+        print_text = "\n".join(element for element in print_elements) + "\n"
+        self.assertEqual(mock_stdout.getvalue(), print_text)
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPrintHelperMethods)
