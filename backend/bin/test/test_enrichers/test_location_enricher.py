@@ -1,8 +1,5 @@
 import unittest
 
-from io import StringIO
-from unittest.mock import patch
-
 from main.enrichers.location_enricher import LocationEnricher
 
 
@@ -42,21 +39,6 @@ class TestLocationEnricherMethods(unittest.TestCase):
         line = self.locator.locate(self.dst_src)
         expected_line = '"47.1449","8.1551","",""'
         self.assertEqual(line, expected_line)
-
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_print_empty_locations(self, mock_stdout):
-        print_text = "Print out for all {} location entries\n\n\n\n".format(len(self.locator.locations))
-        self.locator.print()
-        self.assertEqual(mock_stdout.getvalue(), print_text)
-
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_print_full_locations(self, mock_stdout):
-        self.locator.set_entry(self.private_ip_address, self.empty_location)
-        print_text = "Print out for all {} location entries\n{} --> {}\n\n\n\n" \
-            .format(len(self.locator.locations), self.private_ip_address, self.empty_location)
-
-        self.locator.print()
-        self.assertEqual(mock_stdout.getvalue(), print_text)
 
     def tearDown(self):
         self.locator = None
