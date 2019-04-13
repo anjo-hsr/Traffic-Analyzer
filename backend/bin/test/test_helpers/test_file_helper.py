@@ -1,6 +1,7 @@
 import unittest
 
 from os import path, remove
+from unittest.mock import patch, MagicMock
 
 import main.helpers.file_helper as file_helper
 from main.helpers.environment_helper import EnvironmentHelper
@@ -33,6 +34,10 @@ class TestFileHelperMethods(unittest.TestCase):
             self.assertEqual(row[header1], value1)
             self.assertEqual(row[header2], value2)
 
+    @patch(
+        "main.helpers.environment_helper.EnvironmentHelper.get_environment",
+        MagicMock(return_value={"csv_tmp_path": path.join(".")})
+    )
     def test_download_and_remove(self):
         environment_helper = EnvironmentHelper()
         environment_variables = environment_helper.get_environment()

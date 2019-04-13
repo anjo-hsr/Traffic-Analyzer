@@ -21,6 +21,12 @@ def loop_through_lines(csv_reader, enrichers, output_file):
             helper_headers = [enrichers[helper_key].header for helper_key in enrichers]
             line = CombineHelper.combine_fields(default_header + helper_headers, False)
 
+            # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
+            # for encrypted traffic. ssl.* could be deprecated in future releases
+            # https://packages.qa.debian.org/w/wireshark.html
+            # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
+            line = re.sub(r"ssl.", r"tls.", line)
+
         else:
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
             line = CombineHelper.combine_packet_information(joined_default_cells, enrichers, packet)
@@ -64,7 +70,6 @@ def run(environment_variables):
     for dirpath, _, filenames in walk(csv_tmp_path):
         for file in filenames:
             if file_helper.is_enriched_csv_file(file):
-                pass
                 file_helper.move_file(
                     path.join(dirpath, file),
                     path.join(csv_capture_path, file)
