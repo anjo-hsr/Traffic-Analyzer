@@ -40,7 +40,8 @@ class LocationEnricher:
         except socket.herror:
             pass
 
-    def locate_ip(self, ip_addr, counter=0):
+    @staticmethod
+    def locate_ip(ip_addr, counter=0):
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
             response = requests.get(search_url)
@@ -53,7 +54,7 @@ class LocationEnricher:
         except socket.gaierror:
             if counter < 5:
                 time.sleep(5)
-                self.locate_ip(ip_addr, counter + 1)
+                LocationEnricher.locate_ip(ip_addr, counter + 1)
 
     def locate(self, dst_src):
         destination = dst_src["dst"]
