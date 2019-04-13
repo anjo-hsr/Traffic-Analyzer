@@ -22,10 +22,10 @@ def download():
 
 
 def enrich():
-    import main.enrich_csv as add_information
+    import main.enrich_csv as enrich_csv
 
     print("Start enriching")
-    add_information.main()
+    enrich_csv.main()
 
 
 def run():
