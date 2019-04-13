@@ -42,9 +42,10 @@ class TestCombineHelperMethods(unittest.TestCase):
         self.assertEqual(CombineHelper.combine_fqdns(self.fqdns, self.destination, self.source), combined_fqdns)
 
     def test_combine_default_fields(self):
+        field_names = ["ip.dst","ip.src"]
         packet = {"ip.dst": "8.8.8.8", "ip.src": "10.0.0.1"}
         joined_cells = '"8.8.8.8","10.0.0.1"'
-        self.assertEqual(CombineHelper.join_default_cells(packet), joined_cells)
+        self.assertEqual(CombineHelper.join_default_cells(packet, field_names), joined_cells)
 
 
 if __name__ == "__main__":

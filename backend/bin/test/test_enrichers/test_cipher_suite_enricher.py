@@ -1,8 +1,5 @@
 import unittest
 
-from io import StringIO
-from unittest.mock import patch
-
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 
 
@@ -30,7 +27,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
             expected_cipher_suite = '"{}"'.format(expected_value)
         else:
             expected_cipher_suite = '{}'.format(expected_value)
-            
+
         cipher_suite_number = self.cipher_suite_enricher.get_cipher_suite(packet)
         self.assertEqual(cipher_suite_number, expected_cipher_suite)
 
@@ -46,12 +43,15 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         expected_value = 49200
         self.run_test_packet(expected_value, self.packets["first_packet"])
 
+<<<<<<< HEAD
     @patch("sys.stdout", new_callable=StringIO)
     def test_print_full_locations(self, mock_stdout):
         print_text = "Print out for all 1 stream to cipher suites entries\n1 --> 49200\n\n\n\n"
         self.cipher_suite_enricher.print()
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
+=======
+>>>>>>> backend-run-as-job
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCipherSuiteEnricherMethods)
