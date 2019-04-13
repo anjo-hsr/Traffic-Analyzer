@@ -23,15 +23,17 @@ class EnvironmentHelper:
 
         else:
             environment_variables["pcap_path"] = path.join("..", "..", "..", "docker", "init_files", "pcaps")
-            environment_variables["pcap_processed_path"] = path.join("..", "..", "..", "docker", "init_files",
-                                                                          "pcaps")
+            environment_variables["pcap_processed_path"] = path.join(
+                "..", "..", "..", "docker", "init_files", "pcaps"
+            )
             environment_variables["csv_tmp_path"] = path.join("..", "files")
             environment_variables["csv_capture_path"] = path.join("..", "files")
             environment_variables["csv_list_path"] = path.join("..", "files")
 
         return environment_variables
 
-    def check_process(self, process_name):
+    @staticmethod
+    def check_process(process_name):
         for process in psutil.process_iter(attrs=["name"]):
             if process.info["name"] == process_name:
                 return True
