@@ -70,7 +70,6 @@ def run(environment_variables):
     for dirpath, _, filenames in walk(csv_tmp_path):
         for file in filenames:
             if file_helper.is_enriched_csv_file(file):
-                pass
                 file_helper.move_file(
                     path.join(dirpath, file),
                     path.join(csv_capture_path, file)
