@@ -26,7 +26,7 @@ def loop_through_lines(csv_reader, enrichers, output_file):
             # for encrypted traffic. ssl.* could be deprecated in future releases
             # https://packages.qa.debian.org/w/wireshark.html
             # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
-            line = re.sub(r"ssl.", r"tls.", line)
+            line = re.sub(r"ssl\.", r"tls.", line)
 
         else:
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
