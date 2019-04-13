@@ -98,7 +98,7 @@
           <query>$source_token$
                 | stats dc(tcp_stream) as "# of streams" by cipher_suite_number
                 | join cipher_suite_number
-                [ search source=cipher_suites.csv ]
+                   [ search source=cipher_suites.csv ]
                 | table cipher_suite_number, description, recommended, "# of streams"
                 | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended
                 | sort "# of streams" desc
@@ -113,8 +113,8 @@
           <query>$source_token$
                 | stats dc(tcp_stream) as "# of streams" by tls_ssl_version_negotiated
                 | join tls_ssl_version_negotiated
-                [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/tls-versions.csv"
-                | rename tls_record_version as tls_ssl_version_negotiated]
+                   [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/tls-versions.csv"
+                      | rename tls_record_version as tls_ssl_version_negotiated]
                 | table tls_ssl_version_negotiated, description, "# of streams"
                 | rename tls_ssl_version_negotiated as "Version", description as Description
                 | sort "# of streams" desc
