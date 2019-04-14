@@ -26,5 +26,5 @@ class TlsEnricher:
         return '""'
 
     def print(self):
-        print_text = "Print out for all {} stream to tls version entries"
+        print_text = "Print out for {} streams to tls version entries"
         PrintHelper.print_dict(self.stream_to_handshake_version, print_text)

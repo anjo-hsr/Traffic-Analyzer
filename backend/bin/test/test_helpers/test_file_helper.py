@@ -4,6 +4,7 @@ from os import path, remove
 from unittest.mock import patch, MagicMock
 
 import main.helpers.file_helper as file_helper
+from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
 
 from test.filenames import Filenames
@@ -47,7 +48,7 @@ class TestFileHelperMethods(unittest.TestCase):
         self.assertFalse(path.isfile(file_path))
 
         url = "https://raw.githubusercontent.com/anjo-hsr/Traffic-Analyzer/master/README.md"
-        downloaded_filename = file_helper.download_file(url)
+        downloaded_filename = DownloadHelper.store_file(url)
         self.assertTrue(downloaded_filename, file_path)
         self.assertTrue(path.isfile(file_path))
 

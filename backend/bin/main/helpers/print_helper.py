@@ -13,3 +13,16 @@ class PrintHelper:
         print_list = ", ".join(key for key in list_variable)
         print(print_list)
         print("\n\n")
+
+    @staticmethod
+    def print_enrichers(enrichers):
+        for enricher_key in enrichers:
+            enrichers[enricher_key].print()
+
+    @staticmethod
+    def print_error(error_text):
+        banner = "#" * 120
+        general_text = "An error occured:"
+        print_elements = [banner, general_text, error_text, banner]
+
+        print("\n".join(element for element in print_elements))
