@@ -64,7 +64,7 @@
                 | join type=left ip_proto
                    [search source="/opt/splunk/etc/apps/traffic-analyzer/lookups/lists/protocol-numbers.csv"
                       | rename Decimal as ip_proto]
-                | timechart span=1m count by ip_proto usenull=f
+                | timechart span=1m count by Keyword usenull=f
                 | rename VALUE as Other
           </query>
         </search>
