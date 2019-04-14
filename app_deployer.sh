@@ -80,6 +80,12 @@ function fix_tshark() {
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/tls\.handshake/ssl\.handshake/g' {} +'
 }
 
+function copy_pcaps() {
+    for filename in ./docker/init_files/pcaps/*.pcap*; do
+        docker cp ${filename} ${containerName}:/tmp/pcaps/
+    done
+}
+
 containerName="splunk_traffic-analyzer"
 imageName="${containerName}_image"
 
@@ -107,7 +113,11 @@ case "$1" in
         update_traffic-analyzer
         ;;
 
+    copy-pcaps)
+        copy_pcaps
+        ;;
+
     *)
-        echo $"Usage: $0 {start|update|force-update}"
+        echo $"Usage: $0 {start|update|force-update|copy-pcaps}"
         exit 1
 esac
