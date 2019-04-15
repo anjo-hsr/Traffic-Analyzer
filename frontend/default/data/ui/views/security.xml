@@ -97,7 +97,8 @@
         <title>Commonly used cipher suites</title>
         <search>
           <query>$source_token$
-                | stats dc(tcp_stream) as "# of streams" by cipher_suite_number
+                | dedup tcp_stream, source
+                | stats count as "# of streams" by cipher_suite_number
                 | join cipher_suite_number
                    [ search sourcetype=list source="*cipher_suites.csv" ]
                 | table cipher_suite_number, description, recommended, "# of streams"
@@ -112,7 +113,8 @@
         <title>Commonly used SSL/TLS version</title>
         <search>
           <query>$source_token$
-                | stats dc(tcp_stream) as "# of streams" by tls_ssl_version_negotiated
+                | dedup tcp_stream, source
+                | stats count as "# of streams" by tls_ssl_version_negotiated
                 | join tls_ssl_version_negotiated
                    [search sourcetype=list source="*tls-versions.csv"
                       | rename tls_record_version as tls_ssl_version_negotiated]
