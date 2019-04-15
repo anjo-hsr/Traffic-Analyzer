@@ -48,7 +48,7 @@
           <query>$source_token$
                 | dedup cipher_suite_number
                 | join cipher_suite_number
-                  [ search sourcetype=list source="*cipher_suites.csv" ]
+                   [ search sourcetype=list source="*cipher_suites.csv" ]
                 | table cipher_suite_number, recommended
                 | stats count as amount by recommended
                 | where recommended="N"
