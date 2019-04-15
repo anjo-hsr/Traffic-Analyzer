@@ -27,8 +27,8 @@
         <search>
           <query>$source_token$
                 | where tcp_stream!=""
-                | table tcp_stream, cipher_suite
-                | stats dc(tcp_stream) as "# of streams"
+                | dedup tcp_stream, source
+                | stats count as "# of streams"
           </query>
         </search>
         <option name="colorBy">value</option>
