@@ -11,14 +11,16 @@ class NameResolverEnricher:
         self.header = "dst_fqdn,src_fqdn"
 
     def print(self):
-        print_text = "Print out for all {} fqdn entries"
+        print_text = "Print out for {} fqdn entries"
         PrintHelper.print_dict(self.fqdns, print_text)
 
     def get_fqdn(self, ip_addr):
+        ip_helper = IpHelper()
+
         if ip_addr in self.fqdns:
             return
 
-        if ip_addr == "" or not IpHelper.is_public_ip(ip_addr):
+        if ip_addr == "" or not ip_helper.is_public_ip(ip_addr):
             self.set_entry(ip_addr, ip_addr)
             return
 

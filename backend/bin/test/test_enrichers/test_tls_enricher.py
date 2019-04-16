@@ -1,8 +1,5 @@
 import unittest
 
-from io import StringIO
-from unittest.mock import patch
-
 from main.enrichers.tls_enricher import TlsEnricher
 
 
@@ -75,12 +72,6 @@ class TestTlsEnricherMethods(unittest.TestCase):
         self.run_test_packet(expected_value, self.packets_tls1_3["server_hello_tls1_3"])
         expected_value = "0x0304"
         self.run_test_packet(expected_value, self.packets_tls1_3["first_packet_tls1_3"])
-
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_print_full_locations(self, mock_stdout):
-        print_text = "Print out for all 2 stream to tls version entries\n1 --> 0x0303\n2 --> 0x0304\n\n\n\n"
-        self.tls_enricher.print()
-        self.assertEqual(mock_stdout.getvalue(), print_text)
 
 
 if __name__ == "__main__":

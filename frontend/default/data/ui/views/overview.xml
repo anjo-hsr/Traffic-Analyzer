@@ -6,20 +6,20 @@
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
-      <default>ALL</default>
-      <!-- The final value will be surrounded by prefix and suffix -->
-      <prefix>(</prefix>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
-      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*" | dedup source | table source</query>
+        <query>sourcetype=capture
+              | dedup source
+              | table source
+        </query>
       </search>
     </input>
     <input type="radio" token="direction" searchWhenChanged="true">
@@ -52,7 +52,10 @@
       <table>
         <title>Top $limit$ $directionHeader$</title>
         <search>
-          <query>$source_token$ $src_dst_selector$=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</query>
+          <query>$source_token$ $src_dst_selector$=$ip$
+                | stats sum(linecount) as "# of packages" by src_fqdn
+                | sort $limit$ -num("# of packages")
+          </query>
         </search>
       </table>
     </panel>

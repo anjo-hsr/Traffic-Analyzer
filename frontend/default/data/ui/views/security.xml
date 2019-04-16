@@ -3,20 +3,20 @@
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
-      <default>capture-*</default>
-      <!-- The final value will be surrounded by prefix and suffix -->
-      <prefix>(</prefix>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
-      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
       <delimiter> OR </delimiter>
-      <choice value="capture-*">ALL</choice>
+      <choice value="*">ALL</choice>
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*" | dedup source | table source</query>
+        <query>sourcetype=capture
+              | dedup source
+              | table source
+        </query>
       </search>
     </input>
   </fieldset>
@@ -25,7 +25,11 @@
       <single>
         <title>Total number of tcp streams</title>
         <search>
-          <query>$source_token$ | where tcp_stream!="" | table tcp_stream, cipher_suite | stats dc(tcp_stream) as "# of streams"</query>
+          <query>$source_token$
+                | where tcp_stream!=""
+                | dedup tcp_stream, source
+                | stats count as "# of streams"
+          </query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -41,7 +45,16 @@
       <single>
         <title>Number of inadvisable cipher suites used</title>
         <search>
-          <query> $source_token$ | dedup cipher_suite_number | join cipher_suite_number [ search source=cipher_suites.csv ] | table cipher_suite_number, recommended | stats count as amount by recommended | where recommended="N" | table amount | appendpipe [stats count | where count=0]</query>
+          <query>$source_token$
+                | dedup cipher_suite_number
+                | join cipher_suite_number
+                   [ search sourcetype=list source="*cipher_suites.csv" ]
+                | table cipher_suite_number, recommended
+                | stats count as amount by recommended
+                | where recommended="N"
+                | table amount
+                | appendpipe [stats count | where count=0]
+          </query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -57,7 +70,13 @@
       <single>
         <title>Amount of unsecured traffic (by packets)</title>
         <search>
-          <query> $source_token$ | eval issecure=if(cipher_suite_number=="","no","yes") | table issecure  | top issecure | where issecure="no" | table percent</query>
+          <query>$source_token$
+                | eval issecure=if(cipher_suite_number=="","no","yes")
+                | table issecure
+                | top issecure
+                | where issecure="no"
+                | table percent
+          </query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -77,7 +96,15 @@
       <table>
         <title>Commonly used cipher suites</title>
         <search>
-          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by cipher_suite_number  | join cipher_suite_number [ search source=cipher_suites.csv ] | table cipher_suite_number, description, recommended, "# of streams" | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended | sort "# of streams" desc</query>
+          <query>$source_token$
+                | dedup tcp_stream, source
+                | stats count as "# of streams" by cipher_suite_number
+                | join cipher_suite_number
+                   [ search sourcetype=list source="*cipher_suites.csv" ]
+                | table cipher_suite_number, description, recommended, "# of streams"
+                | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended
+                | sort "# of streams" desc
+          </query>
         </search>
       </table>
     </panel>
@@ -85,7 +112,16 @@
       <table>
         <title>Commonly used SSL/TLS version</title>
         <search>
-          <query>$source_token$ | stats dc(tcp_stream) as "# of streams" by tls_ssl_version_negotiated  | join tls_ssl_version_negotiated [search source="/tmp/csvs/tls-versions.csv" | rename tls_record_version as tls_ssl_version_negotiated] | table tls_ssl_version_negotiated, description, "# of streams" | rename tls_ssl_version_negotiated as "Version", description as Description | sort "# of streams" desc</query>
+          <query>$source_token$
+                | dedup tcp_stream, source
+                | stats count as "# of streams" by tls_ssl_version_negotiated
+                | join tls_ssl_version_negotiated
+                   [search sourcetype=list source="*tls-versions.csv"
+                      | rename tls_record_version as tls_ssl_version_negotiated]
+                | table tls_ssl_version_negotiated, description, "# of streams"
+                | rename tls_ssl_version_negotiated as "Version", description as Description
+                | sort "# of streams" desc
+          </query>
         </search>
       </table>
     </panel>
