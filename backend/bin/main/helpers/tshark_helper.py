@@ -25,9 +25,9 @@ def get_arguments(filename):
                        " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.len -e tcp.stream" \
                        " -e udp.srcport -e udp.dstport -e udp.length" \
                        " -e http.request.method -e http.request.uri" \
-                       " -e tls.handshake.version -e tls.handshake.extensions.supported_version " \
+                       " -e tls.handshake.version -e tls.handshake.extensions.supported_version" \
                        " -e tls.handshake.ciphersuite -e tls.handshake.type" \
-                       " -E header=y -E separator=, -E quote=d -E occurrence=f"
+                       " -E header=y -E separator=, -E quote=d -E occurrence=a"
 
     arguments = shlex.split(export_arguments)
     combined_args = file_argumnets + arguments
