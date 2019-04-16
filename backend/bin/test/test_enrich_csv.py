@@ -5,7 +5,6 @@ import main.enrich_csv as add_information
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
-from main.enrichers.protocol_enricher import ProtocolEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 
 
@@ -27,9 +26,6 @@ class TestEnrichCsv(unittest.TestCase):
             elif key == "tls_ssl_version_enricher":
                 self.assertTrue(isinstance(enrichers[key], TlsEnricher))
 
-            elif key == "protocol_enricher":
-                self.assertTrue(isinstance(enrichers[key], ProtocolEnricher))
-
             else:
                 self.assertTrue(False)
 
@@ -38,7 +34,7 @@ class TestEnrichCsv(unittest.TestCase):
         self.assertTrue(isinstance(enrichers, OrderedDict))
 
     def test_create_enrichers_keys(self):
-        test_keys = ["location_enricher", "name_resolve_enricher", "cipher_suite_enricher", "tls_ssl_version_enricher", "protocol_enricher"]
+        test_keys = ["location_enricher", "name_resolve_enricher", "cipher_suite_enricher", "tls_ssl_version_enricher"]
 
         enrichers = add_information.create_enrichers()
         keys = [enricher_key for enricher_key in enrichers]
