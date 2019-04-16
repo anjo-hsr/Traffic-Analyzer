@@ -14,7 +14,7 @@ class TestTsharkHelperMethods(unittest.TestCase):
                 "-e", "http.request.method", "-e", "http.request.uri",
                 "-e", "tls.handshake.version", "-e", "tls.handshake.extensions.supported_version",
                 "-e", "tls.handshake.ciphersuite", "-e", "tls.handshake.type",
-                "-E", "header=y", "-E", "separator=,", "-E", "quote=d", "-E", "occurrence=f"]
+                "-E", "header=y", "-E", "separator=,", "-E", "quote=d", "-E", "occurrence=a"]
 
         self.assertEqual(tshark_helper.get_arguments(filename), args)
 
