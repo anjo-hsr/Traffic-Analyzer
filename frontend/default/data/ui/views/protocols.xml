@@ -27,11 +27,7 @@
         <search>
           <query>$source_token$
                 | table frame_time, ip_proto
-                | join ip_proto
-                   [search sourcetype=list source="*protocol-numbers.csv"
-                      | rename Decimal as ip_proto]
-                | table frame_time, ip_proto, Keyword, Protocol
-                | stats count by Keyword
+                | stats count by ws_col_Protocol
                 | rename count as packets
           </query>
         </search>
@@ -43,12 +39,8 @@
       <chart>
         <search>
           <query>$source_token$
-                | table frame_time, ip_proto, frame_cap_len
-                | join ip_proto
-                   [search sourcetype=list source="*protocol-numbers.csv"
-                      | rename Decimal as ip_proto]
-                | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len
-                | stats sum(frame_cap_len) as "traffic size" by Keyword
+                | table frame_time, ws_col_Protocol, frame_cap_len
+                | stats sum(frame_cap_len) as "traffic size" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -61,10 +53,7 @@
       <chart>
         <search>
           <query>$source_token$
-                | join type=left ip_proto
-                   [search sourcetype=list source="*protocol-numbers.csv"
-                      | rename Decimal as ip_proto]
-                | timechart span=1m count by Keyword usenull=f
+                | timechart span=1m count by ws_col_Protocol usenull=f
                 | rename VALUE as Other
           </query>
         </search>
