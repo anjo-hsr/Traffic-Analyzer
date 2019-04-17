@@ -18,7 +18,7 @@ class NameResolverEnricher:
         if ip_addr in self.fqdns:
             return
 
-        if ip_addr == "" or not IpHelper.is_public_ip(ip_addr):
+        if ip_addr == "" or not IpHelper.is_global_ip(ip_addr):
             self.set_entry(ip_addr, ip_addr)
             return
 

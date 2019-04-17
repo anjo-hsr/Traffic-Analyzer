@@ -26,7 +26,7 @@ class LocationEnricher:
         if ip_addr in self.locations:
             return
 
-        if ip_addr == "" or not IpHelper.is_public_ip(ip_addr):
+        if ip_addr == "" or not IpHelper.is_global_ip(ip_addr):
             lat_long = ["", ""]
             self.set_entry(ip_addr, lat_long)
             return
