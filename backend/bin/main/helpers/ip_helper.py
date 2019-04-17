@@ -1,9 +1,18 @@
-from IPy import IP
+import ipaddress
 
 
 class IpHelper:
-    def __init__(self):
-        self.public_identifier = "PUBLIC"
+    @staticmethod
+    def is_public_ip(ip_addr):
+        try:
+            return ipaddress.ip_address(ip_addr).is_global
+        except ValueError:
+            return False
 
-    def is_public_ip(self, ip_addr):
-        return IP(ip_addr).iptype() == self.public_identifier
+    @staticmethod
+    def is_ip(ip_addr):
+        try:
+            ipaddress.ip_address(ip_addr)
+            return True
+        except ValueError:
+            return False

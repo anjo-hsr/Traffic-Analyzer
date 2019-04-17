@@ -23,11 +23,10 @@ class LocationEnricher:
         self.locations[ip_addr] = lat_long
 
     def get_location(self, ip_addr, limiter=TrafficLimitHelper(2, 1)):
-        ip_helper = IpHelper()
         if ip_addr in self.locations:
             return
 
-        if ip_addr == "" or not ip_helper.is_public_ip(ip_addr):
+        if ip_addr == "" or not IpHelper.is_public_ip(ip_addr):
             lat_long = ["", ""]
             self.set_entry(ip_addr, lat_long)
             return
