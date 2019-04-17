@@ -14,9 +14,10 @@ class CombineHelper:
         fqdn_information = enrichers["name_resolve_enricher"].resolve(dst_src)
         cipher_suite_information = enrichers["cipher_suite_enricher"].get_cipher_suite(packet)
         tls_ssl_version = enrichers["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
+        ad_bool = enrichers["ad_enricher"].test_urls(fqdn_information)
         line = CombineHelper.combine_fields(
             [joined_default_cells, location_information, fqdn_information,
-             cipher_suite_information, tls_ssl_version])
+             cipher_suite_information, tls_ssl_version, ad_bool])
         return line
 
     @staticmethod

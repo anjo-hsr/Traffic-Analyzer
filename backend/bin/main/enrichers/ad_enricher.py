@@ -2,6 +2,8 @@ import requests
 
 from bs4 import BeautifulSoup
 
+from main.helpers.ip_helper import IpHelper
+
 
 class AdEnricher:
 
@@ -9,6 +11,7 @@ class AdEnricher:
         self.ip_to_category = {}
         self.header = "is_ad"
         self.blacklist_dict = {}
+        self.url_to_ad_dict = {}
         blacklist_urls = self.get_blacklist_urls()
         self.generate_blacklist_dict(blacklist_urls)
 
@@ -41,17 +44,36 @@ class AdEnricher:
         self.write_url_into_dict(dict_entry, url_parts, index - 1)
 
     def test_url(self, url):
+        url = url.replace('"', '')
+        url = url.replace("'", "")
+
+        if url in self.url_to_ad_dict:
+            return self.url_to_ad_dict[url]
+
+        is_ad = False
         dict_to_test = self.blacklist_dict
-        min_url_depth = 2
 
-        reversed_url_parts = reversed(url.split("."))
-        for index, url_part in enumerate(reversed_url_parts):
-            dict_to_test = self.test_url_part(url_part, dict_to_test)
-            if index < min_url_depth and dict_to_test == {}:
-                return False
+        if not IpHelper.is_ip(url):
+            reversed_url_parts = reversed(url.split("."))
+            for index, url_part in enumerate(reversed_url_parts):
+                dict_to_test = self.test_url_part(url_part, dict_to_test)
+                if index < 2 and dict_to_test == {}:
+                    self.url_to_ad_dict[url] = False
+                    return False
 
-        return dict_to_test == {}
+        is_ad = is_ad or dict_to_test == {}
+        self.url_to_ad_dict[url] = is_ad
+        return is_ad
 
     @staticmethod
     def test_url_part(url_part, current_dict):
         return current_dict.get(url_part, {})
+
+    def test_urls(self, fqdn_information):
+        destination, source = fqdn_information.split(",")
+        is_ad = self.test_url(destination) or self.test_url(source)
+
+        return str(is_ad)
+
+    def print(self):
+        pass

@@ -5,6 +5,7 @@ from os import path, remove
 
 import main.helpers.file_helper as file_helper
 
+from main.enrichers.ad_enricher import AdEnricher
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
@@ -39,7 +40,8 @@ def create_enrichers():
         ("location_enricher", LocationEnricher()),
         ("name_resolve_enricher", NameResolverEnricher()),
         ("cipher_suite_enricher", CipherSuiteEnricher()),
-        ("tls_ssl_version_enricher", TlsEnricher())
+        ("tls_ssl_version_enricher", TlsEnricher()),
+        ("ad_enricher", AdEnricher())
     ])
 
 
@@ -70,7 +72,6 @@ def enrich_file(dirpath, file, enrichers, new_file):
             open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
             open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
         csv_reader = file_helper.get_csv_dict_reader(capture)
-
         loop_through_lines(csv_reader, enrichers, output_file)
 
         PrintHelper.print_enrichers(enrichers)
