@@ -3,11 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class CategoryEnricher:
+class AdEnricher:
 
     def __init__(self):
         self.ip_to_category = {}
-        self.header = "category"
+        self.header = "is_ad"
         self.blacklist_dict = {}
         blacklist_urls = self.get_blacklist_urls()
         self.generate_blacklist_dict(blacklist_urls)
