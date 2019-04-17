@@ -6,8 +6,9 @@ import main.helpers.tshark_helper as tshark_helper
 class TestTsharkHelperMethods(unittest.TestCase):
     def test_tshark_get_arguments(self):
         filename = "test.pcap"
-        args = ["-r", filename, "-T", "fields", "-e", "frame.cap_len",
-                "-e", "_ws.col.UTCDateTime", "-e", "_ws.col.Protocol",
+        args = ["-r", filename, "-T", "fields",
+                "-e", "_ws.col.Time", "-e", "_ws.col.Protocol",
+                "-e", "frame.cap_len",
                 "-e", "eth.dst", "-e", "eth.src", "-e",
                 "ip.dst", "-e", "ip.src", "-e", "ip.proto",
                 "-e", "tcp.srcport", "-e", "tcp.dstport", "-e", "tcp.flags", "-e", "tcp.len", "-e", "tcp.stream",
