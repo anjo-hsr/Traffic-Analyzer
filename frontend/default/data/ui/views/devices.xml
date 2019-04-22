@@ -32,11 +32,11 @@
                 | rename ip_src as ip
                 | join type=left ip
                   [search $source_token$
-                  | stats sum(frame_cap_len) as out by ip_src
+                  | stats sum(frame_cap_len) as "bytes out" by ip_src
                   | rename ip_src as ip ]
                 | join type=left ip
                   [search $source_token$
-                  | stats sum(frame_cap_len) as in by ip_dst
+                  | stats sum(frame_cap_len) as "bytes in" by ip_dst
                   | rename ip_dst as ip ]
                 | join type=left ip
                   [search $source_token$
