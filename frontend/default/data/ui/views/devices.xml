@@ -1,0 +1,30 @@
+<form stylesheet="customStyle.css">
+  <label>Security</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="true">
+      <label>Choose capture file:</label>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
+      <suffix>)</suffix>
+      <valuePrefix>source="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <choice value="*">ALL</choice>
+      <fieldForLabel>source</fieldForLabel>
+      <fieldForValue>source</fieldForValue>
+      <search>
+        <query>sourcetype=capture
+              | dedup source
+              | table source
+        </query>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+
+      </table>
+    </panel>
+  </row>
+</form>
