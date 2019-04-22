@@ -23,7 +23,30 @@
   <row>
     <panel>
       <table>
-
+        <title>Endpoints</title>
+        <search>
+          <query>$source_token$
+                | where ip_src!=""
+                | table ip_src, src_fqdn
+                | dedup ip_src
+                | rename ip_src as ip
+                | join type=left ip
+                  [search $source_token$
+                  | stats sum(frame_cap_len) as out by ip_src
+                  | rename ip_src as ip ]
+                | join type=left ip
+                  [search $source_token$
+                  | stats sum(frame_cap_len) as in by ip_dst
+                  | rename ip_dst as ip ]
+                | join type=left ip
+                  [search $source_token$
+                  | rename ip_src as ip
+                  | where tls_handshake_type=1
+                  | eval client_hello=1
+                  | table client_hello, ip ]
+                | fillnull value=0
+          </query>
+        </search>
       </table>
     </panel>
   </row>
