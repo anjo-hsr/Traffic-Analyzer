@@ -23,14 +23,9 @@ class TestLocationEnricherMethods(unittest.TestCase):
         lat_long = self.location_enricher.locate_ip(self.public_ip_address)
         self.assertEqual(lat_long, self.location)
 
-    def test_locate_public_ip_first_time(self):
+    def test_locate_public_ip(self):
         ip_address = self.public_ip_address
         self.assert_location(ip_address, self.location)
-
-        size_before = len(self.locator.locations)
-        self.assert_location(ip_address, self.location)
-        size_after = len(self.locator.locations)
-        self.assertEqual(size_after, size_before)
 
     def test_locate_private_ip(self):
         ip_address = self.private_ip_address
