@@ -7,12 +7,15 @@ from main.helpers.ip_helper import IpHelper
 
 class AdEnricher:
 
-    def __init__(self):
+    def __init__(self, blacklist_urls=None):
         self.ip_to_category = {}
         self.header = "is_ad"
         self.blacklist_dict = {}
         self.url_to_ad_dict = {}
-        blacklist_urls = self.get_blacklist_urls()
+
+        if blacklist_urls is None:
+            blacklist_urls = self.get_blacklist_urls()
+
         self.generate_blacklist_dict(blacklist_urls)
 
     @staticmethod
@@ -27,21 +30,25 @@ class AdEnricher:
             url_parts = url.split(".")
             start_index = len(url_parts) - 1
             dict_to_write = self.blacklist_dict
-            self.write_url_into_dict(dict_to_write, url_parts, start_index)
+            self.write_url_into_dict(dict_to_write, url_parts, url, start_index)
 
-    def write_url_into_dict(self, dict_to_write, url_parts, index):
+    def write_url_into_dict(self, dict_to_write, url_parts, url, index):
         if index < 1:
             return
+        elif index < 2:
+            next_value = url
+        else:
+            next_value = {}
 
         key = url_parts[index]
         value = url_parts[index - 1]
 
         dict_entry = self.blacklist_dict.get(key, {})
-        dict_entry[value] = {}
+        dict_entry[value] = next_value
         dict_to_write[key] = dict_entry
 
         url_parts = url_parts[:index]
-        self.write_url_into_dict(dict_entry, url_parts, index - 1)
+        self.write_url_into_dict(dict_entry, url_parts, url, index - 1)
 
     def test_url(self, url):
         url = url.replace('"', '')
@@ -56,10 +63,17 @@ class AdEnricher:
         if not IpHelper.is_ip(url):
             reversed_url_parts = reversed(url.split("."))
             for index, url_part in enumerate(reversed_url_parts):
-                dict_to_test = self.test_url_part(url_part, dict_to_test)
-                if index < 2 and dict_to_test == {}:
-                    self.url_to_ad_dict[url] = False
-                    return False
+                return_value = self.test_url_part(url_part, dict_to_test)
+                if isinstance(return_value, dict):
+                    if return_value == {}:
+                        self.url_to_ad_dict[url] = False
+                        return False
+                    else:
+                        dict_to_test = return_value
+
+                if isinstance(return_value, str):
+                    self.url_to_ad_dict[url] = True
+                    return True
 
         is_ad = is_ad or dict_to_test == {}
         self.url_to_ad_dict[url] = is_ad
