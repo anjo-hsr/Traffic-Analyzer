@@ -3,3 +3,4 @@ tls.record.version,description
 "0x00000301","TLS 1.0"
 "0x00000302","TLS 1.1"
 "0x00000303","TLS 1.2"
+"0x00000304","TLS 1.3"
