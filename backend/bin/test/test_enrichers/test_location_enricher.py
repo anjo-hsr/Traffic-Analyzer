@@ -27,9 +27,9 @@ class TestLocationEnricherMethods(unittest.TestCase):
         ip_address = self.public_ip_address
         self.assert_location(ip_address, self.location)
 
-        size_before = len(self.locator.locations)
+        size_before = len(self.location_enricher.locations)
         self.assert_location(ip_address, self.location)
-        size_after = len(self.locator.locations)
+        size_after = len(self.location_enricher.locations)
         self.assertEqual(size_after, size_before)
 
     def test_locate_private_ip(self):

@@ -22,7 +22,7 @@ class TrafficLimitHelper:
         return self.requests_per_period
 
     def reset_period_timestamp(self):
-        self.period_start_timestamp = self.timestamp
+        self.period_start_timestamp = self.timestamp()
         self.counter = 0
 
     def increase_counter(self):
