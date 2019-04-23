@@ -22,7 +22,7 @@
   </fieldset>
   <row>
     <panel>
-      <title>Protocols by packets</title>
+      <title>Protocols by # of packets</title>
       <chart>
         <search>
           <query>$source_token$
@@ -35,7 +35,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Protocols by traffic</title>
+      <title>Protocols by volume</title>
       <chart>
         <search>
           <query>$source_token$
