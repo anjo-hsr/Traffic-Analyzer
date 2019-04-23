@@ -1,60 +1,118 @@
 <form stylesheet="customStyle.css">
   <label>Overview</label>
-  <search id="base_search">
-    <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
-  </search>
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
-      <default>ALL</default>
-      <!-- The final value will be surrounded by prefix and suffix -->
-      <prefix>(</prefix>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
-      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*" | dedup source | table source</query>
+        <query>sourcetype=capture
+              | dedup source
+              | table source
+        </query>
       </search>
-    </input>
-    <input type="radio" token="direction" searchWhenChanged="true">
-      <label>Direction of traffic</label>
-      <choice value="out">outgoing</choice>
-      <choice value="in">incoming</choice>
-      <default>out</default>
-      <change>
-        <condition value="in">
-          <set token="directionHeader">sources</set>
-          <set token="src_dst_selector">ip_dst</set>
-        </condition>
-        <condition value="out">
-          <set token="directionHeader">destination</set>
-          <set token="src_dst_selector">ip_src</set>
-        </condition>
-      </change>
-    </input>
-    <input type="text" searchWhenChanged="true" token="limit">
-      <label>Show top n results:</label>
-      <default>5</default>
-    </input>
-    <input type="text" searchWhenChanged="true" token="ip">
-      <label>Show for following  IP:</label>
-      <default>*</default>
     </input>
   </fieldset>
   <row>
     <panel>
-      <table>
-        <title>Top $limit$ $directionHeader$</title>
+      <chart>
+        <title>Protocols by packets</title>
         <search>
-          <query>$source_token$ $src_dst_selector$=$ip$ | stats sum(linecount) as "# of packages" by src_fqdn  | sort $limit$ -num("# of packages")</query>
+          <query>$source_token$
+                | table frame_time, ip_proto
+                | stats count by ws_col_Protocol
+                | rename count as packets
+          </query>
         </search>
-      </table>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Protocols by traffic</title>
+        <search>
+          <query>$source_token$
+                | table frame_time, ws_col_Protocol, frame_cap_len
+                | stats sum(frame_cap_len) as "traffic size" by ws_col_Protocol
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Security</title>
+      <single>
+        <title>Total number of tcp streams</title>
+        <search>
+          <query>$source_token$
+                | where tcp_stream!=""
+                | dedup tcp_stream, source
+                | stats count as "# of streams"
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title>Number of inadvisable cipher suites used</title>
+        <search>
+          <query>$source_token$
+                | dedup cipher_suite_number
+                | join cipher_suite_number
+                   [ search sourcetype=list source="*cipher_suites.csv" ]
+                | table cipher_suite_number, recommended
+                | stats count as amount by recommended
+                | where recommended="N"
+                | table amount
+                | appendpipe [stats count | where count=0]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title>Amount of unsecured traffic (by packets)</title>
+        <search>
+          <query>$source_token$
+                | eval issecure=if(cipher_suite_number=="","no","yes")
+                | table issecure
+                | top issecure
+                | where issecure="no"
+                | table percent
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
     </panel>
   </row>
 </form>

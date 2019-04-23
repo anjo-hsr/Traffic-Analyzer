@@ -11,7 +11,7 @@ class NameResolverEnricher:
         self.header = "dst_fqdn,src_fqdn"
 
     def print(self):
-        print_text = "Print out for all {} fqdn entries"
+        print_text = "Print out for {} fqdn entries"
         PrintHelper.print_dict(self.fqdns, print_text)
 
     def get_fqdn(self, ip_addr):

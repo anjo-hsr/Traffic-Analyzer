@@ -1,8 +1,5 @@
 import unittest
 
-from io import StringIO
-from unittest.mock import patch
-
 from main.enrichers.location_enricher import LocationEnricher
 
 
@@ -16,14 +13,14 @@ class TestLocationEnricherMethods(unittest.TestCase):
         cls.empty_location = ["", ""]
 
     def setUp(self):
-        self.locator = LocationEnricher()
+        self.location_enricher = LocationEnricher()
 
     def assert_location(self, ip_address, location):
-        self.locator.get_location(ip_address)
-        self.assertEqual(self.locator.locations[ip_address], location)
+        self.location_enricher.get_location(ip_address)
+        self.assertEqual(self.location_enricher.locations[ip_address], location)
 
     def test_get_location(self):
-        lat_long = self.locator.locate_ip(self.public_ip_address)
+        lat_long = self.location_enricher.locate_ip(self.public_ip_address)
         self.assertEqual(lat_long, self.location)
 
     def test_locate_public_ip_first_time(self):
@@ -44,27 +41,12 @@ class TestLocationEnricherMethods(unittest.TestCase):
         self.assert_location(ip_address, self.empty_location)
 
     def test_locate(self):
-        line = self.locator.locate(self.dst_src)
+        line = self.location_enricher.locate(self.dst_src)
         expected_line = '"47.1449","8.1551","",""'
         self.assertEqual(line, expected_line)
 
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_print_empty_locations(self, mock_stdout):
-        print_text = "Print out for all {} location entries\n\n\n\n".format(len(self.locator.locations))
-        self.locator.print()
-        self.assertEqual(mock_stdout.getvalue(), print_text)
-
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_print_full_locations(self, mock_stdout):
-        self.locator.set_entry(self.private_ip_address, self.empty_location)
-        print_text = "Print out for all {} location entries\n{} --> {}\n\n\n\n" \
-            .format(len(self.locator.locations), self.private_ip_address, self.empty_location)
-
-        self.locator.print()
-        self.assertEqual(mock_stdout.getvalue(), print_text)
-
     def tearDown(self):
-        self.locator = None
+        self.location_enricher = None
 
 
 if __name__ == "__main__":

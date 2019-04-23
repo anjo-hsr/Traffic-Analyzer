@@ -16,6 +16,9 @@ function delete_containers() {
 function building_splunk() {
     echo -e "\nBuilding with docker-compose"
     docker-compose up -d
+}
+
+function wait_till_container_is_running() {
     echo -e "Wait till docker container is running (~60s)"
 
     while [[ $(docker ps -q --filter health=starting --filter name=${containerName} --format "{{.Names}}" | grep ${containerName}) ]]
@@ -52,18 +55,35 @@ function update_traffic-analyzer() {
     sleep 5
     docker cp ./docker/init_files/traffic-analyzer/traffic-analyzer.tar.gz ${containerName}:/tmp/traffic-analyzer/
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk install app /tmp/traffic-analyzer/traffic-analyzer.tar.gz -auth admin:AnJo-HSR -update 1'
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type d -exec sudo chmod 755 {} \;'
-    docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
 
-    #Must be done till tshark is updated to version 3.0.0 for debian
-    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/lookups -type f -exec sed -i 's/tls\./ssl\./g' {} +'
+    set_rights
+    fix_tshark
 
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk restart splunkd'
 }
 
-function import_csvs() {
-    echo -e "\nImport standard csv files from ./docker/init_files/csvs"
-    docker exec ${containerName} bash -c 'for csv in /tmp/csvs/*.csv; do sudo /opt/splunk/bin/splunk add oneshot "$csv" -auth admin:AnJo-HSR; done'
+function set_rights() {
+    echo -e "\nSet rights on folders and files"
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type d -exec sudo chmod 775 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/lookups -type d -exec sudo chmod 777 {} \;'
+
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/ -type f -exec sudo chmod 664 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -name "*.sh" -type f -exec sudo chmod 775 {} \;'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -name "*.py" -type f -exec sudo chmod 775 {} \;'
+
+    docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
+}
+
+function fix_tshark() {
+    #Must be done till tshark is updated to version 3.0.0 for debian
+    echo -e "\nReplace tls. with ssl for tshark versions 2.x"
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/tls\.handshake/ssl\.handshake/g' {} +'
+}
+
+function copy_pcaps() {
+    for filename in ./docker/init_files/pcaps/*.pcap*; do
+        docker cp ${filename} ${containerName}:/tmp/pcaps/
+    done
 }
 
 containerName="splunk_traffic-analyzer"
@@ -74,10 +94,10 @@ case "$1" in
         stop_splunk
         delete_containers
         building_splunk
-        install_requirements
         create_tar
+        wait_till_container_is_running
+        install_requirements
         update_traffic-analyzer
-        import_csvs
         ;;
 
     update)
@@ -93,7 +113,11 @@ case "$1" in
         update_traffic-analyzer
         ;;
 
+    copy-pcaps)
+        copy_pcaps
+        ;;
+
     *)
-        echo $"Usage: $0 {start|update|force-update}"
+        echo $"Usage: $0 {start|update|force-update|copy-pcaps}"
         exit 1
 esac

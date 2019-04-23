@@ -43,12 +43,6 @@ class TestConvertPcapMethods(unittest.TestCase):
         self.assertEqual(new_pcap_filenames, csv_filenames_lower)
         self.assertEqual(new_pcapng_filenames, csv_filenames_lower)
 
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_print_error(self, mock_stdout):
-        error_text = "No wireshark folder found. Please install Wireshark into the standard folder\n"
-        convert_pcap.print_error()
-        self.assertEqual(mock_stdout.getvalue(), error_text)
-
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestConvertPcapMethods)

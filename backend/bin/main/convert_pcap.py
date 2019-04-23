@@ -2,12 +2,13 @@ import platform
 import re
 import subprocess
 
-from os import path, walk
+from os import path
 
 import main.helpers.file_helper as file_helper
 import main.helpers.tshark_helper as tshark_helper
 
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.print_helper import PrintHelper
 
 
 def run_tshark(filename):
@@ -16,7 +17,8 @@ def run_tshark(filename):
     with open(new_filename, "w") as out_file:
         program_path = detect_platform()
         if program_path is None:
-            return print_error()
+            error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
+            return PrintHelper.print_error(error_text)
 
         start_tshark(filename, out_file, program_path)
 
@@ -68,10 +70,6 @@ def get_new_filename(filename):
     return new_filename
 
 
-def print_error():
-    print("No wireshark folder found. Please install Wireshark into the standard folder")
-
-
 def main():
     environment_helper = EnvironmentHelper()
     run(environment_helper.get_environment())
@@ -79,20 +77,21 @@ def main():
 
 def run(environment_variables):
     pcap_path = environment_variables["pcap_path"]
-    csv_path = environment_variables["csv_path"]
+    pcap_processed_path = environment_variables["pcap_processed_path"]
+    csv_tmp_path = environment_variables["csv_tmp_path"]
 
-    for dirpath, _, filenames in walk(pcap_path):
-        for file in filenames:
-            if file_helper.is_pcap_file(file):
-                run_tshark(path.join(dirpath, file))
+    for file_path in file_helper.get_file_paths(pcap_path, file_helper.is_pcap_file):
+        run_tshark(path.join(file_path["path"], file_path["filename"]))
+        file_helper.move_file(
+            path.join(file_path["path"], file_path["filename"]),
+            path.join(pcap_processed_path, file_path["filename"])
+        )
 
-    for dirpath, _, filenames in walk(pcap_path):
-        for file in filenames:
-            if file_helper.is_normal_csv_file(file):
-                file_helper.move_file(
-                    path.join(dirpath, file),
-                    path.join(csv_path, file)
-                )
+    for file_path in file_helper.get_file_paths(pcap_path, file_helper.is_normal_csv_file):
+        file_helper.move_file(
+            path.join(file_path["path"], file_path["filename"]),
+            path.join(csv_tmp_path, file_path["filename"])
+        )
 
 
 if __name__ == "__main__":

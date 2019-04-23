@@ -3,38 +3,45 @@
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
-      <default>capture-*</default>
-      <!-- The final value will be surrounded by prefix and suffix -->
-      <prefix>(</prefix>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <!-- Each value will be surrounded by the valuePrefix and valueSuffix -->
       <valuePrefix>source="</valuePrefix>
       <valueSuffix>"</valueSuffix>
-      <!-- All the values and their valuePrefix and valueSuffix will be concatenated together with the delimiter between them -->
       <delimiter> OR </delimiter>
-      <choice value="capture-*">ALL</choice>
+      <choice value="*">ALL</choice>
       <fieldForLabel>source</fieldForLabel>
       <fieldForValue>source</fieldForValue>
       <search>
-        <query>source="capture-*" | dedup source | table source</query>
+        <query>sourcetype=capture
+              | dedup source
+              | table source
+        </query>
       </search>
     </input>
   </fieldset>
   <row>
     <panel>
-      <title>Protocols by packets</title>
+      <title>Protocols by # of packets</title>
       <chart>
         <search>
-          <query> $source_token$ | table frame_time, ip_proto | join ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol | stats count by Keyword | rename count as packets</query>
+          <query>$source_token$
+                | table frame_time, ip_proto
+                | stats count by ws_col_Protocol
+                | rename count as packets
+          </query>
         </search>
         <option name="charting.chart">pie</option>
       </chart>
     </panel>
     <panel>
-      <title>Protocols by traffic</title>
+      <title>Protocols by volume</title>
       <chart>
         <search>
-          <query> $source_token$ | table frame_time, ip_proto, frame_cap_len | join ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | table frame_time, ip_proto, Keyword, Protocol, frame_cap_len | stats sum(frame_cap_len) as "traffic size" by Keyword</query>
+          <query>$source_token$
+                | table frame_time, ws_col_Protocol, frame_cap_len
+                | stats sum(frame_cap_len) as "traffic size" by ws_col_Protocol
+          </query>
         </search>
         <option name="charting.chart">pie</option>
       </chart>
@@ -45,7 +52,10 @@
       <title>Protokolle über Zeit</title>
       <chart>
         <search>
-          <query> $source_token$ | join type=left ip_proto [search source="/tmp/csvs/protocol-numbers.csv" | rename Decimal as ip_proto] | timechart span=1m count by ip_proto usenull=f | rename VALUE as Other</query>
+          <query>$source_token$
+                | timechart span=1m count by ws_col_Protocol usenull=f
+                | rename VALUE as Other
+          </query>
         </search>
         <option name="charting.chart">area</option>
         <option name="charting.chart.nullValueMode">connect</option>
