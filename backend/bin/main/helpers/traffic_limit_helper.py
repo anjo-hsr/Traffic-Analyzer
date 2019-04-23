@@ -7,15 +7,15 @@ class TrafficLimitHelper:
     def __init__(self, requests_per_period, period_time):
         self.requests_per_period = requests_per_period
         self.period_time = period_time
-        self.period_start_timestamp = self.timestamp
+        self.period_start_timestamp = self.timestamp()
         self.counter = 0
 
     @property
     def waiting_time(self):
-        return self.period_time - (self.timestamp - self.period_start_timestamp)
+        return self.period_time - (self.timestamp() - self.period_start_timestamp)
 
-    @property
-    def timestamp(self):
+    @staticmethod
+    def timestamp():
         return datetime.now().timestamp()
 
     def get_requests_per_period(self):
