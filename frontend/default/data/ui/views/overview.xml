@@ -49,6 +49,7 @@
   </row>
   <row>
     <panel>
+      <title>Security</title>
       <single>
         <title>Total number of tcp streams</title>
         <search>
@@ -67,8 +68,6 @@
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
       </single>
-    </panel>
-    <panel>
       <single>
         <title>Number of inadvisable cipher suites used</title>
         <search>
@@ -92,8 +91,6 @@
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
       </single>
-    </panel>
-    <panel>
       <single>
         <title>Amount of unsecured traffic (by packets)</title>
         <search>
