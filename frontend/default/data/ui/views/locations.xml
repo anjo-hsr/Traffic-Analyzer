@@ -1,5 +1,5 @@
-<dashboard stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Locations</label>
+<form stylesheet="customStyle.css" script="tokenStorer.js">
+ <label>Locations</label>
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
       <label>Choose capture file:</label>
@@ -22,20 +22,47 @@
   </fieldset>
   <row>
     <panel>
-      <viz type="leaflet_maps_app.maps-plus">
+      <map>
         <search>
           <query>$source_token$
                 | dedup dst_fqdn
                 | table dst_fqdn, dst_latitude, dst_longitude
-                | where dst_latitude != "" and dst_longitude != ""
-                | eval clusterGroup="default"
-                | rename dst_fqdn as tooltip, dst_latitude as latitude, dst_longitude as longitude
+                | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
+                | lookup geo_countries longitude, latitude
+                | stats count by featureId
+                | rename count as Destinations, featureId as Country
+                | geom geo_countries featureIdField="Country"
+                |</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="mapping.type">choropleth</option>
+        <option name="trellis.enabled">0</option>
+        <drilldown>
+          <set token="selectedCountry">$click.value$</set>
+          <set token="selectedCountryFilter">where featureId = "$click.value$"</set>
+        </drilldown>
+      </map>
+    </panel>
+    <panel>
+      <table>
+        <title>Destinations in $selectedCountry$</title>
+        <search>
+          <query>$source_token$
+                | table dst_fqdn, dst_latitude, dst_longitude, tcp_stream
+                | dedup tcp_stream
+                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
+                | lookup geo_countries longitude, latitude
+                | $selectedCountryFilter$
+                | stats count(tcp_stream) by Destination
+                | table Destination, count(tcp_stream)
+                | rename count(tcp_stream) as "# of connections"
           </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
-        <option name="drilldown">none</option>
-      </viz>
+      </table>
     </panel>
   </row>
-</dashboard>
+</form>
