@@ -24,7 +24,8 @@
     <panel>
       <map>
         <search>
-          <query>$source_token$| dedup dst_fqdn
+          <query>$source_token$
+                | dedup dst_fqdn
                 | table dst_fqdn, dst_latitude, dst_longitude
                 | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
                 | lookup geo_countries longitude, latitude
