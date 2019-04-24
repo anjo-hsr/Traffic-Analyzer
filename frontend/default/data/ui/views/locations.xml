@@ -1,4 +1,4 @@
-<dashboard stylesheet="customStyle.css">
+<dashboard stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Locations</label>
   <fieldset submitButton="false" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="true">
