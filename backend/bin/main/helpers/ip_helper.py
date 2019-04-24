@@ -7,9 +7,9 @@ class IpHelper:
         try:
             ip = ipaddress.ip_address(ip_address)
 
-            # Multicast addresses are currently detected as globally addresses. To prevent this false positive
-            # the check for is_global is done with multiple checks.
-            return not (ip.is_multicast or ip.is_private or ip.is_loopback)
+            # Multicast addresses are in ipaddress detected as globally addresses. The function is used to tell if a IP
+            # address should be resolved with nslookup. This line prevents the checking of multicast ips as well.
+            return ip.is_global and not ip.is_multicast
         except ValueError:
             return False
 
