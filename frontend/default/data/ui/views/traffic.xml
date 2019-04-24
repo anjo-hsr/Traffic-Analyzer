@@ -1,4 +1,4 @@
-<form stylesheet="customStyle.css">
+<form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Traffic</label>
   <search id="base_search">
     <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
