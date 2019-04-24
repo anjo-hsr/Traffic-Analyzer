@@ -8,6 +8,7 @@ import main.helpers.file_helper as file_helper
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.combine_helper import CombineHelper
@@ -43,7 +44,8 @@ def create_enrichers():
         ("location_enricher", LocationEnricher()),
         ("name_resolve_enricher", NameResolverEnricher()),
         ("cipher_suite_enricher", CipherSuiteEnricher()),
-        ("tls_ssl_version_enricher", TlsEnricher())
+        ("tls_ssl_version_enricher", TlsEnricher()),
+        ("stream_enricher", StreamEnricher())
     ])
 
 
