@@ -18,6 +18,4 @@ require([
             window.sessionStorage.setItem(tokenKey, attributes[tokenKey]);
         );
     });
-
-
 });
