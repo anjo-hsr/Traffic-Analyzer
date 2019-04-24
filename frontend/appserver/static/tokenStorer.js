@@ -1,9 +1,7 @@
 require([
     "splunkjs/mvc",
     "splunkjs/mvc/simplexml/ready!"
-], function (
-    mvc
-) {
+], function (mvc) {
     let defaultTokenModel = mvc.Components.get("default");
 
     let savedTokens = window.sessionStorage;
@@ -17,7 +15,7 @@ require([
     defaultTokenModel.on("change", function () {
         let attributes = defaultTokenModel.attributes;
         Object.keys(attributes).forEach(tokenKey =>
-            window.sessionStorage.setItem(tokenKey, attributes[tokenKey])
+            window.sessionStorage.setItem(tokenKey, attributes[tokenKey]);
         );
     });
 
