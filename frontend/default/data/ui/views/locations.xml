@@ -32,7 +32,7 @@
                 | stats count by featureId
                 | rename count as Destinations, featureId as Country
                 | geom geo_countries featureIdField="Country"
-                |</query>
+          </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
