@@ -1,7 +1,7 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Devices</label>
-  <fieldset submitButton="false" autoRun="true">
-    <input type="multiselect" token="source_token" searchWhenChanged="true">
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>

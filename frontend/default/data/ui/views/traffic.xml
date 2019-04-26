@@ -3,8 +3,8 @@
   <search id="base_search">
     <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
   </search>
-  <fieldset submitButton="false" autoRun="true">
-    <input type="multiselect" token="source_token" searchWhenChanged="true">
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
