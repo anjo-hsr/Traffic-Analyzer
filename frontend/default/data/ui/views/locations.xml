@@ -1,68 +1,68 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
- <label>Locations</label>
-  <fieldset submitButton="false" autoRun="true">
-    <input type="multiselect" token="source_token" searchWhenChanged="true">
-      <label>Choose capture file:</label>
-      <default>*</default>
-      <prefix>(sourcetype=capture </prefix>
-      <suffix>)</suffix>
-      <valuePrefix>source="</valuePrefix>
-      <valueSuffix>"</valueSuffix>
-      <delimiter> OR </delimiter>
-      <choice value="*">ALL</choice>
-      <fieldForLabel>source</fieldForLabel>
-      <fieldForValue>source</fieldForValue>
-      <search>
-        <query>sourcetype=capture
-              | dedup source
-              | table source
-        </query>
-      </search>
-    </input>
-  </fieldset>
-  <row>
-    <panel>
-      <map>
-        <search>
-          <query>$source_token$
-                | dedup dst_fqdn
-                | table dst_fqdn, dst_latitude, dst_longitude
-                | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
-                | lookup geo_countries longitude, latitude
-                | stats count by featureId
-                | rename count as Destinations, featureId as Country
-                | geom geo_countries featureIdField="Country"
-          </query>
-          <earliest>0</earliest>
-          <latest></latest>
-        </search>
-        <option name="drilldown">all</option>
-        <option name="mapping.type">choropleth</option>
-        <option name="trellis.enabled">0</option>
-        <drilldown>
-          <set token="selectedCountry">$click.value$</set>
-          <set token="selectedCountryFilter">where featureId = "$click.value$"</set>
-        </drilldown>
-      </map>
-    </panel>
-    <panel>
-      <table>
-        <title>Destinations in $selectedCountry$</title>
-        <search>
-          <query>$source_token$
-                | table dst_fqdn, dst_latitude, dst_longitude, tcp_stream
-                | dedup tcp_stream
-                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
-                | lookup geo_countries longitude, latitude
-                | $selectedCountryFilter$
-                | stats count(tcp_stream) by Destination
-                | table Destination, count(tcp_stream)
-                | rename count(tcp_stream) as "# of connections"
-          </query>
-          <earliest>0</earliest>
-          <latest></latest>
-        </search>
-      </table>
-    </panel>
-  </row>
+    <label>Locations</label>
+    <fieldset submitButton="false" autoRun="true">
+        <input type="multiselect" token="source_token" searchWhenChanged="true">
+            <label>Choose capture file:</label>
+            <default>*</default>
+            <prefix>(sourcetype=capture</prefix>
+            <suffix>)</suffix>
+            <valuePrefix>source="</valuePrefix>
+            <valueSuffix>"</valueSuffix>
+            <delimiter>OR</delimiter>
+            <choice value="*">ALL</choice>
+            <fieldForLabel>source</fieldForLabel>
+            <fieldForValue>source</fieldForValue>
+            <search>
+                <query>sourcetype=capture
+                    | dedup source
+                    | table source
+                </query>
+            </search>
+        </input>
+    </fieldset>
+    <row>
+        <panel>
+            <map>
+                <search>
+                    <query>$source_token$
+                        | dedup dst_fqdn
+                        | table dst_fqdn, dst_latitude, dst_longitude
+                        | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
+                        | lookup geo_countries longitude, latitude
+                        | stats count by featureId
+                        | rename count as Destinations, featureId as Country
+                        | geom geo_countries featureIdField="Country"
+                    </query>
+                    <earliest>0</earliest>
+                    <latest></latest>
+                </search>
+                <option name="drilldown">all</option>
+                <option name="mapping.type">choropleth</option>
+                <option name="trellis.enabled">0</option>
+                <drilldown>
+                    <set token="selectedCountry">$click.value$</set>
+                    <set token="selectedCountryFilter">where featureId = "$click.value$"</set>
+                </drilldown>
+            </map>
+        </panel>
+        <panel>
+            <table>
+                <title>Destinations in $selectedCountry$</title>
+                <search>
+                    <query>$source_token$
+                        | table dst_fqdn, dst_latitude, dst_longitude, tcp_stream
+                        | dedup tcp_stream
+                        | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
+                        | lookup geo_countries longitude, latitude
+                        | $selectedCountryFilter$
+                        | stats count(tcp_stream) by Destination
+                        | table Destination, count(tcp_stream)
+                        | rename count(tcp_stream) as "# of connections"
+                    </query>
+                    <earliest>0</earliest>
+                    <latest></latest>
+                </search>
+            </table>
+        </panel>
+    </row>
 </form>
