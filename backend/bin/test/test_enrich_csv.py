@@ -12,9 +12,8 @@ from main.enrichers.tls_enricher import TlsEnricher
 class TestEnrichCsv(unittest.TestCase):
     def test_create_enrichers_classes(self):
         enrichers = add_information.create_enrichers()
-        keys = enrichers.keys()
 
-        for key in keys:
+        for key in enrichers.keys():
             if key == "location_enricher":
                 self.assertTrue(isinstance(enrichers[key], LocationEnricher))
 
