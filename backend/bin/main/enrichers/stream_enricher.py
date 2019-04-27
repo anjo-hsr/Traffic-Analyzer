@@ -8,6 +8,7 @@ class StreamEntry:
         self.combined_string = combined_string
         self.stream_id = stream_id
 
+
 class StreamEnricher:
     def __init__(self):
         self.stream_ids = {"": ""}
@@ -35,10 +36,11 @@ class StreamEnricher:
         udp_dst_port = packet["udp.dstport"]
         udp_src_port = packet["udp.srcport"]
 
-        if (tcp_dst_port is "" and tcp_src_port is "") and (udp_dst_port is "" and udp_src_port is ""):
+        are_ports_set = (tcp_dst_port is not "" and tcp_src_port is not "") or \
+                        (udp_dst_port is not "" and udp_src_port is not "")
+        if not are_ports_set:
             return ""
 
-        timestamp = packet["frame.time"]
         inbound = ",".join([dst_ip, src_ip, tcp_dst_port, tcp_src_port, udp_dst_port, udp_src_port])
         outbound = ",".join([src_ip, dst_ip, tcp_src_port, tcp_dst_port, udp_src_port, udp_dst_port])
         inbound_outbound_list = [inbound, outbound]
