@@ -6,6 +6,7 @@ from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.cipher_suite_enricher = CipherSuiteEnricher()
         cls.packets = {
             "client_hello": {
                 "tls.handshake.type": "1",
@@ -20,7 +21,10 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
                 "tls.handshake.ciphersuite": "",
                 "tcp.stream": 1
             }}
-        cls.cipher_suite_enricher = CipherSuiteEnricher()
+
+    def test_header(self):
+        expected_header = "cipher_suite_number"
+        self.assertEqual(self.cipher_suite_enricher.header, expected_header)
 
     def run_test_packet(self, expected_value, packet):
         if expected_value == "":

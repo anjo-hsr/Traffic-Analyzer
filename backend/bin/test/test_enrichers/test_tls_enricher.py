@@ -6,6 +6,7 @@ from main.enrichers.tls_enricher import TlsEnricher
 class TestTlsEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.tls_enricher = TlsEnricher()
         cls.packets_tls1_2 = {
             "client_hello_tls1_2": {
                 "tls.version": "0x0301",
@@ -46,7 +47,10 @@ class TestTlsEnricherMethods(unittest.TestCase):
                 "tls.handshake.extensions.supported_version": "",
                 "tcp.stream": 2
             }}
-        cls.tls_enricher = TlsEnricher()
+
+    def test_header(self):
+        expected_header = "tls_ssl_version_negotiated"
+        self.assertEqual(self.tls_enricher.header, expected_header)
 
     def run_test_packet(self, expected_value, packet):
         if expected_value == "":
