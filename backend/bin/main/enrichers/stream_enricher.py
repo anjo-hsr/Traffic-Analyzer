@@ -36,8 +36,8 @@ class StreamEnricher:
         udp_dst_port = packet["udp.dstport"]
         udp_src_port = packet["udp.srcport"]
 
-        are_ports_set = (tcp_dst_port is not "" and tcp_src_port is not "") or \
-                        (udp_dst_port is not "" and udp_src_port is not "")
+        are_ports_set = (tcp_dst_port != "" and tcp_src_port != "") or \
+                        (udp_dst_port != "" and udp_src_port != "")
         if not are_ports_set:
             return ""
 
