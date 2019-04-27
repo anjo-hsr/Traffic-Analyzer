@@ -28,7 +28,8 @@ class IpInformationDownloader:
         if ip_address in self.ip_information:
             return self.ip_information[ip_address]
 
-        if ip_address == "" or not IpHelper.is_public_ip(ip_address):
+        ip_helper = IpHelper()
+        if ip_address == "" or not ip_helper.is_public_ip(ip_address):
             self.ip_information[ip_address] = IpInformationDownloader.get_empty_ip_data(ip_address)
             return IpInformationDownloader.get_empty_ip_data(ip_address)
 
