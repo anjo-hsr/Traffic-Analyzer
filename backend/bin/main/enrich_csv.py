@@ -28,7 +28,7 @@ def loop_through_lines(csv_reader, enrichers, output_file):
 
             # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
             # for encrypted traffic. ssl.* could be deprecated in future releases
-            # https://packages.qa.debian.org/w/wireshark.html
+            # https://tracker.debian.org/pkg/wireshark
             # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
             line = re.sub(r"ssl\.", r"tls.", line)
 
