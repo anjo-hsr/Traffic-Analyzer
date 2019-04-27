@@ -30,11 +30,11 @@ class TestCombineHelperMethods(unittest.TestCase):
 
     def test_combine_fields_with_quotes(self):
         row = "number,name,description"
-
         fqdns_string = self.csv_delimiter.join([self.fqdns[self.destination], self.fqdns[self.source]])
         locations_string = self.csv_delimiter.join([self.locations[self.destination], self.locations[self.source]])
+        elements = [row, fqdns_string, locations_string]
 
-        expected_line = self.csv_delimiter.join('"{0}"'.format(element) for element in [row, fqdns_string, locations_string])
+        expected_line = self.csv_delimiter.join('"{0}"'.format(element) for element in elements)
         given_line = CombineHelper.combine_fields([self.row, fqdns_string, locations_string], True)
         self.assertEqual(given_line, expected_line)
 
@@ -46,12 +46,8 @@ class TestCombineHelperMethods(unittest.TestCase):
         given_line = CombineHelper.combine_fields([self.row, fqdns_string, locations_string])
         self.assertEqual(given_line, expected_line)
 
-    def test_combine_fqdns(self):
-        combined_fqdns = '"{1}"{0}"{2}"'.format(self.csv_delimiter, self.fqdns[self.destination], self.fqdns[self.source])
-        self.assertEqual(CombineHelper.combine_fqdns(self.fqdns, self.destination, self.source), combined_fqdns)
-
     def test_combine_default_fields(self):
-        field_names = ["ip.dst","ip.src"]
+        field_names = ["ip.dst", "ip.src"]
         packet = {"ip.dst": "8.8.8.8", "ip.src": "10.0.0.1"}
         joined_cells = '"8.8.8.8","10.0.0.1"'
         self.assertEqual(CombineHelper.join_default_cells(packet, field_names), joined_cells)
