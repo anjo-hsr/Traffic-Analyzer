@@ -8,18 +8,19 @@ from main.enrichers.name_resolve_enricher import NameResolverEnricher
 class TestCombineHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.csv_delimiter = ","
         cls.location_enricher = LocationEnricher()
         cls.name_resolver_enricher = NameResolverEnricher()
 
         cls.source = "10.0.0.1"
         cls.destination = "8.8.8.8"
 
+        cls.row = "number,name,description"
         cls.fqdns = {cls.destination: "google-public-dns-a.google.com", cls.source: ""}
         cls.locations = {cls.destination: "[8.1551, 47.144901]", cls.source: ""}
 
     def test_delimiter(self):
-        csv_delimiter = ","
-        self.assertEqual(CombineHelper.delimiter, csv_delimiter)
+        self.assertEqual(CombineHelper.delimiter, self.csv_delimiter)
 
     def test_get_src_dst(self):
         packet = {"ip.dst": "8.8.8.8", "ip.src": "10.0.0.1"}
@@ -27,18 +28,26 @@ class TestCombineHelperMethods(unittest.TestCase):
 
         self.assertEqual(CombineHelper.get_dst_src(packet), dst_src_list)
 
-    def test_combine_fields(self):
+    def test_combine_fields_with_quotes(self):
         row = "number,name,description"
 
-        fqdns_string = "{},{}".format(self.fqdns[self.destination], self.fqdns[self.source])
-        locations_string = "{},{}".format(self.locations[self.destination], self.locations[self.source])
-        combined_line_without_quotes = '{},{},{}'.format(row, fqdns_string, locations_string)
-        combined_line_with_quotes = '"{}","{}","{}"'.format(row, fqdns_string, locations_string)
-        self.assertEqual(CombineHelper.combine_fields([row, fqdns_string, locations_string], True), combined_line_with_quotes)
-        self.assertEqual(CombineHelper.combine_fields([row, fqdns_string, locations_string]), combined_line_without_quotes)
+        fqdns_string = self.csv_delimiter.join([self.fqdns[self.destination], self.fqdns[self.source]])
+        locations_string = self.csv_delimiter.join([self.locations[self.destination], self.locations[self.source]])
+
+        expected_line = self.csv_delimiter.join('"{0}"'.format(element) for element in [row, fqdns_string, locations_string])
+        given_line = CombineHelper.combine_fields([self.row, fqdns_string, locations_string], True)
+        self.assertEqual(given_line, expected_line)
+
+    def test_combine_fields_without_quotes(self):
+        fqdns_string = self.csv_delimiter.join([self.fqdns[self.destination], self.fqdns[self.source]])
+        locations_string = self.csv_delimiter.join([self.locations[self.destination], self.locations[self.source]])
+
+        expected_line = self.csv_delimiter.join([self.row, fqdns_string, locations_string])
+        given_line = CombineHelper.combine_fields([self.row, fqdns_string, locations_string])
+        self.assertEqual(given_line, expected_line)
 
     def test_combine_fqdns(self):
-        combined_fqdns = '"{}","{}"'.format(self.fqdns[self.destination], self.fqdns[self.source])
+        combined_fqdns = '"{1}"{0}"{2}"'.format(self.csv_delimiter, self.fqdns[self.destination], self.fqdns[self.source])
         self.assertEqual(CombineHelper.combine_fqdns(self.fqdns, self.destination, self.source), combined_fqdns)
 
     def test_combine_default_fields(self):
