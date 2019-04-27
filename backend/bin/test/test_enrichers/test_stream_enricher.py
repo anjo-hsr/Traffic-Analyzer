@@ -54,8 +54,6 @@ class TestStreamEnricherMethods(unittest.TestCase):
         self.assertEqual(len(self.stream_enricher.stream_ids), expected_size)
 
 
-
-
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestStreamEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
