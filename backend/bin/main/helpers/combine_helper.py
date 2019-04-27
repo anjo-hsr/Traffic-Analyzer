@@ -22,9 +22,9 @@ class CombineHelper:
     @staticmethod
     def combine_fields(fields, quotes_needed=False):
         if quotes_needed:
-            return ",".join('"{}"'.format(field) for field in fields)
+            return CombineHelper.delimiter.join('"{}"'.format(field) for field in fields)
 
-        return ",".join("{}".format(field) for field in fields)
+        return CombineHelper.delimiter.join("{}".format(field) for field in fields)
 
     @staticmethod
     def join_default_cells(packet, field_names):

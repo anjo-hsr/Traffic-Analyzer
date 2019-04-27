@@ -64,4 +64,4 @@ class LocationEnricher:
         pos_dest = CombineHelper.combine_lat_long(self.locations, destination)
         pos_src = CombineHelper.combine_lat_long(self.locations, source)
 
-        return "{1}{0}{2}".format(CombineHelper.delimiter, pos_dest, pos_src)
+        return CombineHelper.delimiter.join([pos_dest, pos_src])

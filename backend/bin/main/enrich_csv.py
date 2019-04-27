@@ -16,9 +16,9 @@ from main.helpers.print_helper import PrintHelper
 
 def loop_through_lines(csv_reader, enrichers, output_file):
     for index, packet in enumerate(csv_reader):
-
-        packet["ip.dst"] = packet["ip.dst"].split(",")[0]
-        packet["ip.src"] = packet["ip.src"].split(",")[0]
+        ip_enumerate_character = ","
+        packet["ip.dst"] = packet["ip.dst"].split(ip_enumerate_character)[0]
+        packet["ip.src"] = packet["ip.src"].split(ip_enumerate_character)[0]
 
         if file_helper.is_header(index):
             default_header = csv_reader.fieldnames
