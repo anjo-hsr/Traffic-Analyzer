@@ -18,7 +18,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
 
     def test_get_timestamp(self):
         timestamp = datetime.now().timestamp()
-        self.assertAlmostEqual(TrafficLimitHelper.get_timestamp(), timestamp)
+        self.assertAlmostEqual(TrafficLimitHelper.get_timestamp(), timestamp, 2)
 
     def test_reset_period_timestamp(self):
         expected_counter = 0
