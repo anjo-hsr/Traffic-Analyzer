@@ -1,21 +1,22 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Protocols</label>
-  <fieldset submitButton="false" autoRun="true">
-    <input type="multiselect" token="source_token" searchWhenChanged="true">
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="</valuePrefix>
+      <valuePrefix>source="*/</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
-      <fieldForLabel>source</fieldForLabel>
-      <fieldForValue>source</fieldForValue>
+      <fieldForLabel>shortSource</fieldForLabel>
+      <fieldForValue>shortSource</fieldForValue>
       <search>
         <query>sourcetype=capture
               | dedup source
-              | table source
+              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+              | table shortSource
         </query>
       </search>
     </input>
@@ -40,7 +41,7 @@
         <search>
           <query>$source_token$
                 | table frame_time, ws_col_Protocol, frame_cap_len
-                | stats sum(frame_cap_len) as "traffic size" by ws_col_Protocol
+                | stats sum(frame_cap_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
