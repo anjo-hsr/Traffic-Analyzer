@@ -6,16 +6,17 @@
             <default>*</default>
             <prefix>(sourcetype=capture </prefix>
             <suffix>)</suffix>
-            <valuePrefix>source="</valuePrefix>
+            <valuePrefix>source="*</valuePrefix>
             <valueSuffix>"</valueSuffix>
             <delimiter> OR </delimiter>
             <choice value="*">ALL</choice>
-            <fieldForLabel>source</fieldForLabel>
-            <fieldForValue>source</fieldForValue>
+            <fieldForLabel>shortSource</fieldForLabel>
+            <fieldForValue>shortSource</fieldForValue>
             <search>
                 <query>sourcetype=capture
-                    | dedup source
-                    | table source
+                | dedup source
+                | rex field=source "\/opt\/splunk\/etc\/apps\/traffic-analyzer\/lookups\/captures\/(?&lt;shortSource&gt;.*)"
+                | table shortSource
                 </query>
             </search>
         </input>
