@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "label": "IP Location Finder",
   "message": "by KeyCDN",
-  "color": "#3686BE",
+  "color": "blue",
   "namedLogo": "keycdn",
   "logoColor": "white"
 }
