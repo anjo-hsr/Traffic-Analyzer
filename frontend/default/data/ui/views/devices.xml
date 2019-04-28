@@ -23,8 +23,8 @@
   </fieldset>
   <row>
     <panel>
+      <title>Endpoints</title>
       <table>
-        <title>Endpoints</title>
         <search>
           <query>$source_token$
                 | where ip_src!=""

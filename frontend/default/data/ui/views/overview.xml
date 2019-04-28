@@ -23,8 +23,8 @@
   </fieldset>
   <row>
     <panel>
+      <title>Protocols by packets</title>
       <chart>
-        <title>Protocols by packets</title>
         <search>
           <query>$source_token$
                 | table frame_time, ip_proto
@@ -36,8 +36,8 @@
       </chart>
     </panel>
     <panel>
+      <title>Protocols by traffic</title>
       <chart>
-        <title>Protocols by traffic</title>
         <search>
           <query>$source_token$
                 | table frame_time, ws_col_Protocol, frame_cap_len

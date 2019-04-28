@@ -21,10 +21,10 @@
       </search>
     </input>
   </fieldset>
-  <row>
+   <row>
     <panel>
+      <title>Total number of tcp streams</title>
       <single>
-        <title>Total number of tcp streams</title>
         <search>
           <query>$source_token$
                 | where tcp_stream!=""
@@ -142,8 +142,8 @@
   </row>
   <row>
     <panel>
+      <title>Commonly used cipher suites</title>
       <table>
-        <title>Commonly used cipher suites</title>
         <search>
           <query>$source_token$
                 | dedup traffic_analyzer_tcp_stream
@@ -158,8 +158,8 @@
       </table>
     </panel>
     <panel>
+      <title>Commonly used SSL/TLS version</title>
       <table>
-        <title>Commonly used SSL/TLS version</title>
         <search>
           <query>$source_token$
                 | dedup traffic_analyzer_tcp_stream

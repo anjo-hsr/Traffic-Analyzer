@@ -23,6 +23,7 @@
     </fieldset>
     <row>
         <panel>
+            <Title>Choropleth Map</Title>
             <map>
                 <search>
                     <query>$source_token$
@@ -47,8 +48,8 @@
             </map>
         </panel>
         <panel>
+            <title>Destinations in $selectedCountry$</title>
             <table>
-                <title>Destinations in $selectedCountry$</title>
                 <search>
                     <query>$source_token$
                         | table dst_fqdn, dst_latitude, dst_longitude, traffic_analyzer_tcp_stream
