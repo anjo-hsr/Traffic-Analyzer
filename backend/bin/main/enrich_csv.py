@@ -4,6 +4,7 @@ from collections import OrderedDict
 from os import path, remove
 
 import main.helpers.file_helper as file_helper
+from main.downloaders.ip_information_downloader import IpInformationDownloader
 
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
@@ -13,13 +14,14 @@ from main.enrichers.tls_enricher import TlsEnricher
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.print_helper import PrintHelper
+from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
-def loop_through_lines(csv_reader, enrichers, output_file):
+def loop_through_lines(csv_reader, enrichers, output_file, ip_information_downloader):
     for index, packet in enumerate(csv_reader):
-
-        packet["ip.dst"] = packet["ip.dst"].split(",")[0]
-        packet["ip.src"] = packet["ip.src"].split(",")[0]
+        ip_enumerate_character = ","
+        packet["ip.dst"] = packet["ip.dst"].split(ip_enumerate_character)[0]
+        packet["ip.src"] = packet["ip.src"].split(ip_enumerate_character)[0]
 
         if file_helper.is_header(index):
             default_header = csv_reader.fieldnames
@@ -34,7 +36,8 @@ def loop_through_lines(csv_reader, enrichers, output_file):
 
         else:
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
-            line = CombineHelper.combine_packet_information(joined_default_cells, enrichers, packet)
+            line = CombineHelper.combine_packet_information(joined_default_cells, enrichers, packet,
+                                                            ip_information_downloader)
 
         file_helper.write_line(output_file, line)
 
@@ -57,11 +60,13 @@ def main():
 def run(environment_variables, print_enrichers=False):
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
+    limiter = TrafficLimitHelper(3, 1)
+    ip_information_downloader = IpInformationDownloader(limiter)
     enrichers = create_enrichers()
 
     for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_normal_csv_file):
         new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
-        enrich_file(file_path["path"], file_path["filename"], enrichers, new_file)
+        enrich_file(file_path["path"], file_path["filename"], enrichers, new_file, ip_information_downloader)
         remove(path.join(file_path["path"], file_path["filename"]))
 
     if print_enrichers:
@@ -74,13 +79,13 @@ def run(environment_variables, print_enrichers=False):
         )
 
 
-def enrich_file(dirpath, file, enrichers, new_file):
+def enrich_file(dirpath, file, enrichers, new_file, ip_information_downloader):
     with \
             open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
             open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
         csv_reader = file_helper.get_csv_dict_reader(capture)
 
-        loop_through_lines(csv_reader, enrichers, output_file)
+        loop_through_lines(csv_reader, enrichers, output_file, ip_information_downloader)
 
 
 if __name__ == "__main__":
