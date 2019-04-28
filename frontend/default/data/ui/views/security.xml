@@ -27,7 +27,7 @@
         <search>
           <query>$source_token$
                 | where tcp_stream!=""
-                | dedup tcp_stream, source
+                | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams"
           </query>
         </search>
@@ -97,7 +97,7 @@
         <title>Commonly used cipher suites</title>
         <search>
           <query>$source_token$
-                | dedup tcp_stream, source
+                | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by cipher_suite_number
                 | join cipher_suite_number
                    [ search sourcetype=list source="*cipher_suites.csv" ]
@@ -113,7 +113,7 @@
         <title>Commonly used SSL/TLS version</title>
         <search>
           <query>$source_token$
-                | dedup tcp_stream, source
+                | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by tls_ssl_version_negotiated
                 | join tls_ssl_version_negotiated
                    [search sourcetype=list source="*tls-versions.csv"
