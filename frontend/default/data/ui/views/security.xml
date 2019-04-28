@@ -43,8 +43,9 @@
       </single>
     </panel>
     <panel>
+      <title>Number of inadvisable cipher suites used</title>
       <single>
-        <title>Number of inadvisable cipher suites used</title>
+        <title>Absolute</title>
         <search>
           <query>$source_token$
                 | dedup cipher_suite_number
@@ -66,10 +67,57 @@
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
       </single>
+      <single>
+        <title>Percent</title>
+        <search>
+          <query>$source_token$
+                | dedup cipher_suite_number
+                | join cipher_suite_number
+                   [ search sourcetype=list source="*cipher_suites.csv" ]
+                | table cipher_suite_number, recommended
+                | eventstats count as amount by recommended
+                | eventstats count as totalAmount
+                | where recommended="N" | dedup recommended
+                | eval percOfTotal= 100 / totalAmount * amount | table percOfTotal
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">%</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
     </panel>
     <panel>
+      <title>Amount of unsecured traffic (by # of packets)</title>
       <single>
-        <title>Amount of unsecured traffic (by packets)</title>
+        <title>Absolute</title>
+        <search>
+          <query>$source_token$
+                | eval issecure=if(cipher_suite_number=="","no","yes")
+                | table issecure
+                | top issecure
+                | where issecure="no"
+                | table count
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title>Percent</title>
         <search>
           <query>$source_token$
                 | eval issecure=if(cipher_suite_number=="","no","yes")
