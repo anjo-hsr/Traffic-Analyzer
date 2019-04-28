@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch, MagicMock
 
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.ip_helper import IpHelper
@@ -11,7 +12,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         cls.multicast_ip = "224.0.0.1"
         cls.public_ip = "8.8.8.8"
         cls.ip_data_private = {
-            "rdns": cls.private_ip,
+            "rdns": "router.hsr.ch",
             "asn": "",
             "isp": "",
             "latitude": "",
@@ -37,6 +38,7 @@ class TestIpInformationDownloader(unittest.TestCase):
     def setUp(self):
         self.ip_information_downloader = IpInformationDownloader()
 
+    @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
     def test_get_ip_information_private(self):
         ip_address = self.private_ip
         self.assertDictEqual(self.ip_information_downloader.get_ip_information(ip_address), self.ip_data_private)
@@ -45,6 +47,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         ip_address = self.public_ip
         self.assertDictEqual(IpInformationDownloader.get_ip_data(ip_address), self.google_ip_data)
 
+    @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
     def test_get_ip_information_twice(self):
         ip_address = self.private_ip
         length = 1
@@ -58,11 +61,6 @@ class TestIpInformationDownloader(unittest.TestCase):
         ip_address = self.multicast_ip
         ip_helper = IpHelper()
         self.assertEqual(IpInformationDownloader.get_private_ip_data(ip_address, ip_helper), self.ip_data_multicast)
-
-    def test_get_private_ip_data_private(self):
-        ip_address = self.private_ip
-        ip_helper = IpHelper()
-        self.assertEqual(IpInformationDownloader.get_private_ip_data(ip_address, ip_helper), self.ip_data_private)
 
 
 if __name__ == "__main__":
