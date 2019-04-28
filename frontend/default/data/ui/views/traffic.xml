@@ -9,7 +9,7 @@
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="*</valuePrefix>
+      <valuePrefix>source="*/</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
