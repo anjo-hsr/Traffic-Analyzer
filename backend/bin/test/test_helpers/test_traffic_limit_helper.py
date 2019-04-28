@@ -18,7 +18,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
 
     def test_get_timestamp(self):
         timestamp = datetime.now().timestamp()
-        self.assertAlmostEqual(TrafficLimitHelper.get_timestamp(), timestamp, 2)
+        self.assertAlmostEqual(TrafficLimitHelper.get_timestamp(), timestamp, 1)
 
     def test_reset_period_timestamp(self):
         expected_counter = 0
@@ -37,7 +37,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
         timestamp_before = datetime.now().timestamp()
         self.traffic_limit_helper.check_request_load()
         timestamp_after = datetime.now().timestamp()
-        self.assertAlmostEqual(timestamp_after - timestamp_before, 0, 2)
+        self.assertAlmostEqual(timestamp_after - timestamp_before, 0, 1)
 
     def test_check_request_load_waiting(self):
         counter = 0
@@ -48,7 +48,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
         timestamp_before = datetime.now().timestamp()
         self.traffic_limit_helper.check_request_load()
         timestamp_after = datetime.now().timestamp()
-        self.assertAlmostEqual(timestamp_after - timestamp_before, 1, 2)
+        self.assertAlmostEqual(timestamp_after - timestamp_before, 1, 1)
 
 
 if __name__ == '__main__':
