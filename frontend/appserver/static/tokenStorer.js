@@ -15,7 +15,7 @@ require([
     defaultTokenModel.on("change", function () {
         let attributes = defaultTokenModel.attributes;
         Object.keys(attributes).forEach(tokenKey =>
-            window.sessionStorage.setItem(tokenKey, attributes[tokenKey]);
+            window.sessionStorage.setItem(tokenKey, attributes[tokenKey])
         );
     });
 });

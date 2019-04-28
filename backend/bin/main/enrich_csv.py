@@ -9,6 +9,7 @@ from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.combine_helper import CombineHelper
@@ -29,7 +30,7 @@ def loop_through_lines(csv_reader, enrichers, output_file, ip_information_downlo
 
             # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
             # for encrypted traffic. ssl.* could be deprecated in future releases
-            # https://packages.qa.debian.org/w/wireshark.html
+            # https://tracker.debian.org/pkg/wireshark
             # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
             line = re.sub(r"ssl\.", r"tls.", line)
 
@@ -46,7 +47,8 @@ def create_enrichers():
         ("location_enricher", LocationEnricher()),
         ("name_resolve_enricher", NameResolverEnricher()),
         ("cipher_suite_enricher", CipherSuiteEnricher()),
-        ("tls_ssl_version_enricher", TlsEnricher())
+        ("tls_ssl_version_enricher", TlsEnricher()),
+        ("stream_enricher", StreamEnricher())
     ])
 
 
@@ -55,17 +57,20 @@ def main():
     run(environment_helper.get_environment())
 
 
-def run(environment_variables):
+def run(environment_variables, print_enrichers=False):
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
     limiter = TrafficLimitHelper(3, 1)
     ip_information_downloader = IpInformationDownloader(limiter)
+    enrichers = create_enrichers()
 
     for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_normal_csv_file):
-        enrichers = create_enrichers()
         new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
         enrich_file(file_path["path"], file_path["filename"], enrichers, new_file, ip_information_downloader)
         remove(path.join(file_path["path"], file_path["filename"]))
+
+    if print_enrichers:
+        PrintHelper.print_enrichers(enrichers)
 
     for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_enriched_csv_file):
         file_helper.move_file(
@@ -81,8 +86,6 @@ def enrich_file(dirpath, file, enrichers, new_file, ip_information_downloader):
         csv_reader = file_helper.get_csv_dict_reader(capture)
 
         loop_through_lines(csv_reader, enrichers, output_file, ip_information_downloader)
-
-        PrintHelper.print_enrichers(enrichers)
 
 
 if __name__ == "__main__":
