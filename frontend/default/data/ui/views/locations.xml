@@ -4,11 +4,11 @@
         <input type="multiselect" token="source_token" searchWhenChanged="false">
             <label>Choose capture file:</label>
             <default>*</default>
-            <prefix>(sourcetype=capture</prefix>
+            <prefix>(sourcetype=capture </prefix>
             <suffix>)</suffix>
             <valuePrefix>source="</valuePrefix>
             <valueSuffix>"</valueSuffix>
-            <delimiter>OR</delimiter>
+            <delimiter> OR </delimiter>
             <choice value="*">ALL</choice>
             <fieldForLabel>source</fieldForLabel>
             <fieldForValue>source</fieldForValue>
