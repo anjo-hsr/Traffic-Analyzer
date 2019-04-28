@@ -30,21 +30,33 @@ class IpInformationDownloader:
 
         ip_helper = IpHelper()
         if ip_address == "" or not ip_helper.is_public_ip(ip_address):
-            self.ip_information[ip_address] = IpInformationDownloader.get_empty_ip_data(ip_address)
-            return IpInformationDownloader.get_empty_ip_data(ip_address)
+            self.ip_information[ip_address] = IpInformationDownloader.get_private_ip_data(ip_address, ip_helper)
+            return self.ip_information[ip_address]
 
         self.limiter.check_request_load()
         self.ip_information[ip_address] = IpInformationDownloader.get_ip_data(ip_address)
 
     @staticmethod
-    def get_empty_ip_data(ip_address):
+    def get_private_ip_data(ip_address, ip_helper):
+        fqdn = ip_address
+        if ip_address != "" and ip_helper.is_private_ip(ip_address):
+            fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
+
         return {
-            "rdns": ip_address,
+            "rdns": fqdn,
             "asn": "",
             "isp": "",
             "latitude": "",
             "longitude": ""
         }
+
+    @staticmethod
+    def get_fqdn(fqdn, ip_address):
+        try:
+            fqdn = socket.getfqdn(ip_address)
+        except socket.herror:
+            pass
+        return fqdn
 
     @staticmethod
     def get_ip_data(ip_addr, counter=0):
