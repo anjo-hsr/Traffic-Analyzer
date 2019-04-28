@@ -27,7 +27,7 @@ class TestIpInformationDownloader(unittest.TestCase):
             "longitude": ""
         }
 
-        cls.google_ip_data = {
+        cls.ip_data_public = {
             'rdns': 'google-public-dns-a.google.com',
             'asn': 15169,
             'isp': 'Google LLC',
@@ -38,32 +38,33 @@ class TestIpInformationDownloader(unittest.TestCase):
     def setUp(self):
         self.ip_information_downloader = IpInformationDownloader()
 
+    def assert_ip_data(self, ip_address, expected_ip_data):
+        self.ip_information_downloader.get_ip_information(ip_address)
+        ip_data = self.ip_information_downloader.ip_information[ip_address]
+        self.assertEqual(ip_data, expected_ip_data)
+
+    def test_get_ip_data_public(self):
+        ip_address = self.public_ip
+        self.assert_ip_data(ip_address, self.ip_data_public)
+
     @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
     def test_get_ip_information_private(self):
         ip_address = self.private_ip
-        self.ip_information_downloader.get_ip_information(ip_address)
-        self.assertEqual(self.ip_information_downloader.ip_information[ip_address], self.ip_data_private)
+        self.assert_ip_data(ip_address, self.ip_data_private)
 
-    def test_get_ip_data(self):
-        ip_address = self.public_ip
-        self.assertDictEqual(IpInformationDownloader.get_ip_data(ip_address), self.google_ip_data)
+    def test_get_ip_data_multicast(self):
+        ip_address = self.multicast_ip
+        self.assert_ip_data(ip_address, self.ip_data_multicast)
 
     @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
     def test_get_ip_information_twice(self):
         ip_address = self.private_ip
         length = 1
-        self.ip_information_downloader.get_ip_information(ip_address)
-        self.assertEqual(self.ip_information_downloader.ip_information[ip_address], self.ip_data_private)
+        self.assert_ip_data(ip_address, self.ip_data_private)
         self.assertEqual(len(self.ip_information_downloader.ip_information), length)
 
-        self.ip_information_downloader.get_ip_information(ip_address)
-        self.assertEqual(self.ip_information_downloader.ip_information[ip_address], self.ip_data_private)
+        self.assert_ip_data(ip_address, self.ip_data_private)
         self.assertEqual(len(self.ip_information_downloader.ip_information), length)
-
-    def test_get_private_ip_data_multicast(self):
-        ip_address = self.multicast_ip
-        ip_helper = IpHelper()
-        self.assertEqual(IpInformationDownloader.get_private_ip_data(ip_address, ip_helper), self.ip_data_multicast)
 
 
 if __name__ == "__main__":
