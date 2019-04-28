@@ -18,7 +18,7 @@
       <search>
         <query>sourcetype=capture
               | dedup source
-              | rex field=source "\/opt\/splunk\/etc\/apps\/traffic-analyzer\/lookups\/captures\/(?&lt;shortSource&gt;.*)"
+              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
               | table shortSource
         </query>
       </search>
