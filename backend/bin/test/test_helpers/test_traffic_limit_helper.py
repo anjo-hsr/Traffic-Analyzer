@@ -37,7 +37,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
         timestamp_before = datetime.now().timestamp()
         self.traffic_limit_helper.check_request_load()
         timestamp_after = datetime.now().timestamp()
-        self.assertAlmostEqual(timestamp_after - timestamp_before, 0)
+        self.assertAlmostEqual(timestamp_after - timestamp_before, 0, 2)
 
     def test_check_request_load_waiting(self):
         counter = 0
