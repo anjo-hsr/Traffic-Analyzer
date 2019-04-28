@@ -41,7 +41,7 @@
         <search>
           <query>$source_token$
                 | table frame_time, ws_col_Protocol, frame_cap_len
-                | stats sum(frame_cap_len) as "traffic size" by ws_col_Protocol
+                | stats sum(frame_cap_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
