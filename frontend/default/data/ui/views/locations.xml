@@ -50,14 +50,15 @@
                 <title>Destinations in $selectedCountry$</title>
                 <search>
                     <query>$source_token$
-                        | table dst_fqdn, dst_latitude, dst_longitude, tcp_stream
-                        | dedup tcp_stream
+                        | table dst_fqdn, dst_latitude, dst_longitude, traffic_analyzer_tcp_stream
+                        | dedup traffic_analyzer_tcp_stream
                         | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
                         | lookup geo_countries longitude, latitude
                         | $selectedCountryFilter$
-                        | stats count(tcp_stream) by Destination
-                        | table Destination, count(tcp_stream)
-                        | rename count(tcp_stream) as "# of connections"
+                        | stats count(traffic_analyzer_tcp_stream) by Destination
+                        | table Destination, count(traffic_analyzer_tcp_stream)
+                        | rename count(traffic_analyzer_tcp_stream) as "# of connections"
+                        | sort - "# of connections"
                     </query>
                     <earliest>0</earliest>
                     <latest></latest>
