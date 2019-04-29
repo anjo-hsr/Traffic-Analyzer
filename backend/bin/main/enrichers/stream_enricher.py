@@ -3,12 +3,6 @@ import hashlib
 from main.helpers.print_helper import PrintHelper
 
 
-class StreamEntry:
-    def __init__(self, combined_string, stream_id):
-        self.combined_string = combined_string
-        self.stream_id = stream_id
-
-
 class StreamEnricher:
     def __init__(self):
         self.stream_ids = {"": ""}
@@ -24,8 +18,9 @@ class StreamEnricher:
             return self.stream_ids[inbound_outbound_string]
 
         stream_entry = self.generate_stream_id(inbound_outbound_string)
-        self.set_entry(stream_entry)
-        return stream_entry.stream_id
+
+        self.stream_ids[stream_entry["combined_string"]] = stream_entry["stream_id"]
+        return stream_entry["stream_id"]
 
     @staticmethod
     def get_combined_strings(packet):
@@ -52,7 +47,7 @@ class StreamEnricher:
     def generate_stream_id(combined_string):
         hash_value = hashlib.sha256(combined_string.encode())
         stream_id = int(hash_value.hexdigest(), 16) % 100000000
-        return StreamEntry(combined_string, stream_id)
-
-    def set_entry(self, stream_entry):
-        self.stream_ids[stream_entry.combined_string] = stream_entry.stream_id
+        return {
+            "combined_string": combined_string,
+            "stream_id": stream_id
+        }
