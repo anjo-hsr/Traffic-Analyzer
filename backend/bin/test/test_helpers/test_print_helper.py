@@ -42,6 +42,13 @@ class TestPrintHelperMethods(unittest.TestCase):
         print_text = "\n".join(element for element in print_elements) + "\n"
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_print_nothing(self, mock_stdout):
+        error_text = "print helper tester"
+        PrintHelper.print_nothing(error_text)
+        print_text = "Nothing to print for print helper tester.\n"
+        self.assertEqual(mock_stdout.getvalue(), print_text)
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPrintHelperMethods)

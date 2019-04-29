@@ -1,33 +1,34 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Security</label>
-  <fieldset submitButton="false" autoRun="true">
-    <input type="multiselect" token="source_token" searchWhenChanged="true">
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="</valuePrefix>
+      <valuePrefix>source="*/</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
-      <fieldForLabel>source</fieldForLabel>
-      <fieldForValue>source</fieldForValue>
+      <fieldForLabel>shortSource</fieldForLabel>
+      <fieldForValue>shortSource</fieldForValue>
       <search>
         <query>sourcetype=capture
               | dedup source
-              | table source
+              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+              | table shortSource
         </query>
       </search>
     </input>
   </fieldset>
-  <row>
+   <row>
     <panel>
+      <title>Total number of tcp streams</title>
       <single>
-        <title>Total number of tcp streams</title>
         <search>
           <query>$source_token$
                 | where tcp_stream!=""
-                | dedup tcp_stream, source
+                | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams"
           </query>
         </search>
@@ -42,8 +43,9 @@
       </single>
     </panel>
     <panel>
+      <title>Number of inadvisable cipher suites used</title>
       <single>
-        <title>Number of inadvisable cipher suites used</title>
+        <title>Absolute</title>
         <search>
           <query>$source_token$
                 | dedup cipher_suite_number
@@ -65,10 +67,57 @@
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
       </single>
+      <single>
+        <title>Percent</title>
+        <search>
+          <query>$source_token$
+                | dedup cipher_suite_number
+                | join cipher_suite_number
+                   [ search sourcetype=list source="*cipher_suites.csv" ]
+                | table cipher_suite_number, recommended
+                | eventstats count as amount by recommended
+                | eventstats count as totalAmount
+                | where recommended="N" | dedup recommended
+                | eval percOfTotal= 100 / totalAmount * amount | table percOfTotal
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">%</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
     </panel>
     <panel>
+      <title>Amount of unsecured traffic (by # of packets)</title>
       <single>
-        <title>Amount of unsecured traffic (by packets)</title>
+        <title>Absolute</title>
+        <search>
+          <query>$source_token$
+                | eval issecure=if(cipher_suite_number=="","no","yes")
+                | table issecure
+                | top issecure
+                | where issecure="no"
+                | table count
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title>Percent</title>
         <search>
           <query>$source_token$
                 | eval issecure=if(cipher_suite_number=="","no","yes")
@@ -93,11 +142,11 @@
   </row>
   <row>
     <panel>
+      <title>Commonly used cipher suites</title>
       <table>
-        <title>Commonly used cipher suites</title>
         <search>
           <query>$source_token$
-                | dedup tcp_stream, source
+                | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by cipher_suite_number
                 | join cipher_suite_number
                    [ search sourcetype=list source="*cipher_suites.csv" ]
@@ -109,11 +158,11 @@
       </table>
     </panel>
     <panel>
+      <title>Commonly used SSL/TLS version</title>
       <table>
-        <title>Commonly used SSL/TLS version</title>
         <search>
           <query>$source_token$
-                | dedup tcp_stream, source
+                | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by tls_ssl_version_negotiated
                 | join tls_ssl_version_negotiated
                    [search sourcetype=list source="*tls-versions.csv"

@@ -26,3 +26,7 @@ class PrintHelper:
         print_elements = [banner, general_text, error_text, banner]
 
         print("\n".join(element for element in print_elements))
+
+    @staticmethod
+    def print_nothing(enricher_type):
+        print("Nothing to print for {}.".format(enricher_type))

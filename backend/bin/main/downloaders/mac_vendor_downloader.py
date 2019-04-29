@@ -3,6 +3,7 @@ import re
 from os import path
 
 import main.helpers.file_helper as file_helper
+from main.helpers.combine_helper import CombineHelper
 from main.helpers.download_helper import DownloadHelper
 
 from main.helpers.environment_helper import EnvironmentHelper
@@ -16,7 +17,7 @@ def convert_mac_address(row):
 
 def write_row(output_file, row):
     mac_address = convert_mac_address(row)
-    line = mac_address + "," + '"{}"'.format(row["Organization Name"])
+    line = mac_address + CombineHelper.delimiter + '"{}"'.format(row["Organization Name"])
     file_helper.write_line(output_file, line)
 
 
