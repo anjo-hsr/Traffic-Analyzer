@@ -30,7 +30,8 @@ class TestStreamEnricherMethods(unittest.TestCase):
     def test_generate_stream_id_public(self):
         tcp_packet_string = ",".join(self.public_packet[information] for information in self.public_packet)
         expected_stream_id = 27795967
-        self.assertEqual(StreamEnricher.generate_stream_id(tcp_packet_string).stream_id, expected_stream_id)
+        stream_id = StreamEnricher.generate_stream_id(tcp_packet_string)["stream_id"]
+        self.assertEqual(stream_id, expected_stream_id)
 
     def test_get_combined_strings_public_packet(self):
         expected_string = "10.0.0.1,152.96.36.100,52012,443,,;152.96.36.100,10.0.0.1,443,52012,,"

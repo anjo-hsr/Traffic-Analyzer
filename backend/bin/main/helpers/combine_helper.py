@@ -1,6 +1,3 @@
-from main.downloaders.ip_information_downloader import IpInformationDownloader
-
-
 class CombineHelper:
     delimiter = ","
 

@@ -5,6 +5,10 @@ from main.helpers.print_helper import PrintHelper
 class LocationEnricher:
     def __init__(self):
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
+        self.enricher_type = "location enricher"
+
+    def print(self):
+        PrintHelper.print_nothing(self.enricher_type)
 
     @staticmethod
     def extract_location(dst_src_information):
@@ -17,7 +21,3 @@ class LocationEnricher:
         pos_src = CombineHelper.delimiter.join('"{}"'.format(position_data) for position_data in src_lat_long)
 
         return CombineHelper.delimiter.join([pos_dest, pos_src])
-
-    def print(self):
-        enricher_type = "location enricher"
-        PrintHelper.print_nothing(enricher_type)

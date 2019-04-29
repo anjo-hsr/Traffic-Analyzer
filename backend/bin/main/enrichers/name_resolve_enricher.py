@@ -5,6 +5,10 @@ from main.helpers.print_helper import PrintHelper
 class NameResolverEnricher:
     def __init__(self):
         self.header = "dst_fqdn,src_fqdn"
+        self.enricher_type = "name resolve enricher"
+
+    def print(self):
+        PrintHelper.print_nothing(self.enricher_type)
 
     @staticmethod
     def extract_fqdn(dst_src_information):
@@ -12,7 +16,3 @@ class NameResolverEnricher:
         src_data = dst_src_information["src"]
         fqdns = [dst_data["rdns"], src_data["rdns"]]
         return CombineHelper.delimiter.join('"{}"'.format(fqdn) for fqdn in fqdns)
-
-    def print(self):
-        enricher_type = "name resolve enricher"
-        PrintHelper.print_nothing(enricher_type)
