@@ -7,7 +7,9 @@ class CombineHelper:
         return dst_src
 
     @staticmethod
-    def combine_packet_information(joined_default_cells, enrichers, packet, ip_information_downloader):
+    def combine_packet_information(joined_default_cells, enrichment_classes, packet):
+        enrichers = enrichment_classes.enrichers
+        ip_information_downloader = enrichment_classes.ip_information_downloader
         dst_src = CombineHelper.get_dst_src(packet)
         dst_src_information = ip_information_downloader.get_dst_src_information(dst_src)
 

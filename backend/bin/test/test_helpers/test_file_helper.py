@@ -75,15 +75,32 @@ class TestFileHelperMethods(unittest.TestCase):
         remove(test_file_path)
 
     def test_move_file(self):
-        source_path = path.join(".", ".test_file")
-        destination_path = path.join(".", ".test_file-moved")
-        open(source_path, 'a').close()
+        source_path = path.join(".", "test_file")
+        destination_path = path.join(".", "test_file-moved")
 
+        open(source_path, 'a').close()
+        self.assertTrue(path.isfile(source_path))
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
+
         file_helper.move_file(source_path, destination_path)
+        self.assertTrue(path.isfile(destination_path))
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
-        file_helper.move_file(destination_path, source_path)
-        self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
+
+        file_helper.remove(destination_path)
+        self.assertFalse(path.isfile(source_path))
+        self.assertFalse(path.isfile(destination_path))
+
+    def test_move_file_same_path(self):
+        source_path = path.join(".", ".test_file")
+        destination_path = path.join(".", ".test_file")
+
+        open(source_path, 'a').close()
+        self.assertTrue(path.isfile(source_path))
+        self.assertEqual(path.isfile(source_path), path.isfile(destination_path))
+
+        file_helper.move_file(source_path, destination_path)
+        self.assertTrue(path.isfile(destination_path))
+        self.assertEqual(path.isfile(source_path), path.isfile(destination_path))
 
         file_helper.remove(source_path)
         self.assertFalse(path.isfile(source_path))
