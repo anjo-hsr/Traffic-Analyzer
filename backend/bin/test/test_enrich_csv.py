@@ -46,8 +46,8 @@ class TestEnrichCsv(unittest.TestCase):
             "name_resolve_enricher",
             "cipher_suite_enricher",
             "tls_ssl_version_enricher",
+            "stream_enricher",
             "ad_enricher"
-            "stream_enricher"
         ]
 
         enrichers = add_information.create_enrichers()

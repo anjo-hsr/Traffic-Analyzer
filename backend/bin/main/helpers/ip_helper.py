@@ -14,6 +14,22 @@ class IpHelper:
             return False
 
     @staticmethod
+    def is_multicast_ip(ip_address):
+        try:
+            ip = ipaddress.ip_address(ip_address)
+            return ip.is_multicast
+        except ValueError:
+            return False
+
+    @staticmethod
+    def is_private_ip(ip_address):
+        try:
+            ip = ipaddress.ip_address(ip_address)
+            return ip.is_private
+        except ValueError:
+            return False
+
+    @staticmethod
     def is_ip(ip_address):
         try:
             ipaddress.ip_address(ip_address)
