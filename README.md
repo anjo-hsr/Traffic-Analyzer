@@ -1,8 +1,9 @@
 # Traffic-Analyzer
 [![Build Status](https://img.shields.io/travis/anjo-hsr/Traffic-Analyzer.svg?logo=travis)](https://travis-ci.org/anjo-hsr/Traffic-Analyzer)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=anjo-hsr_Traffic-Analyzer&metric=alert_status)](https://sonarcloud.io/dashboard?id=anjo-hsr_Traffic-Analyzer)
-[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg?logo=python)](https://www.python.org/)
-[![PEP8](https://img.shields.io/badge/code%20style-pep8-blue.svg?logo=python)](https://www.python.org/dev/peps/pep-0008/)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg?logo=python)](https://www.python.org/)
+[![PEP8](https://img.shields.io/badge/code%20style-pep8-yellow.svg?logo=python)](https://www.python.org/dev/peps/pep-0008/)
+[![IP Location Finder](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanjo-hsr%2FTraffic-Analyzer%2Fmaster%2FbadgeEndpoint%2Fkeycdn.json)](https://tools.keycdn.com/geo)
 
 ## Deployment script
 Start using traffic analyzer with the given [app_deployer.sh](https://github.com/anjo-hsr/Traffic-Analyzer/blob/master/app_deployer.sh) script.  
@@ -22,6 +23,3 @@ The default login credentials are:
 - password: **AnJo-HSR**
 
 To change them please edit the .env file. The password must follow the given [password policy from splunk](https://docs.splunk.com/Documentation/Splunk/latest/Security/Configurepasswordsinspecfile) otherwise the container will not start.
-
-## Geo location service
-[IP Location Finder by KeyCDN](https://tools.keycdn.com/geo)
