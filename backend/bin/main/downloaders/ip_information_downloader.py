@@ -26,12 +26,12 @@ class IpInformationDownloader:
 
     def get_ip_information(self, ip_address):
         if ip_address in self.ip_information:
-            return self.ip_information[ip_address]
+            return
 
         ip_helper = IpHelper()
         if ip_address == "" or not ip_helper.is_global_ip(ip_address):
             self.ip_information[ip_address] = IpInformationDownloader.get_private_ip_data(ip_address, ip_helper)
-            return self.ip_information[ip_address]
+            return
 
         self.limiter.check_request_load()
         self.ip_information[ip_address] = IpInformationDownloader.get_ip_data(ip_address)
