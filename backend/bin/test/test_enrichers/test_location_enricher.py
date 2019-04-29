@@ -6,42 +6,53 @@ from main.enrichers.location_enricher import LocationEnricher
 class TestLocationEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.public_ip_address = "152.96.36.100"
-        cls.private_ip_address = "10.0.0.1"
-        cls.dst_src = {"dst": cls.public_ip_address, "src": cls.private_ip_address}
-        cls.location = [47.1449, 8.1551]
-        cls.empty_location = ["", ""]
+        cls.location_enricher = LocationEnricher()
+        cls.dst_src_information_local = {
+            "dst": {
+                "rdns": "10.0.0.1",
+                "asn": "",
+                "isp": "",
+                "latitude": "",
+                "longitude": ""
+            },
+            "src": {
+                "rdns": "10.0.0.2",
+                "asn": "",
+                "isp": "",
+                "latitude": "",
+                "longitude": ""
+            }
+        }
+        cls.dst_src_information_public = {
+            "dst": {
+                "rdns": "8.8.8.8",
+                "asn": "15169",
+                "isp": "Google LLC",
+                "latitude": "37.751",
+                "longitude": "-97.822"
+            },
+            "src": {
+                "rdns": "10.0.0.1",
+                "asn": "",
+                "isp": "",
+                "latitude": "",
+                "longitude": ""
+            }
+        }
 
-    def setUp(self):
-        self.location_enricher = LocationEnricher()
+    def test_header(self):
+        expected_header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
+        self.assertEqual(self.location_enricher.header, expected_header)
 
-    def assert_location(self, ip_address, location):
-        self.location_enricher.get_location(ip_address)
-        self.assertEqual(self.location_enricher.locations[ip_address], location)
+    def test_extract_location_local_connection(self):
+        locations = self.location_enricher.extract_location(self.dst_src_information_local)
+        empty_location = '"","","",""'
+        self.assertEqual(locations, empty_location)
 
-    def test_get_location(self):
-        lat_long = self.location_enricher.locate_ip(self.public_ip_address)
-        self.assertEqual(lat_long, self.location)
-
-    def test_locate_public_ip(self):
-        ip_address = self.public_ip_address
-        self.assert_location(ip_address, self.location)
-
-    def test_locate_private_ip(self):
-        ip_address = self.private_ip_address
-        self.assert_location(ip_address, self.empty_location)
-
-    def test_locate_no_ip(self):
-        ip_address = ""
-        self.assert_location(ip_address, self.empty_location)
-
-    def test_locate(self):
-        line = self.location_enricher.locate(self.dst_src)
-        expected_line = '"47.1449","8.1551","",""'
-        self.assertEqual(line, expected_line)
-
-    def tearDown(self):
-        self.location_enricher = None
+    def test_extract_location_public_connection(self):
+        locations = self.location_enricher.extract_location(self.dst_src_information_public)
+        expected_fqnds = '"37.751","-97.822","",""'
+        self.assertEqual(locations, expected_fqnds)
 
 
 if __name__ == "__main__":
