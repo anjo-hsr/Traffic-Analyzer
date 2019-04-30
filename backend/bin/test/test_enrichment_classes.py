@@ -2,6 +2,7 @@ import unittest
 from collections import OrderedDict
 
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
+from main.enrichers.ip_type_enricher import IpTypeEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
 from main.enrichers.stream_enricher import StreamEnricher
@@ -33,6 +34,9 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             elif key == "tls_ssl_version_enricher":
                 self.assertTrue(isinstance(enrichers[key], TlsEnricher))
 
+            elif key == "ip_type_enricher":
+                self.assertTrue(isinstance(enrichers[key], IpTypeEnricher))
+
             elif key == "stream_enricher":
                 self.assertTrue(isinstance(enrichers[key], StreamEnricher))
 
@@ -49,6 +53,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "name_resolve_enricher",
             "cipher_suite_enricher",
             "tls_ssl_version_enricher",
+            "ip_type_enricher",
             "stream_enricher"
         ]
 
