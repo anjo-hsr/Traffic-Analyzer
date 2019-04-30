@@ -106,6 +106,7 @@
                 | eventstats count as totalAmount
                 | where recommended="N" | dedup recommended
                 | eval percOfTotal= 100 / totalAmount * amount | table percOfTotal
+                | appendpipe [stats count | where count=0]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -131,6 +132,7 @@
                 | top issecure
                 | where issecure="no"
                 | table count
+                | appendpipe [stats count | where count=0]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -152,6 +154,7 @@
                 | top issecure
                 | where issecure="no"
                 | table percent
+                | appendpipe [stats count | where count=0]
           </query>
         </search>
         <option name="colorBy">value</option>
