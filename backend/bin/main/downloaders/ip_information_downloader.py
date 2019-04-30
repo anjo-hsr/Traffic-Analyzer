@@ -43,6 +43,7 @@ class IpInformationDownloader:
             fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
 
         return {
+            "ip_address": ip_address,
             "rdns": fqdn,
             "asn": "",
             "isp": "",
@@ -66,6 +67,7 @@ class IpInformationDownloader:
             response_json = json.loads(response.content.decode("utf-8"))
             geo_data = response_json["data"]["geo"]
             return {
+                "ip_address": ip_addr,
                 "rdns": geo_data["rdns"],
                 "asn": geo_data["asn"],
                 "isp": geo_data["isp"],

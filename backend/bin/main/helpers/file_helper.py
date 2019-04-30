@@ -41,7 +41,8 @@ def get_file_paths(dir_path, check_method):
 
 
 def is_pcap_file(file):
-    return str(file).lower().endswith(".pcap") or str(file).lower().endswith(".pcapng")
+    file = str(file).lower()
+    return file.endswith(".pcap") or file.endswith(".pcapng")
 
 
 def is_normal_csv_file(file):
@@ -51,4 +52,4 @@ def is_normal_csv_file(file):
 
 def is_enriched_csv_file(file):
     file = str(file).lower()
-    return file.startswith("capture-") and file.endswith(".csv") and file.endswith("-enriched.csv")
+    return file.startswith("capture-") and file.endswith("-enriched.csv")
