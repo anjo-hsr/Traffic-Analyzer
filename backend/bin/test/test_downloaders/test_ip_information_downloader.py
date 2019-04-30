@@ -12,6 +12,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         cls.multicast_ip = "224.0.0.1"
         cls.public_ip = "8.8.8.8"
         cls.ip_data_private = {
+            "ip_address": cls.private_ip,
             "rdns": "router.hsr.ch",
             "asn": "",
             "isp": "",
@@ -20,6 +21,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         }
 
         cls.ip_data_multicast = {
+            "ip_address": cls.multicast_ip,
             "rdns": cls.multicast_ip,
             "asn": "",
             "isp": "",
@@ -28,6 +30,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         }
 
         cls.ip_data_public = {
+            "ip_address": cls.public_ip,
             'rdns': 'google-public-dns-a.google.com',
             'asn': 15169,
             'isp': 'Google LLC',
