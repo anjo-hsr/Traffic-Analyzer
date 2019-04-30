@@ -1,5 +1,5 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Devices</label>
+  <label>Internal Endpoints</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -28,7 +28,7 @@
         <search>
           <query>$source_token$
                 | where ip_src!=""
-                | table ip_src, src_fqdn
+                | table eth_src, ip_src
                 | dedup ip_src
                 | rename ip_src as ip
                 | join type=left ip
