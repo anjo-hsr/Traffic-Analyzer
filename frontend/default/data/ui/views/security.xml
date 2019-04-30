@@ -21,7 +21,7 @@
       </search>
     </input>
   </fieldset>
-   <row>
+  <row>
     <panel>
       <title>Total number of tcp streams</title>
       <single>
