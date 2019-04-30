@@ -8,14 +8,16 @@ require([
     Object.keys(savedTokens).forEach(tokenKey => {
         let currentToken = defaultTokenModel.get(tokenKey);
         if (Boolean(currentToken)) {
-            defaultTokenModel.set(tokenKey, savedTokens[tokenKey]);
+            let parsedToken = JSON.parse(savedTokens[tokenKey]);
+            defaultTokenModel.set(tokenKey, parsedToken);
         }
     });
 
     defaultTokenModel.on("change", function () {
         let attributes = defaultTokenModel.attributes;
-        Object.keys(attributes).forEach(tokenKey =>
-            window.sessionStorage.setItem(tokenKey, attributes[tokenKey])
-        );
+        Object.keys(attributes).forEach(tokenKey => {
+            let stringifiedToken = JSON.stringify(attributes[tokenKey]);
+            window.sessionStorage.setItem(tokenKey, stringifiedToken);
+        });
     });
 });
