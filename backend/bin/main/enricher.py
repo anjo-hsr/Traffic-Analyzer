@@ -23,12 +23,12 @@ class Enricher:
 
     def initialize_variables(self):
         self.enrichers = OrderedDict([
-            ("ad_enricher", AdEnricher()),
             ("location_enricher", LocationEnricher()),
             ("name_resolve_enricher", NameResolverEnricher()),
             ("cipher_suite_enricher", CipherSuiteEnricher()),
             ("tls_ssl_version_enricher", TlsEnricher()),
             ("ip_type_enricher", IpTypeEnricher()),
-            ("stream_enricher", StreamEnricher())
+            ("stream_enricher", StreamEnricher()),
+            ("ad_enricher", AdEnricher())
         ])
         self.ip_information_downloader = IpInformationDownloader(self.limiter)
