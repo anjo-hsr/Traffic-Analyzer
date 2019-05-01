@@ -13,7 +13,7 @@ class DnsLookupEnricher:
         return packet["_ws.col.Protocol"] == "DNS" and packet["dns.flags.response"] == self.response_type_key
 
     def is_a_or_aaaa_response_type(self, dns_response_type):
-        return dns_response_type == self.a_record_key or dns_response_type == self.aaaa_record_key
+        return dns_response_type in [self.a_record_key, self.aaaa_record_key]
 
     @staticmethod
     def get_empty_dict(stream_id):
