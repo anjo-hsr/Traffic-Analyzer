@@ -17,6 +17,14 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
             "www.hsr.ch",
             "www.google.com",
         ]
+        cls.mixex_urls = [
+            "analytics.google.com",
+            "zrh04s15-in-f14.1e100.net",
+        ]
+        cls.empty_urls = [
+            "",
+            "",
+        ]
 
         cls.ad_enricher = AdEnricher(cls.blacklist_urls)
 
@@ -54,6 +62,14 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         for blacklist_url in self.blacklist_urls:
             blacklist_url = "subdomain." + blacklist_url
             self.assertTrue(self.ad_enricher.test_url(blacklist_url))
+
+    def test_url_mixed(self):
+        mixed_urls_string = ",".join(self.mixex_urls)
+        self.assertTrue(self.ad_enricher.test_urls(mixed_urls_string))
+
+    def test_url_mixed_empty(self):
+        empty_urls_string = ",".join(self.empty_urls)
+        self.assertTrue(self.ad_enricher.test_urls(empty_urls_string))
 
 
 if __name__ == "__main__":
