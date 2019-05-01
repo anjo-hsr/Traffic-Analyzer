@@ -85,6 +85,7 @@ class AdEnricher:
 
             if isinstance(return_value, str):
                 return_value = True
+                break
 
         self.url_to_ad_dict[url] = return_value
         return return_value
