@@ -70,10 +70,11 @@ class AdEnricher:
         return url
 
     def test_url_against_dict(self, url, dict_to_test):
-        if IpHelper.is_ip(url):
-            return False
-
         return_value = False
+
+        if IpHelper.is_ip(url):
+            return return_value
+        
         reversed_url_parts = reversed(url.split("."))
         for url_part in reversed_url_parts:
             return_value = self.test_url_part(url_part, dict_to_test)
