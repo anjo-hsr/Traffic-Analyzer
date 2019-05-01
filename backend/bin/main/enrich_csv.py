@@ -46,8 +46,7 @@ def loop_through_lines(csv_reader, enrichment_classes, output_file):
 
 
 def main():
-    environment_helper = EnvironmentHelper()
-    run(environment_helper.get_environment())
+    run(EnvironmentHelper().get_environment())
 
 
 def run(environment_variables, print_enrichers=False):
