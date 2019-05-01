@@ -20,14 +20,20 @@
         </query>
       </search>
     </input>
+    <input type="text" searchWhenChanged="true" token="filteredMAC">
+      <label>Show for following  Device (MAC):</label>
+      <default>*</default>
+    </input>
   </fieldset>
   <row>
     <panel>
       <title>Endpoints</title>
       <table>
         <search>
-          <query>$source_token$
-                | where ip_src!=""
+          <query>$source_token$ eth_src=$filteredMAC$
+                    src_is_private_ip="true"
+                    dst_is_private_ip="false"
+                | where ip_src!="" AND ip_src!="0.0.0.0"
                 | table eth_src, ip_src
                 | dedup ip_src
                 | rename ip_src as ip
