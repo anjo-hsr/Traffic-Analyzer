@@ -89,10 +89,10 @@ class AdEnricher:
         for url in url_array:
             if url == "":
                 continue
-                
+
             is_ad = is_ad or self.test_url(url)
 
-        return is_ad if "1" else "0"
+        return "1" if is_ad else "0"
 
     def print(self):
         pass
