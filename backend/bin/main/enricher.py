@@ -1,5 +1,7 @@
 from collections import OrderedDict
 
+from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
+from main.enrichers.ad_enricher import AdEnricher
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.ip_type_enricher import IpTypeEnricher
@@ -27,6 +29,8 @@ class Enricher:
             ("cipher_suite_enricher", CipherSuiteEnricher()),
             ("tls_ssl_version_enricher", TlsEnricher()),
             ("ip_type_enricher", IpTypeEnricher()),
-            ("stream_enricher", StreamEnricher())
+            ("stream_enricher", StreamEnricher()),
+            ("ad_enricher", AdEnricher()),
+            ("dns_lookup_enricher", DnsLookupEnricher())
         ])
         self.ip_information_downloader = IpInformationDownloader(self.limiter)

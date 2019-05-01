@@ -7,7 +7,6 @@ class EnvironmentHelper:
 
     def __init__(self):
         self.production_process_name = "splunkd"
-        self.splunk_app_folder = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer")
 
     def get_environment(self):
         is_splunk_server = self.check_process(self.production_process_name)
@@ -15,20 +14,26 @@ class EnvironmentHelper:
         environment_variables = {}
 
         if is_splunk_server:
-            environment_variables["pcap_path"] = path.join("/tmp", "pcaps")
-            environment_variables["pcap_processed_path"] = path.join("/tmp", "pcaps_processed")
-            environment_variables["csv_tmp_path"] = path.join("/tmp", "csvs")
-            environment_variables["csv_capture_path"] = path.join(self.splunk_app_folder, "lookups", "captures")
-            environment_variables["csv_list_path"] = path.join(self.splunk_app_folder, "lookups", "lists")
+            splunk_app_lookup_folder = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "lookups")
+            tmp_folder = "/tmp"
+
+            environment_variables["pcap_path"] = path.join(tmp_folder, "pcaps")
+            environment_variables["pcap_processed_path"] = path.join(tmp_folder, "pcaps_processed")
+            environment_variables["csv_tmp_path"] = path.join(tmp_folder, "csvs")
+            environment_variables["csv_capture_path"] = path.join(splunk_app_lookup_folder, "captures")
+            environment_variables["csv_list_path"] = path.join(splunk_app_lookup_folder, "lists")
+            environment_variables["dns_request_files"] = path.join(splunk_app_lookup_folder, "dns_request_files")
 
         else:
-            environment_variables["pcap_path"] = path.join("..", "..", "..", "docker", "init_files", "pcaps")
-            environment_variables["pcap_processed_path"] = path.join(
-                "..", "..", "..", "docker", "init_files", "pcaps"
-            )
-            environment_variables["csv_tmp_path"] = path.join("..", "files")
-            environment_variables["csv_capture_path"] = path.join("..", "files")
-            environment_variables["csv_list_path"] = path.join("..", "files")
+            file_path = path.join("..", "files")
+            docker_init_files_path = path.join("..", "..", "..", "docker", "init_files")
+
+            environment_variables["pcap_path"] = path.join(docker_init_files_path, "pcaps")
+            environment_variables["pcap_processed_path"] = path.join(docker_init_files_path, "pcaps")
+            environment_variables["csv_tmp_path"] = file_path
+            environment_variables["csv_capture_path"] = file_path
+            environment_variables["csv_list_path"] = file_path
+            environment_variables["dns_request_files"] = file_path
 
         return environment_variables
 
