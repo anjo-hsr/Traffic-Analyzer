@@ -74,7 +74,7 @@ class AdEnricher:
 
         if IpHelper.is_ip(url):
             return return_value
-        
+
         reversed_url_parts = reversed(url.split("."))
         for url_part in reversed_url_parts:
             return_value = self.test_url_part(url_part, dict_to_test)
