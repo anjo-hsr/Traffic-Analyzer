@@ -29,7 +29,7 @@ class IpInformationDownloader:
             return
 
         ip_helper = IpHelper()
-        if ip_address == "" or not ip_helper.is_public_ip(ip_address):
+        if ip_address == "" or not ip_helper.is_global_ip(ip_address):
             self.ip_information[ip_address] = IpInformationDownloader.get_private_ip_data(ip_address, ip_helper)
             return
 
