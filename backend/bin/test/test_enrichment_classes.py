@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from main.enrichers.ad_enricher import AdEnricher
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
+from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
 from main.enrichers.ip_type_enricher import IpTypeEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
@@ -23,10 +24,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
         enrichers = self.enrichment_classes.enrichers
 
         for key in enrichers.keys():
-            if key == "ad_enricher":
-                self.assertTrue(isinstance(enrichers[key], AdEnricher))
-
-            elif key == "location_enricher":
+            if key == "location_enricher":
                 self.assertTrue(isinstance(enrichers[key], LocationEnricher))
 
             elif key == "name_resolve_enricher":
@@ -44,6 +42,12 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             elif key == "stream_enricher":
                 self.assertTrue(isinstance(enrichers[key], StreamEnricher))
 
+            elif key == "ad_enricher":
+                self.assertTrue(isinstance(enrichers[key], AdEnricher))
+
+            elif key == "dns_lookup_enricher":
+                self.assertTrue(isinstance(enrichers[key], DnsLookupEnricher))
+
             else:
                 self.assertTrue(False)
 
@@ -53,13 +57,14 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
 
     def test_create_enrichers_keys(self):
         test_keys = [
-            "ad_enricher",
             "location_enricher",
             "name_resolve_enricher",
             "cipher_suite_enricher",
             "tls_ssl_version_enricher",
             "ip_type_enricher",
-            "stream_enricher"
+            "stream_enricher",
+            "ad_enricher",
+            "dns_lookup_enricher"
         ]
 
         enrichers = self.enrichment_classes.enrichers
