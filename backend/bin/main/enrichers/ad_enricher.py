@@ -6,7 +6,6 @@ from main.helpers.ip_helper import IpHelper
 
 
 class AdEnricher:
-
     def __init__(self, blacklist_urls=None):
         self.ip_to_category = {}
         self.header = "category"
@@ -35,7 +34,8 @@ class AdEnricher:
     def write_url_into_dict(self, dict_to_write, url_parts, url, index):
         if index < 1:
             return
-        elif index < 2:
+
+        if index < 2:
             next_value = url
         else:
             next_value = {}
@@ -51,33 +51,43 @@ class AdEnricher:
         self.write_url_into_dict(dict_entry, url_parts, url, index - 1)
 
     def test_url(self, url):
-        url = url.replace('"', '')
-        url = url.replace("'", "")
+        url = self.remove_quotations(url)
 
         if url in self.url_to_ad_dict:
             return self.url_to_ad_dict[url]
 
-        is_ad = False
         dict_to_test = self.blacklist_dict
-
-        if not IpHelper.is_ip(url):
-            reversed_url_parts = reversed(url.split("."))
-            for index, url_part in enumerate(reversed_url_parts):
-                return_value = self.test_url_part(url_part, dict_to_test)
-                if isinstance(return_value, dict):
-                    if return_value == {}:
-                        self.url_to_ad_dict[url] = False
-                        return False
-                    else:
-                        dict_to_test = return_value
-
-                if isinstance(return_value, str):
-                    self.url_to_ad_dict[url] = True
-                    return True
+        is_ad = self.test_url_against_dict(url, dict_to_test)
 
         is_ad = is_ad or dict_to_test == {}
         self.url_to_ad_dict[url] = is_ad
         return is_ad
+
+    @staticmethod
+    def remove_quotations(url):
+        url = url.replace('"', '')
+        url = url.replace("'", "")
+        return url
+
+    def test_url_against_dict(self, url, dict_to_test):
+        if IpHelper.is_ip(url):
+            return False
+
+        return_value = False
+        reversed_url_parts = reversed(url.split("."))
+        for url_part in reversed_url_parts:
+            return_value = self.test_url_part(url_part, dict_to_test)
+            if isinstance(return_value, dict):
+                if return_value == {}:
+                    break
+
+                dict_to_test = return_value
+
+            if isinstance(return_value, str):
+                return_value = True
+
+        self.url_to_ad_dict[url] = return_value
+        return return_value
 
     @staticmethod
     def test_url_part(url_part, current_dict):
