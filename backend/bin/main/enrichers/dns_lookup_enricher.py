@@ -40,11 +40,7 @@ class DnsLookupEnricher:
         dst_ip_information = CombineHelper.delimiter.join(
             [dst_ip_information["query_name"], dst_a_records])
 
-        combined_values = CombineHelper.delimiter.join([dst_ip_information, src_ip_information])
-        if self.is_response(packet):
-            self.write_file(packet, stream_id, combined_values)
-
-        return combined_values
+        return CombineHelper.delimiter.join([dst_ip_information, src_ip_information])
 
     def save_dns_query(self, packet):
         dns_response_types = packet["dns.resp.type"].split(",")
@@ -70,11 +66,3 @@ class DnsLookupEnricher:
                 "query_name": dns_query_name,
                 "a_records": filtered_dns_response_names
             }
-
-    @staticmethod
-    def write_file(packet, stream_id, combined_values):
-        dst_ip = packet["ip.dst"]
-        src_ip = packet["ip.src"]
-        cells = [stream_id, dst_ip, src_ip, combined_values]
-
-        CombineHelper.delimiter.join(cells)
