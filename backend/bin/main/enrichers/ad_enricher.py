@@ -9,7 +9,7 @@ class AdEnricher:
 
     def __init__(self, blacklist_urls=None):
         self.ip_to_category = {}
-        self.header = "is_ad"
+        self.header = "category"
         self.blacklist_dict = {}
         self.url_to_ad_dict = {}
 
@@ -89,9 +89,10 @@ class AdEnricher:
         for url in url_array:
             if url == "":
                 continue
+                
             is_ad = is_ad or self.test_url(url)
 
-        return str(is_ad)
+        return is_ad if "1" else "0"
 
     def print(self):
         pass
