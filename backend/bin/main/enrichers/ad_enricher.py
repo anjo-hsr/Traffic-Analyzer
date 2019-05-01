@@ -83,9 +83,13 @@ class AdEnricher:
     def test_url_part(url_part, current_dict):
         return current_dict.get(url_part, {})
 
-    def test_urls(self, fqdn_information):
-        destination, source = fqdn_information.split(",")
-        is_ad = self.test_url(destination) or self.test_url(source)
+    def test_urls(self, urls):
+        url_array = urls.split(",")
+        is_ad = False
+        for url in url_array:
+            if url == "":
+                continue
+            is_ad = is_ad or self.test_url(url)
 
         return str(is_ad)
 

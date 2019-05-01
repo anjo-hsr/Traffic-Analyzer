@@ -19,10 +19,11 @@ class CombineHelper:
         tls_ssl_version = enrichers["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
         ip_type_information = enrichers["ip_type_enricher"].extract_ip_types(dst_src_information)
         stream_id = enrichers["stream_enricher"].get_stream_id(packet)
-        ad_bool = enrichers["ad_enricher"].test_urls(fqdn_information)
+        dns_lookup_information = enrichers["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
+        ad_bool = enrichers["ad_enricher"].test_urls(dns_lookup_information)
         line = CombineHelper.combine_fields(
             [joined_default_cells, location_information, fqdn_information, cipher_suite_information,
-             tls_ssl_version, ip_type_information, stream_id, ad_bool])
+             tls_ssl_version, ip_type_information, stream_id, ad_bool, dns_lookup_information])
         return line
 
     @staticmethod
