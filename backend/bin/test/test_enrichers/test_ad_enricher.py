@@ -28,28 +28,6 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
 
         cls.ad_enricher = AdEnricher(cls.blacklist_urls)
 
-    def test_create_blacklist_dict(self):
-        expected_dict = {
-            "au": {"com": {"news": {
-                "adserver": "adserver.news.com.au"
-            }}},
-            "com": {
-                "amazonaws": {"s3": {
-                    "yab-adimages": "yab-adimages.s3.amazonaws.com"
-                }},
-                "google": {
-                    "analytics": "analytics.google.com"
-                },
-            },
-            "de": {
-                "adserver01": "adserver01.de"
-            },
-            "uk": {"co": {"telegraph": {
-                "webtrends": "webtrends.telegraph.co.uk"
-            }}},
-        }
-        self.assertDictEqual(self.ad_enricher.blacklist_dict, expected_dict)
-
     def test_url_normal(self):
         for normal_url in self.normal_urls:
             self.assertFalse(self.ad_enricher.test_url(normal_url))
