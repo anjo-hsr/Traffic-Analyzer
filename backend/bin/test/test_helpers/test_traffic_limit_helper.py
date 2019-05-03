@@ -49,6 +49,6 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
         self.assertAlmostEqual(timestamp_after - timestamp_before, 1, 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestTrafficLimitHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

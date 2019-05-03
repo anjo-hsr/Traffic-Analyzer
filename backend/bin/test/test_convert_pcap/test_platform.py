@@ -37,6 +37,6 @@ class TestPlatformMethods(unittest.TestCase):
         self.assertEqual(convert_pcap.detect_platform(), None)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPlatformMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

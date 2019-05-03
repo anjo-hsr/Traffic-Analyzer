@@ -40,6 +40,6 @@ class TestConvertPcapMethods(unittest.TestCase):
         self.assertEqual(new_pcapng_filenames, csv_filenames_lower)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestConvertPcapMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

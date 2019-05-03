@@ -50,6 +50,6 @@ class TestPrintHelperMethods(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPrintHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

@@ -71,6 +71,6 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
         self.assertEqual(list(enrichers_dict.keys()), self.test_keys)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrichmentClassesMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

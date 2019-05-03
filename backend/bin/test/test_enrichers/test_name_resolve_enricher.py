@@ -55,6 +55,6 @@ class TestNameResolveEnricherMethods(unittest.TestCase):
         self.assertEqual(fqdns, expected_fqdns)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestNameResolveEnricherMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
