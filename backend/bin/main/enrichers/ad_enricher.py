@@ -77,7 +77,7 @@ class AdEnricher:
 
         reversed_url_parts = reversed(url.split("."))
         for url_part in reversed_url_parts:
-            return_value = self.test_url_part(url_part, dict_to_test)
+            return_value = dict_to_test.get(url_part, {})
             if isinstance(return_value, dict):
                 if return_value == {}:
                     break
@@ -90,10 +90,6 @@ class AdEnricher:
 
         self.url_to_ad_dict[url] = return_value
         return return_value
-
-    @staticmethod
-    def test_url_part(url_part, current_dict):
-        return current_dict.get(url_part, {})
 
     def test_urls(self, urls):
         url_array = urls.split(",")
