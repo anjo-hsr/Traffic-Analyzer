@@ -13,6 +13,10 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
             "adserver01.de",
             "webtrends.telegraph.co.uk",
         ]
+        cls.ips = [
+            "152.96.36.100",
+            "8.8.8.8",
+        ]
         cls.normal_urls = [
             "www.hsr.ch",
             "www.google.com",
@@ -31,6 +35,10 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
     def test_url_normal(self):
         for normal_url in self.normal_urls:
             self.assertFalse(self.ad_enricher.test_url(normal_url))
+
+    def test_ips(self):
+        for ip in self.ips:
+            self.assertFalse(self.ad_enricher.test_url(ip))
 
     def test_url_blacklist(self):
         for blacklist_url in self.blacklist_urls:
