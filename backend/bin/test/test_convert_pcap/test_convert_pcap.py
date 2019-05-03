@@ -1,8 +1,4 @@
-from io import StringIO
-
 import unittest
-
-from unittest.mock import patch
 
 import main.convert_pcap as convert_pcap
 from test.filenames import Filenames

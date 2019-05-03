@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from main.downloaders.ip_information_downloader import IpInformationDownloader
-from main.helpers.ip_helper import IpHelper
 
 
 class TestIpInformationDownloader(unittest.TestCase):
