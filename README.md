@@ -1,5 +1,5 @@
 # Traffic-Analyzer
-[![Build Status](https://img.shields.io/travis/anjo-hsr/Traffic-Analyzer.svg?logo=travis)](https://travis-ci.org/anjo-hsr/Traffic-Analyzer)
+[![Build Status](https://img.shields.io/travis/anjo-hsr/Traffic-Analyzer/master.svg?logo=travis)](https://travis-ci.org/anjo-hsr/Traffic-Analyzer)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=anjo-hsr_Traffic-Analyzer&metric=alert_status)](https://sonarcloud.io/dashboard?id=anjo-hsr_Traffic-Analyzer)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg?logo=python)](https://www.python.org/)
 [![PEP8](https://img.shields.io/badge/code%20style-pep8-yellow.svg?logo=python)](https://www.python.org/dev/peps/pep-0008/)

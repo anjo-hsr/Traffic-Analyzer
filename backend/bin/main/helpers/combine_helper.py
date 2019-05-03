@@ -8,21 +8,13 @@ class CombineHelper:
 
     @staticmethod
     def combine_packet_information(joined_default_cells, enrichment_classes, packet):
-        enrichers = enrichment_classes.enrichers
         ip_information_downloader = enrichment_classes.ip_information_downloader
         dst_src = CombineHelper.get_dst_src(packet)
         dst_src_information = ip_information_downloader.get_dst_src_information(dst_src)
 
-        location_information = enrichers["location_enricher"].extract_location(dst_src_information)
-        fqdn_information = enrichers["name_resolve_enricher"].extract_fqdn(dst_src_information)
-        cipher_suite_information = enrichers["cipher_suite_enricher"].get_cipher_suite(packet)
-        tls_ssl_version = enrichers["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
-        ip_type_information = enrichers["ip_type_enricher"].extract_ip_types(dst_src_information)
-        stream_id = enrichers["stream_enricher"].get_stream_id(packet)
-        line = CombineHelper.combine_fields(
-            [joined_default_cells, location_information, fqdn_information,
-             cipher_suite_information, tls_ssl_version, ip_type_information, stream_id])
-        return line
+        information_dict = enrichment_classes.get_information_dict(dst_src_information, packet)
+        enriched_line = CombineHelper.delimiter.join(information_dict.values())
+        return CombineHelper.combine_fields([joined_default_cells, enriched_line])
 
     @staticmethod
     def combine_fields(fields, quotes_needed=False):

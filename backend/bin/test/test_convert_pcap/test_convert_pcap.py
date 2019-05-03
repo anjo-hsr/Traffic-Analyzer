@@ -1,18 +1,14 @@
-from io import StringIO
-
 import unittest
 
-from unittest.mock import patch
-
 import main.convert_pcap as convert_pcap
-from test.filenames import Filenames
+from test.filenames import get_filenames
 
 
 class TestConvertPcapMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        filenames = Filenames.get_filenames()
+        filenames = get_filenames()
         cls.csv_filenames = filenames["csv_filenames"]
         cls.pcap_filenames_without_prefix = filenames["pcap_filenames_without_prefix"]
         cls.pcapng_filenames_without_prefix = filenames["pcapng_filenames_without_prefix"]
@@ -44,6 +40,6 @@ class TestConvertPcapMethods(unittest.TestCase):
         self.assertEqual(new_pcapng_filenames, csv_filenames_lower)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestConvertPcapMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

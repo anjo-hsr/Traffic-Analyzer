@@ -1,12 +1,11 @@
 import re
-
 from os import path, remove
 
-import main.helpers.file_helper as file_helper
 from main.enricher import Enricher
-
-from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.combine_helper import CombineHelper
+from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_move_helper, file_name_helper, file_read_helper, file_write_helper, \
+    file_path_helper
 from main.helpers.print_helper import PrintHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
@@ -15,7 +14,7 @@ def enrich_file(dirpath, file, enrichment_classes, new_file):
     with \
             open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
             open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
-        csv_reader = file_helper.get_csv_dict_reader(capture)
+        csv_reader = file_read_helper.get_csv_dict_reader(capture)
 
         loop_through_lines(csv_reader, enrichment_classes, output_file)
 
@@ -26,7 +25,7 @@ def loop_through_lines(csv_reader, enrichment_classes, output_file):
         packet["ip.dst"] = packet["ip.dst"].split(ip_enumerate_character)[0]
         packet["ip.src"] = packet["ip.src"].split(ip_enumerate_character)[0]
 
-        if file_helper.is_header(index):
+        if file_read_helper.is_header(index):
             default_header = csv_reader.fieldnames
             enrichers = enrichment_classes.enrichers
             helper_headers = [enrichers[helper_key].header for helper_key in enrichers]
@@ -42,12 +41,11 @@ def loop_through_lines(csv_reader, enrichment_classes, output_file):
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
             line = CombineHelper.combine_packet_information(joined_default_cells, enrichment_classes, packet)
 
-        file_helper.write_line(output_file, line)
+        file_write_helper.write_line(output_file, line)
 
 
 def main():
-    environment_helper = EnvironmentHelper()
-    run(environment_helper.get_environment())
+    run(EnvironmentHelper().get_environment())
 
 
 def run(environment_variables, print_enrichers=False):
@@ -56,16 +54,16 @@ def run(environment_variables, print_enrichers=False):
     limiter = TrafficLimitHelper(3, 1)
     enrichment_classes = Enricher(limiter)
 
-    for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_normal_csv_file):
+    for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_normal_csv_file):
         new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
         enrich_file(file_path["path"], file_path["filename"], enrichment_classes, new_file)
         remove(path.join(file_path["path"], file_path["filename"]))
 
     if print_enrichers:
-        PrintHelper.print_enrichers(enrichment_classes.enrichers)
+        PrintHelper.print_enrichers(enrichment_classes.enricher_classes)
 
-    for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_enriched_csv_file):
-        file_helper.move_file(
+    for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_enriched_csv_file):
+        file_move_helper.move_file(
             path.join(file_path["path"], file_path["filename"]),
             path.join(csv_capture_path, file_path["filename"])
         )

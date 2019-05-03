@@ -1,12 +1,10 @@
 import re
-
 from os import path
 
-import main.helpers.file_helper as file_helper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.download_helper import DownloadHelper
-
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_move_helper, file_write_helper
 
 
 def convert_mac_address(row):
@@ -18,7 +16,7 @@ def convert_mac_address(row):
 def write_row(output_file, row):
     mac_address = convert_mac_address(row)
     line = mac_address + CombineHelper.delimiter + '"{}"'.format(row["Organization Name"])
-    file_helper.write_line(output_file, line)
+    file_write_helper.write_line(output_file, line)
 
 
 def main():
@@ -32,7 +30,7 @@ def run(destination_file):
     url = "http://standards-oui.ieee.org/oui/oui.csv"
     header = "eth_short,vendor"
     filename = DownloadHelper.download_file(destination_file, url, header, write_row)
-    file_helper.remove_file(filename)
+    file_move_helper.remove_file(filename)
 
 
 if __name__ == "__main__":

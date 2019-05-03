@@ -6,6 +6,6 @@ class TestEnrichCsv(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestEnrichCsv)
     unittest.TextTestRunner(verbosity=2).run(suite)
