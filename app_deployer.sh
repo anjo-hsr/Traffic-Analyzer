@@ -86,6 +86,21 @@ function copy_pcaps() {
     done
 }
 
+function test_splunk_app(){
+    appName="traffic-analyzer"
+    trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
+
+    sleep 20
+    cisco=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" eth_short=\"00:00:0c\" | dedup eth_short' -auth admin:AnJo-HSR"`
+    ciscoString='00:00:0c,"Cisco Systems, Inc"'
+
+    if [[ ${trafficAnalyzer} == *"App '${appName}' is packaged."* ]] && [[ ${cisco} == ${ciscoString} ]]; then
+        echo "Test was successful."
+    else
+        echo "Test failed"
+    fi
+}
+
 containerName="splunk_traffic-analyzer"
 imageName="${containerName}_image"
 
@@ -117,7 +132,11 @@ case "$1" in
         copy_pcaps
         ;;
 
+    test-app)
+        test_splunk_app
+        ;;
+
     *)
-        echo $"Usage: $0 {start|update|force-update|copy-pcaps}"
+        echo $"Usage: $0 {start|update|force-update|copy-pcaps|test-app}"
         exit 1
 esac
