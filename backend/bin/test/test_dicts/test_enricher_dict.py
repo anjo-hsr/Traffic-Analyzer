@@ -2,7 +2,6 @@ import unittest
 from collections import OrderedDict
 
 from main.dicts.enrichers_dict import get_enricher_dict
-from main.enricher import Enricher
 from main.enrichers.ad_enricher import AdEnricher
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
