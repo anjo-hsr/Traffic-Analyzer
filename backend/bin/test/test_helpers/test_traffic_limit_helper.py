@@ -27,7 +27,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
     def test_increase_counter(self):
         expected_counter = 0
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
-        self.traffic_limit_helper.increase_counter()
+        self.traffic_limit_helper.check_request_load()
         expected_counter += 1
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
 
