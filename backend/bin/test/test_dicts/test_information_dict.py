@@ -3,6 +3,7 @@ import unittest
 from main.enricher import Enricher
 from test.test_dicts.keys import id_keys
 
+
 class TestInformationDict(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

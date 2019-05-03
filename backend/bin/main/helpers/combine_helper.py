@@ -16,7 +16,6 @@ class CombineHelper:
         enriched_line = CombineHelper.delimiter.join(information_dict.values())
         return CombineHelper.combine_fields([joined_default_cells, enriched_line])
 
-
     @staticmethod
     def combine_fields(fields, quotes_needed=False):
         if quotes_needed:
