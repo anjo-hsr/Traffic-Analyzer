@@ -15,13 +15,13 @@ from main.enrichers.tls_enricher import TlsEnricher
 class TestEnrichmentClassesMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.enrichment_classes = Enricher()
+        cls.enricher = Enricher()
 
     def setUp(self):
-        self.enrichment_classes.reset_variables()
+        self.enricher.reset_variables()
 
     def test_create_enrichers_classes(self):
-        enrichers = self.enrichment_classes.enrichers
+        enrichers = self.enricher.enrichers
 
         for key in enrichers.keys():
             if key == "location_enricher":
@@ -52,7 +52,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
                 self.assertTrue(False)
 
     def test_create_enrichers_is_dict(self):
-        enrichers = self.enrichment_classes.enrichers
+        enrichers = self.enricher.enrichers
         self.assertTrue(isinstance(enrichers, OrderedDict))
 
     def test_create_enrichers_keys(self):
@@ -67,7 +67,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "dns_lookup_enricher"
         ]
 
-        enrichers = self.enrichment_classes.enrichers
+        enrichers = self.enricher.enrichers
         keys = [enricher_key for enricher_key in enrichers]
         self.assertEqual(keys, test_keys)
 
