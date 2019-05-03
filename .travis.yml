@@ -36,8 +36,6 @@ jobs:
       script:
         - dos2unix ./app_deployer.sh
         - ./app_deployer.sh start
-        - sleep 10
-        - ./app_deployer.sh test-app
     - stage: sonar
       script:
         - cd ./backend
