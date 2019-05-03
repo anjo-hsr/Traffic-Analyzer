@@ -1,4 +1,4 @@
-from main.dicts.enrichers_dict import EnrichersDict
+from main.dicts.enrichers_dict import get_enricher_dict
 from main.dicts.information_dict import InformationDict
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
@@ -7,7 +7,7 @@ from main.helpers.traffic_limit_helper import TrafficLimitHelper
 class Enricher:
     def __init__(self, limiter=TrafficLimitHelper(2, 1)):
         self.limiter = limiter
-        self.enricher_classes = EnrichersDict()
+        self.enricher_classes = get_enricher_dict()
         self.ip_information_downloader = IpInformationDownloader(limiter)
         self.initialize_variables()
         self.information_dict = InformationDict()
@@ -16,7 +16,7 @@ class Enricher:
         self.initialize_variables()
 
     def initialize_variables(self):
-        self.enricher_classes = EnrichersDict()
+        self.enricher_classes = get_enricher_dict()
         self.ip_information_downloader = IpInformationDownloader(self.limiter)
 
     def get_information_dict(self, dst_src_information, packet):

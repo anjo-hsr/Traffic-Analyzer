@@ -10,15 +10,14 @@ from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 
 
-class EnrichersDict:
-    def __init__(self):
-        self.enrichers_dict = OrderedDict([
-            ("location_enricher", LocationEnricher()),
-            ("fqdn_resolve_enricher", NameResolverEnricher()),
-            ("cipher_suite_enricher", CipherSuiteEnricher()),
-            ("tls_ssl_version_enricher", TlsEnricher()),
-            ("ip_type_enricher", IpTypeEnricher()),
-            ("stream_enricher", StreamEnricher()),
-            ("ad_enricher", AdEnricher()),
-            ("dns_lookup_enricher", DnsLookupEnricher())
-        ])
+def get_enricher_dict():
+    return OrderedDict([
+        ("location_enricher", LocationEnricher()),
+        ("fqdn_resolve_enricher", NameResolverEnricher()),
+        ("cipher_suite_enricher", CipherSuiteEnricher()),
+        ("tls_ssl_version_enricher", TlsEnricher()),
+        ("ip_type_enricher", IpTypeEnricher()),
+        ("stream_enricher", StreamEnricher()),
+        ("ad_enricher", AdEnricher()),
+        ("dns_lookup_enricher", DnsLookupEnricher())
+    ])
