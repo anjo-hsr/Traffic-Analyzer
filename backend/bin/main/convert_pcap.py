@@ -3,7 +3,7 @@ import re
 import subprocess
 from os import path
 
-import main.helpers.file_helper as file_helper
+import main.helpers.file.file_helper as file_helper
 import main.helpers.tshark_helper as tshark_helper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.print_helper import PrintHelper

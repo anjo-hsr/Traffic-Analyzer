@@ -1,7 +1,7 @@
 from os import path
 from urllib import request
 
-from main.helpers import file_helper
+from main.helpers.file import file_helper
 from main.helpers.environment_helper import EnvironmentHelper
 
 
