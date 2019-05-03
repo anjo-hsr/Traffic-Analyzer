@@ -20,7 +20,7 @@ def move_file(old_path, new_path):
         return
 
     try:
-        remove(new_path)
+        remove_file(new_path)
     except OSError:
         pass
 
