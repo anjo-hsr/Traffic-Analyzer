@@ -3,6 +3,7 @@ from os import path, remove
 from unittest.mock import patch, MagicMock
 
 import main.helpers.file.file_helper as file_helper
+import main.helpers.file.file_name_helper as file_name_helper
 from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
 from test.filenames import Filenames
@@ -106,27 +107,27 @@ class TestFileHelperMethods(unittest.TestCase):
 
     def test_pcap_pcapng_filenames(self):
         for filename in self.pcap_filenames_with_prefix:
-            self.assertTrue(file_helper.is_pcap_file(filename))
+            self.assertTrue(file_name_helper.is_pcap_file(filename))
 
         for filename in self.pcapng_filenames_with_prefix:
-            self.assertTrue(file_helper.is_pcap_file(filename))
+            self.assertTrue(file_name_helper.is_pcap_file(filename))
 
         for filename in self.csv_filenames:
-            self.assertFalse(file_helper.is_pcap_file(filename))
+            self.assertFalse(file_name_helper.is_pcap_file(filename))
 
     def test_is_normal_csv(self):
         for filename in self.csv_filenames:
-            self.assertTrue(file_helper.is_normal_csv_file(filename))
+            self.assertTrue(file_name_helper.is_normal_csv_file(filename))
 
         for filename in self.csv_enriched_filenames:
-            self.assertFalse(file_helper.is_normal_csv_file(filename))
+            self.assertFalse(file_name_helper.is_normal_csv_file(filename))
 
     def test_is_enriched_csv(self):
         for filename in self.csv_enriched_filenames:
-            self.assertTrue(file_helper.is_enriched_csv_file(filename))
+            self.assertTrue(file_name_helper.is_enriched_csv_file(filename))
 
         for filename in self.csv_filenames:
-            self.assertFalse(file_helper.is_enriched_csv_file(filename))
+            self.assertFalse(file_name_helper.is_enriched_csv_file(filename))
 
 
 if __name__ == "__main__":

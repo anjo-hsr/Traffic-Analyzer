@@ -2,6 +2,7 @@ import re
 from os import path, remove
 
 import main.helpers.file.file_helper as file_helper
+import main.helpers.file.file_name_helper as file_name_helper
 from main.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.environment_helper import EnvironmentHelper
@@ -53,7 +54,7 @@ def run(environment_variables, print_enrichers=False):
     limiter = TrafficLimitHelper(3, 1)
     enrichment_classes = Enricher(limiter)
 
-    for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_normal_csv_file):
+    for file_path in file_helper.get_file_paths(csv_tmp_path, file.file_name_helper.is_normal_csv_file):
         new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
         enrich_file(file_path["path"], file_path["filename"], enrichment_classes, new_file)
         remove(path.join(file_path["path"], file_path["filename"]))
@@ -61,7 +62,7 @@ def run(environment_variables, print_enrichers=False):
     if print_enrichers:
         PrintHelper.print_enrichers(enrichment_classes.enricher_classes)
 
-    for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_enriched_csv_file):
+    for file_path in file_helper.get_file_paths(csv_tmp_path, file.file_name_helper.is_enriched_csv_file):
         file_helper.move_file(
             path.join(file_path["path"], file_path["filename"]),
             path.join(csv_capture_path, file_path["filename"])
