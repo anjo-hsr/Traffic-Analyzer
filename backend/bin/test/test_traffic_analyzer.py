@@ -1,7 +1,5 @@
 import unittest
-
 from io import StringIO
-
 from unittest.mock import patch
 
 import main.traffic_analyzer as traffic_analyzer

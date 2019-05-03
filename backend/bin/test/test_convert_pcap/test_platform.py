@@ -1,5 +1,4 @@
 import unittest
-
 from unittest.mock import patch, MagicMock
 
 import main.convert_pcap as convert_pcap

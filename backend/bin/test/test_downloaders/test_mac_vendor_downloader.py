@@ -1,5 +1,4 @@
 import unittest
-
 from os import path, remove
 
 import main.downloaders.mac_vendor_downloader as get_mac

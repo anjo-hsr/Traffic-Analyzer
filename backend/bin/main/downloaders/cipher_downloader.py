@@ -1,9 +1,8 @@
 from os import path
 
 import main.helpers.file_helper as file_helper
-
-from main.helpers.download_helper import DownloadHelper
 from main.helpers.combine_helper import CombineHelper
+from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
 
 

@@ -1,12 +1,10 @@
 import re
-
 from os import path, remove
 
 import main.helpers.file_helper as file_helper
 from main.enricher import Enricher
-
-from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.combine_helper import CombineHelper
+from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.print_helper import PrintHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 

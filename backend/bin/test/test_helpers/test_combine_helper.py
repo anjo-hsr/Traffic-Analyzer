@@ -1,8 +1,8 @@
 import unittest
 
-from main.helpers.combine_helper import CombineHelper
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.helpers.combine_helper import CombineHelper
 
 
 class TestCombineHelperMethods(unittest.TestCase):
