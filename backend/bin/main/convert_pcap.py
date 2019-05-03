@@ -1,13 +1,11 @@
 import platform
 import re
 import subprocess
-
 from os import path
 
-import main.helpers.file_helper as file_helper
 import main.helpers.tshark_helper as tshark_helper
-
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_move_helper, file_name_helper, file_path_helper
 from main.helpers.print_helper import PrintHelper
 
 
@@ -80,15 +78,15 @@ def run(environment_variables):
     pcap_processed_path = environment_variables["pcap_processed_path"]
     csv_tmp_path = environment_variables["csv_tmp_path"]
 
-    for file_path in file_helper.get_file_paths(pcap_path, file_helper.is_pcap_file):
+    for file_path in file_path_helper.get_file_paths(pcap_path, file_name_helper.is_pcap_file):
         run_tshark(path.join(file_path["path"], file_path["filename"]))
-        file_helper.move_file(
+        file_move_helper.move_file(
             path.join(file_path["path"], file_path["filename"]),
             path.join(pcap_processed_path, file_path["filename"])
         )
 
-    for file_path in file_helper.get_file_paths(pcap_path, file_helper.is_normal_csv_file):
-        file_helper.move_file(
+    for file_path in file_path_helper.get_file_paths(pcap_path, file_name_helper.is_normal_csv_file):
+        file_move_helper.move_file(
             path.join(file_path["path"], file_path["filename"]),
             path.join(csv_tmp_path, file_path["filename"])
         )

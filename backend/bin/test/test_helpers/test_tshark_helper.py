@@ -23,6 +23,6 @@ class TestTsharkHelperMethods(unittest.TestCase):
         self.assertEqual(tshark_helper.get_arguments(filename), args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestTsharkHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

@@ -1,12 +1,11 @@
 import unittest
-
 from os import path
 from unittest.mock import patch
 
 from main.helpers.environment_helper import EnvironmentHelper
 
 
-class Process():
+class Process:
     def __init__(self, name):
         self.info = {"name": name}
 

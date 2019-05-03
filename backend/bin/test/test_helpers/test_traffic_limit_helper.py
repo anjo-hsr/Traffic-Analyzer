@@ -1,7 +1,5 @@
 import unittest
-
 from datetime import datetime
-from unittest.mock import patch, MagicMock
 
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
@@ -29,7 +27,7 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
     def test_increase_counter(self):
         expected_counter = 0
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
-        self.traffic_limit_helper.increase_counter()
+        self.traffic_limit_helper.check_request_load()
         expected_counter += 1
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
 
@@ -51,6 +49,6 @@ class TestTrafficLimitHelperMethods(unittest.TestCase):
         self.assertAlmostEqual(timestamp_after - timestamp_before, 1, 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestTrafficLimitHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
