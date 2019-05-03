@@ -2,10 +2,9 @@ import unittest
 from os import path, remove
 from unittest.mock import patch, MagicMock
 
-import main.helpers.file.file_helper as file_helper
-import main.helpers.file.file_name_helper as file_name_helper
 from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_move_helper, file_name_helper, file_read_helper, file_write_helper
 from test.filenames import Filenames
 
 
@@ -25,7 +24,7 @@ class TestFileHelperMethods(unittest.TestCase):
         value1, value2 = "3c:d9:2b", "Hewlett Packard"
 
         csv_file = '{},{}\n{},"{}"'.format(header1, header2, value1, value2).splitlines()
-        dict_reader = file_helper.get_csv_dict_reader(csv_file)
+        dict_reader = file_read_helper.get_csv_dict_reader(csv_file)
 
         field_names = [header1, header2]
         self.assertEqual(dict_reader.fieldnames, field_names)
@@ -51,7 +50,7 @@ class TestFileHelperMethods(unittest.TestCase):
         self.assertTrue(downloaded_filename, file_path)
         self.assertTrue(path.isfile(file_path))
 
-        file_helper.remove_file(file_path)
+        file_move_helper.remove_file(file_path)
         self.assertFalse(path.isfile(file_path))
 
     def test_is_header(self):
@@ -60,13 +59,13 @@ class TestFileHelperMethods(unittest.TestCase):
             1: False
         }
         for key in line_dict:
-            self.assertEqual(file_helper.is_header(key), line_dict[key])
+            self.assertEqual(file_read_helper.is_header(key), line_dict[key])
 
     def test_write_line(self):
         line = "test123"
         test_file_path = path.join(".", "test.csv")
         with open(test_file_path, mode="w") as test_file:
-            file_helper.write_line(test_file, line)
+            file_write_helper.write_line(test_file, line)
 
         with open(test_file_path) as test_file:
             self.assertEqual(test_file.read(), line + "\n")
@@ -81,11 +80,11 @@ class TestFileHelperMethods(unittest.TestCase):
         self.assertTrue(path.isfile(source_path))
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
 
-        file_helper.move_file(source_path, destination_path)
+        file_move_helper.move_file(source_path, destination_path)
         self.assertTrue(path.isfile(destination_path))
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
 
-        file_helper.remove(destination_path)
+        file_move_helper.remove(destination_path)
         self.assertFalse(path.isfile(source_path))
         self.assertFalse(path.isfile(destination_path))
 
@@ -97,11 +96,11 @@ class TestFileHelperMethods(unittest.TestCase):
         self.assertTrue(path.isfile(source_path))
         self.assertEqual(path.isfile(source_path), path.isfile(destination_path))
 
-        file_helper.move_file(source_path, destination_path)
+        file_move_helper.move_file(source_path, destination_path)
         self.assertTrue(path.isfile(destination_path))
         self.assertEqual(path.isfile(source_path), path.isfile(destination_path))
 
-        file_helper.remove(source_path)
+        file_move_helper.remove(source_path)
         self.assertFalse(path.isfile(source_path))
         self.assertFalse(path.isfile(destination_path))
 

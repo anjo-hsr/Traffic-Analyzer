@@ -1,8 +1,8 @@
 from os import path
 from urllib import request
 
-from main.helpers.file import file_helper
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_read_helper, file_write_helper
 
 
 class DownloadHelper:
@@ -30,7 +30,7 @@ class DownloadHelper:
 
     @staticmethod
     def write_download_file(write_row, csv_file, output_file, header):
-        file_helper.write_line(output_file, header)
-        csv_reader = file_helper.get_csv_dict_reader(csv_file)
+        file_write_helper.write_line(output_file, header)
+        csv_reader = file_read_helper.get_csv_dict_reader(csv_file)
         for row in csv_reader:
             write_row(output_file, row)

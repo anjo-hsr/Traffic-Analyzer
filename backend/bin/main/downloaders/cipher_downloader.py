@@ -1,9 +1,9 @@
 from os import path
 
-import main.helpers.file.file_helper as file_helper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_move_helper, file_write_helper
 
 
 def calculate_hex(hex_pair):
@@ -24,7 +24,7 @@ def combine_information(row):
 def write_row(output_file, row):
     try:
         line = combine_information(row)
-        file_helper.write_line(output_file, line)
+        file_write_helper.write_line(output_file, line)
     except ValueError:
         pass
 
@@ -40,7 +40,7 @@ def run(destination_file):
     url = "https://www.iana.org/assignments/tls-parameters/tls-parameters-4.csv"
     header = "cipher_suite_number,description,recommended"
     filename = DownloadHelper.download_file(destination_file, url, header, write_row)
-    file_helper.remove_file(filename)
+    file_move_helper.remove_file(filename)
 
 
 if __name__ == "__main__":
