@@ -1,14 +1,14 @@
 import unittest
+from collections import OrderedDict
 
-from main.enricher import Enricher
+from main.dicts.information_dict import get_information_dict
 from test.test_dicts.keys import id_keys
 
 
 class TestInformationDict(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.enricher = Enricher()
-        cls.test_keys = [
+        cls.information_keys = [
             "location_information",
             "fqdn_information",
             "cipher_suite_information",
@@ -20,17 +20,18 @@ class TestInformationDict(unittest.TestCase):
         ]
 
     def setUp(self):
-        self.enricher.reset_variables()
+        self.information_dict = get_information_dict()
 
-    def test_get_information_dict(self):
-        information_dict = self.enricher.get_information_dict(None, None)
-        self.assertEqual(list(information_dict.keys()), self.test_keys)
+    def test_create_enrichers_is_dict(self):
+        self.assertTrue(isinstance(self.information_dict, OrderedDict))
+
+    def test_create_information_keys(self):
+        self.assertEqual(list(self.information_dict.keys()), self.information_keys)
 
     def test_information_dict_keys(self):
-        information_dict = self.enricher.get_information_dict(None, None)
         id_index = 0
-        key_ids = [key.split("_")[id_index] for key in information_dict.keys()]
-        self.assertEqual(key_ids, id_keys)
+        information_enricher_key_ids = [key.split("_")[id_index] for key in self.information_dict.keys()]
+        self.assertEqual(information_enricher_key_ids, id_keys)
 
 
 if __name__ == "__main__":
