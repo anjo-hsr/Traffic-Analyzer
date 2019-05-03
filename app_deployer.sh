@@ -90,14 +90,16 @@ function test_splunk_app(){
     appName="traffic-analyzer"
     trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
 
-    sleep 20
-    cisco=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" eth_short=\"00:00:0c\" | dedup eth_short' -auth admin:AnJo-HSR"`
-    ciscoString='00:00:0c,"Cisco Systems, Inc"'
+    echo -e "\nSleep for 15 seconds till the lists are imported"
+    sleep 15
+    tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
+    tcpString="6,TCP,Transmission Control,,[RFC793]"
 
-    if [[ ${trafficAnalyzer} == *"App '${appName}' is packaged."* ]] && [[ ${cisco} == ${ciscoString} ]]; then
+    if [[ "${trafficAnalyzer}" == *"App '${appName}' is packaged."* ]] && [[ "${tcpEntry}" == "${tcpString}" ]]; then
         echo "Test was successful."
     else
         echo "Test failed"
+        return 1
     fi
 }
 
@@ -113,12 +115,14 @@ case "$1" in
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
+        test_splunk_app
         ;;
 
     update)
         install_requirements
         create_tar
         update_traffic-analyzer
+        test_splunk_app
         ;;
 
     force-update)
@@ -126,6 +130,7 @@ case "$1" in
         create_tar
         remove_traffic-analyzer
         update_traffic-analyzer
+        test_splunk_app
         ;;
 
     copy-pcaps)
