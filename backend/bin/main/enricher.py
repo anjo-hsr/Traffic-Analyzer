@@ -1,5 +1,5 @@
 from main.dicts.enrichers_dict import get_enricher_dict
-from main.dicts.information_dict import get_information_dict
+from main.dicts.information_dict import get_information_dict, fill_dict
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
@@ -8,15 +8,12 @@ class Enricher:
     def __init__(self, limiter=TrafficLimitHelper(2, 1)):
         self.limiter = limiter
         self.enricher_classes = get_enricher_dict()
-        self.ip_information_downloader = IpInformationDownloader(limiter)
-        self.initialize_variables()
         self.information_dict = get_information_dict()
+        self.ip_information_downloader = IpInformationDownloader(limiter)
 
     def reset_variables(self):
-        self.initialize_variables()
-
-    def initialize_variables(self):
         self.enricher_classes = get_enricher_dict()
+        self.information_dict = get_information_dict()
         self.ip_information_downloader = IpInformationDownloader(self.limiter)
 
     def get_information_dict(self, dst_src_information, packet):
@@ -33,7 +30,7 @@ class Enricher:
         dns_lookup_information = enrichers_dict["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
         ad_value = enrichers_dict["ad_enricher"].test_urls(dns_lookup_information)
 
-        self.information_dict.fill_dict([
+        fill_dict(self.information_dict, [
             ("location_information", location_information),
             ("fqdn_information", fqdn_information),
             ("cipher_suite_information", cipher_suite_information),

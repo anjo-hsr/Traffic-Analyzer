@@ -14,9 +14,9 @@ def get_information_dict():
     ])
 
 
-def fill_dict(self, fill_list):
+def fill_dict(information_dict, fill_list):
     key_index = 0
     value_index = 1
 
     for tuple_entry in fill_list:
-        self.information_dict[tuple_entry[key_index]] = tuple_entry[value_index]
+        information_dict[tuple_entry[key_index]] = tuple_entry[value_index]
