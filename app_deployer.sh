@@ -90,15 +90,15 @@ function test_splunk_app(){
     appName="traffic-analyzer"
     trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
 
-    echo -e "\nSleep for 15 seconds till the lists are imported"
-    sleep 15
+    echo -e "\nSleep for 20 seconds till the lists are imported"
+    sleep 20
     tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
     tcpString="6,TCP,Transmission Control,,[RFC793]"
 
     if [[ "${trafficAnalyzer}" == *"App '${appName}' is packaged."* ]] && [[ "${tcpEntry}" == "${tcpString}" ]]; then
-        echo "Test was successful."
+        echo "App test was successful."
     else
-        echo "Test failed"
+        echo "App test failed."
         return 1
     fi
 }
