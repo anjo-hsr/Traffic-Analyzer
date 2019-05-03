@@ -1,13 +1,13 @@
 import unittest
 
 from main.helpers.file import file_name_helper
-from test.filenames import Filenames
+from test.filenames import get_filenames
 
 
 class TestFileNameHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        filenames = Filenames.get_filenames()
+        filenames = get_filenames()
         cls.csv_filenames = filenames["csv_filenames"]
         cls.csv_enriched_filenames = filenames["csv_enriched_filenames"]
         cls.pcap_filenames_without_prefix = filenames["pcap_filenames_without_prefix"]

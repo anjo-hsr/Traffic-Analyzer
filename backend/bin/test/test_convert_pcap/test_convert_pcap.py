@@ -1,14 +1,14 @@
 import unittest
 
 import main.convert_pcap as convert_pcap
-from test.filenames import Filenames
+from test.filenames import get_filenames
 
 
 class TestConvertPcapMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        filenames = Filenames.get_filenames()
+        filenames = get_filenames()
         cls.csv_filenames = filenames["csv_filenames"]
         cls.pcap_filenames_without_prefix = filenames["pcap_filenames_without_prefix"]
         cls.pcapng_filenames_without_prefix = filenames["pcapng_filenames_without_prefix"]
