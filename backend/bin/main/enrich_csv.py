@@ -59,7 +59,7 @@ def run(environment_variables, print_enrichers=False):
         remove(path.join(file_path["path"], file_path["filename"]))
 
     if print_enrichers:
-        PrintHelper.print_enrichers(enrichment_classes.enrichers)
+        PrintHelper.print_enrichers(enrichment_classes.enricher_classes)
 
     for file_path in file_helper.get_file_paths(csv_tmp_path, file_helper.is_enriched_csv_file):
         file_helper.move_file(
