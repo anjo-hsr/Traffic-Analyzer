@@ -1,5 +1,5 @@
 from main.dicts.enrichers_dict import get_enricher_dict
-from main.dicts.information_dict import InformationDict
+from main.dicts.information_dict import get_information_dict
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
@@ -10,7 +10,7 @@ class Enricher:
         self.enricher_classes = get_enricher_dict()
         self.ip_information_downloader = IpInformationDownloader(limiter)
         self.initialize_variables()
-        self.information_dict = InformationDict()
+        self.information_dict = get_information_dict()
 
     def reset_variables(self):
         self.initialize_variables()
@@ -21,7 +21,7 @@ class Enricher:
 
     def get_information_dict(self, dst_src_information, packet):
         if dst_src_information is None and packet is None:
-            return self.information_dict.information_dict
+            return self.information_dict
 
         enrichers_dict = self.enricher_classes.enrichers_dict
         location_information = enrichers_dict["location_enricher"].extract_location(dst_src_information)

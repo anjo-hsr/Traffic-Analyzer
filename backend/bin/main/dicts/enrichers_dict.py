@@ -18,6 +18,6 @@ def get_enricher_dict():
         ("tls_ssl_version_enricher", TlsEnricher()),
         ("ip_type_enricher", IpTypeEnricher()),
         ("stream_enricher", StreamEnricher()),
-        ("ad_enricher", AdEnricher()),
-        ("dns_lookup_enricher", DnsLookupEnricher())
+        ("dns_lookup_enricher", DnsLookupEnricher()),
+        ("ad_enricher", AdEnricher())
     ])
