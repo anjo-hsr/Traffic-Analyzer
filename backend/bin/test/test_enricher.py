@@ -16,49 +16,9 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.enricher = Enricher()
-
-    def setUp(self):
-        self.enricher.reset_variables()
-
-    def test_create_enrichers_classes(self):
-        enrichers = self.enricher.enrichers
-
-        for key in enrichers.keys():
-            if key == "location_enricher":
-                self.assertTrue(isinstance(enrichers[key], LocationEnricher))
-
-            elif key == "name_resolve_enricher":
-                self.assertTrue(isinstance(enrichers[key], NameResolverEnricher))
-
-            elif key == "cipher_suite_enricher":
-                self.assertTrue(isinstance(enrichers[key], CipherSuiteEnricher))
-
-            elif key == "tls_ssl_version_enricher":
-                self.assertTrue(isinstance(enrichers[key], TlsEnricher))
-
-            elif key == "ip_type_enricher":
-                self.assertTrue(isinstance(enrichers[key], IpTypeEnricher))
-
-            elif key == "stream_enricher":
-                self.assertTrue(isinstance(enrichers[key], StreamEnricher))
-
-            elif key == "ad_enricher":
-                self.assertTrue(isinstance(enrichers[key], AdEnricher))
-
-            elif key == "dns_lookup_enricher":
-                self.assertTrue(isinstance(enrichers[key], DnsLookupEnricher))
-
-            else:
-                self.assertTrue(False)
-
-    def test_create_enrichers_is_dict(self):
-        enrichers = self.enricher.enrichers
-        self.assertTrue(isinstance(enrichers, OrderedDict))
-
-    def test_create_enrichers_keys(self):
-        test_keys = [
+        cls.test_keys = [
             "location_enricher",
-            "name_resolve_enricher",
+            "fqdn_resolve_enricher",
             "cipher_suite_enricher",
             "tls_ssl_version_enricher",
             "ip_type_enricher",
@@ -67,9 +27,48 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "dns_lookup_enricher"
         ]
 
-        enrichers = self.enricher.enrichers
-        keys = [enricher_key for enricher_key in enrichers]
-        self.assertEqual(keys, test_keys)
+    def setUp(self):
+        self.enricher.reset_variables()
+
+    def test_create_enrichers_classes(self):
+        enrichers_dict = self.enricher.enricher_classes.enrichers_dict
+
+        for key in enrichers_dict.keys():
+            if key == "location_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], LocationEnricher))
+
+            elif key == "fqdn_resolve_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], NameResolverEnricher))
+
+            elif key == "cipher_suite_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], CipherSuiteEnricher))
+
+            elif key == "tls_ssl_version_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], TlsEnricher))
+
+            elif key == "ip_type_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], IpTypeEnricher))
+
+            elif key == "stream_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], StreamEnricher))
+
+            elif key == "dns_lookup_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], DnsLookupEnricher))
+
+            elif key == "ad_enricher":
+                self.assertTrue(isinstance(enrichers_dict[key], AdEnricher))
+
+
+            else:
+                self.assertTrue(False)
+
+    def test_create_enrichers_is_dict(self):
+        enrichers_dict = self.enricher.enricher_classes.enrichers_dict
+        self.assertTrue(isinstance(enrichers_dict, OrderedDict))
+
+    def test_create_enrichers_keys(self):
+        enrichers_dict = self.enricher.enricher_classes.enrichers_dict
+        self.assertEqual(list(enrichers_dict.keys()), self.test_keys)
 
 
 if __name__ == '__main__':
