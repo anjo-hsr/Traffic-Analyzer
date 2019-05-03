@@ -22,9 +22,6 @@ class TrafficLimitHelper:
         self.period_start_timestamp = self.get_timestamp()
         self.counter = 0
 
-    def increase_counter(self):
-        self.counter += 1
-
     def check_request_load(self):
         waiting_time = self.waiting_time
         if (self.counter == self.requests_per_period) and waiting_time > 0:
@@ -34,4 +31,4 @@ class TrafficLimitHelper:
         if self.waiting_time < 0:
             self.reset_period_timestamp()
 
-        self.increase_counter()
+        self.counter += 1

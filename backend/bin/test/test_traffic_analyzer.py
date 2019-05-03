@@ -1,7 +1,5 @@
 import unittest
-
 from io import StringIO
-
 from unittest.mock import patch
 
 import main.traffic_analyzer as traffic_analyzer
@@ -23,6 +21,6 @@ class TestTrafficAnalyzerMethods(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), error_text)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestTrafficAnalyzerMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
