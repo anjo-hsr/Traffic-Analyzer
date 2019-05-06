@@ -86,6 +86,23 @@ function copy_pcaps() {
     done
 }
 
+function test_splunk_app(){
+    appName="traffic-analyzer"
+    trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
+
+    echo -e "\nSleep for 20 seconds till the lists are imported"
+    sleep 20
+    tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
+    tcpString="6,TCP,Transmission Control,,[RFC793]"
+
+    if [[ "${trafficAnalyzer}" == *"App '${appName}' is packaged."* ]] && [[ "${tcpEntry}" == "${tcpString}" ]]; then
+        echo "App test was successful."
+    else
+        echo "App test failed."
+        return 1
+    fi
+}
+
 containerName="splunk_traffic-analyzer"
 imageName="${containerName}_image"
 
@@ -98,12 +115,14 @@ case "$1" in
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
+        test_splunk_app
         ;;
 
     update)
         install_requirements
         create_tar
         update_traffic-analyzer
+        test_splunk_app
         ;;
 
     force-update)
@@ -111,13 +130,18 @@ case "$1" in
         create_tar
         remove_traffic-analyzer
         update_traffic-analyzer
+        test_splunk_app
         ;;
 
     copy-pcaps)
         copy_pcaps
         ;;
 
+    test-app)
+        test_splunk_app
+        ;;
+
     *)
-        echo $"Usage: $0 {start|update|force-update|copy-pcaps}"
+        echo $"Usage: $0 {start|update|force-update|copy-pcaps|test-app}"
         exit 1
 esac
