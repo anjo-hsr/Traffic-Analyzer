@@ -6,7 +6,8 @@ services:
     build:
       context: "./${DEPLOYMENT_FOLDER}"
       args:
-        PORT: $WEB_PORT
+        WEB_PORT: 8000
+        REST_API_PORT: 8089
         INIT_DIR: $INIT_DIR
         SPLUNK_PASSWORD: $SPLUNK_PASSWORD
         SPLUNK_START_ARGS: $SPLUNK_START_ARGS
@@ -14,4 +15,5 @@ services:
     networks:
       default:
     ports:
-      - "${WEB_PORT}:${WEB_PORT}"
+      - "${WEB_PORT}:8000"
+      - "${REST_API_PORT}:8089"
