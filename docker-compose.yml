@@ -15,5 +15,5 @@ services:
     networks:
       default:
     ports:
-      - "${WEB_PORT}:8000"
-      - "${REST_API_PORT}:8089"
+      - "${PUBLIC_WEB_PORT}:8000"
+      - "${PUBLIC_REST_API_PORT}:8089"
