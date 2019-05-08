@@ -31,8 +31,11 @@
       <table>
         <search>
           <query>$source_token$ eth_src=$filteredMAC$
-                    src_is_private_ip="true"
-                    dst_is_private_ip="false"
+                | dedup ip_src
+                | eval src_is_private_extended=if(
+                  cidrmatch("152.96.192.0/22", ip_src) OR
+                  src_is_private_ip == "True","True", "False")
+                | where src_is_private_extended == "True"
                 | where ip_src!="" AND ip_src!="0.0.0.0"
                 | table eth_src, ip_src
                 | dedup ip_src
