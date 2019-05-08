@@ -52,13 +52,12 @@
       <title>Endpoints</title>
       <table>
         <search>
-          <query>$source_token$
-                    eth_dst=$filteredMAC$ OR eth_src=$filteredMAC$
-                    src_is_private_ip="false"
-                    [search $source_token$ src_is_private_ip="false"
-                    | where NOT cidrmatch("152.96.0.0/16", ip_src)
-                    | dedup eth_src
-                    | table eth_src]
+         <query>$source_token$ eth_dst=$filteredMAC$ OR eth_src=$filteredMAC$
+                src_is_private_ip="false"
+                  [search $source_token$ src_is_private_ip="false"
+                  | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+                  | dedup eth_src
+                  | table eth_src]
                 | where ip_src!=""
                 | table ip_src, src_fqdn
                 | dedup ip_src
