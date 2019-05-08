@@ -58,6 +58,7 @@ function update_traffic-analyzer() {
 
     set_rights
     fix_tshark
+    fix_line_endings
 
     docker exec ${containerName} bash -c 'sudo /opt/splunk/bin/splunk restart splunkd'
 }
@@ -72,6 +73,11 @@ function set_rights() {
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -name "*.py" -type f -exec sudo chmod 775 {} \;'
 
     docker exec ${containerName} bash -c 'sudo find /tmp/ -type d -exec sudo chmod 777 {} \;'
+}
+
+function fix_line_endings(){
+    echo -e "\nSet line endings"
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -print0 | xargs -0 sudo dos2unix > /dev/null 2>&1'
 }
 
 function fix_tshark() {
