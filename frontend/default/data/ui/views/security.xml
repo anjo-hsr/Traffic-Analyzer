@@ -45,6 +45,7 @@
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Additional private IP range:</label>
       <default></default>
+    </input> 
   </fieldset>
   <row>
     <panel>
