@@ -20,6 +20,32 @@
         </query>
       </search>
     </input>
+    <input type="text" searchWhenChanged="true" token="filteredMAC">
+      <label>Show for following  Device (MAC):</label>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="ip_range" searchWhenChanged="false">
+      <label>Private IP-Range</label>
+      <choice value="default">Default</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default">
+          <set token="use_default_ip_range">true</set>
+          <unset token="use_custom_ip_range"></unset>
+          <set token="custom_ip_range">1.2.3.4/32</set>
+          <set token="form.custom_ip_range">1.2.3.4/32</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ip_range"></unset>
+          <set token="use_custom_ip_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
+      <label>Additional private IP range:</label>
+      <default></default>
+    </input>
   </fieldset>
   <row>
     <panel>
