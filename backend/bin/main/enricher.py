@@ -20,15 +20,14 @@ class Enricher:
         if dst_src_information is None and packet is None:
             return self.information_dict
 
-        enrichers_dict = self.enricher_classes.enrichers_dict
-        location_information = enrichers_dict["location_enricher"].extract_location(dst_src_information)
-        fqdn_information = enrichers_dict["name_resolve_enricher"].extract_fqdn(dst_src_information)
-        cipher_suite_information = enrichers_dict["cipher_suite_enricher"].get_cipher_suite(packet)
-        tls_ssl_version = enrichers_dict["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
-        ip_type_information = enrichers_dict["ip_type_enricher"].extract_ip_types(dst_src_information)
-        stream_id = enrichers_dict["stream_enricher"].get_stream_id(packet)
-        dns_lookup_information = enrichers_dict["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
-        ad_value = enrichers_dict["ad_enricher"].test_urls(dns_lookup_information)
+        location_information = self.enricher_classes["location_enricher"].extract_location(dst_src_information)
+        fqdn_information = self.enricher_classes["fqdn_resolve_enricher"].extract_fqdn(dst_src_information)
+        cipher_suite_information = self.enricher_classes["cipher_suite_enricher"].get_cipher_suite(packet)
+        tls_ssl_version = self.enricher_classes["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
+        ip_type_information = self.enricher_classes["ip_type_enricher"].extract_ip_types(dst_src_information)
+        stream_id = self.enricher_classes["stream_enricher"].get_stream_id(packet)
+        dns_lookup_information = self.enricher_classes["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
+        ad_value = self.enricher_classes["ad_enricher"].test_urls(dns_lookup_information)
 
         fill_dict(self.information_dict, [
             ("location_information", location_information),
@@ -41,4 +40,4 @@ class Enricher:
             ("ad_value", ad_value)
         ])
 
-        return self.information_dict.information_dict
+        return self.information_dict

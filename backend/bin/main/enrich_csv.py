@@ -10,16 +10,16 @@ from main.helpers.print_helper import PrintHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
-def enrich_file(dirpath, file, enrichment_classes, new_file):
+def enrich_file(dirpath, file, enricher, new_file):
     with \
             open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
             open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
         csv_reader = file_read_helper.get_csv_dict_reader(capture)
 
-        loop_through_lines(csv_reader, enrichment_classes, output_file)
+        loop_through_lines(csv_reader, enricher, output_file)
 
 
-def loop_through_lines(csv_reader, enrichment_classes, output_file):
+def loop_through_lines(csv_reader, enricher, output_file):
     for index, packet in enumerate(csv_reader):
         ip_enumerate_character = ","
         packet["ip.dst"] = packet["ip.dst"].split(ip_enumerate_character)[0]
@@ -27,8 +27,8 @@ def loop_through_lines(csv_reader, enrichment_classes, output_file):
 
         if file_read_helper.is_header(index):
             default_header = csv_reader.fieldnames
-            enrichers = enrichment_classes.enrichers
-            helper_headers = [enrichers[helper_key].header for helper_key in enrichers]
+            enricher_classes = enricher.enricher_classes
+            helper_headers = [enricher_classes[helper_key].header for helper_key in enricher_classes]
             line = CombineHelper.combine_fields(default_header + helper_headers, False)
 
             # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
@@ -39,7 +39,7 @@ def loop_through_lines(csv_reader, enrichment_classes, output_file):
 
         else:
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
-            line = CombineHelper.combine_packet_information(joined_default_cells, enrichment_classes, packet)
+            line = CombineHelper.combine_packet_information(joined_default_cells, enricher, packet)
 
         file_write_helper.write_line(output_file, line)
 
@@ -52,15 +52,15 @@ def run(environment_variables, print_enrichers=False):
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
     limiter = TrafficLimitHelper(3, 1)
-    enrichment_classes = Enricher(limiter)
+    enricher = Enricher(limiter)
 
     for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_normal_csv_file):
         new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
-        enrich_file(file_path["path"], file_path["filename"], enrichment_classes, new_file)
+        enrich_file(file_path["path"], file_path["filename"], enricher, new_file)
         remove(path.join(file_path["path"], file_path["filename"]))
 
     if print_enrichers:
-        PrintHelper.print_enrichers(enrichment_classes.enricher_classes)
+        PrintHelper.print_enrichers(enricher.enricher_classes)
 
     for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_enriched_csv_file):
         file_move_helper.move_file(
