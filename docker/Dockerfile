@@ -12,6 +12,7 @@ RUN sudo mkdir -p $INIT_DIR
 ADD init_files $INIT_DIR
 
 RUN sudo apt update
+RUN sudo apt install dos2unix -y
 RUN sudo apt install tshark -y
 RUN sudo apt install python3 python3-pip -y
 
