@@ -55,8 +55,8 @@
           <query>$source_token$
                 | dedup dst_fqdn
                 | rename category as category_id
-                | join category_id [
-                    search sourcetype=list source="*traffic_categories.csv" | rename id as category_id ]
+                | join category_id
+                  [search sourcetype=list source="*traffic_categories.csv" | rename id as category_id]
                 | table dst_fqdn, dst_latitude, dst_longitude, category, dst_query_name
                 | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
                 | geostats count by category latfield=latitude longfield=longitude
@@ -82,11 +82,11 @@
           <query>$source_token$
                 | dedup dst_fqdn
                 | rename category as category_id
-                | join category_id [
-                    search sourcetype=list source="*traffic_categories.csv" | rename id as category_id ]
+                | join category_id
+                  [search sourcetype=list source="*traffic_categories.csv" | rename id as category_id]
                 | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, category
                 | rename dst_fqdn as Reverse_Lookup, dst_query_name as DNS_Query,
-                    dst_latitude as latitude, dst_longitude as longitude
+                  dst_latitude as latitude, dst_longitude as longitude
                 | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
                 | table DNS_Query, Reverse_Lookup, category
           </query>
