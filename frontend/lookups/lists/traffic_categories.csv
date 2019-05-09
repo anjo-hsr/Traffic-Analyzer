@@ -1,8 +1,8 @@
 id,category
 0,"normal"
 1,"ad"
-2,"malware"
-3,"social engineering"
-4,"threat type unspecified"
+2,"threat type unspecified"
+3,"malware"
+4,"social engineering"
 5,"unwanted software"
 6,"potentially harmful application"
