@@ -26,3 +26,7 @@ class CombineHelper:
     @staticmethod
     def join_default_cells(packet, field_names):
         return CombineHelper.delimiter.join('"{}"'.format(packet[field_name]) for field_name in field_names)
+
+    @staticmethod
+    def join_with_quotes(fields):
+        return '"' + CombineHelper.delimiter.join(fields) + '"'
