@@ -1,0 +1,99 @@
+<form stylesheet="customStyle.css" script="tokenStorer.js">
+  <label>Ad Locations</label>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
+      <label>Choose capture file:</label>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
+      <suffix>)</suffix>
+      <valuePrefix>source="*/</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <choice value="*">ALL</choice>
+      <fieldForLabel>shortSource</fieldForLabel>
+      <fieldForValue>shortSource</fieldForValue>
+      <search>
+        <query>sourcetype=capture
+              | dedup source
+              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+              | table shortSource
+        </query>
+      </search>
+    </input>
+    <input type="text" searchWhenChanged="true" token="filteredMAC">
+      <label>Show for following  Device (MAC):</label>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="ip_range" searchWhenChanged="false">
+      <label>Private IP-Range</label>
+      <choice value="default">Default</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default">
+          <set token="use_default_ip_range">true</set>
+          <unset token="use_custom_ip_range"></unset>
+          <set token="custom_ip_range">1.2.3.4/32</set>
+          <set token="form.custom_ip_range">1.2.3.4/32</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ip_range"></unset>
+          <set token="use_custom_ip_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
+      <label>Additional private IP range:</label>
+      <default></default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Cluster Map</title>
+      <map>
+        <search>
+          <query>$source_token$
+                | dedup dst_fqdn
+                | rename category as category_id
+                | join category_id
+                  [search sourcetype=list source="*traffic_categories.csv" | rename id as category_id]
+                | table dst_fqdn, dst_latitude, dst_longitude, category, dst_query_name
+                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
+                | geostats count by category latfield=latitude longfield=longitude
+          </query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="mapping.type">marker</option>
+        <option name="trellis.enabled">0</option>
+        <drilldown>
+          <set token="lat_min">$click.bounds.south$</set>
+          <set token="lat_max">$click.bounds.north$</set>
+          <set token="long_min">$click.bounds.west$</set>
+          <set token="long_max">$click.bounds.east$</set>
+        </drilldown>
+      </map>
+    </panel>
+    <panel depends="$lat_min$">
+      <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
+      <table>
+        <search>
+          <query>$source_token$
+                | dedup dst_fqdn
+                | rename category as category_id
+                | join category_id
+                  [search sourcetype=list source="*traffic_categories.csv" | rename id as category_id]
+                | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, category
+                | rename dst_fqdn as Reverse_Lookup, dst_query_name as DNS_Query,
+                  dst_latitude as latitude, dst_longitude as longitude
+                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
+                | table DNS_Query, Reverse_Lookup, category
+          </query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+</form>

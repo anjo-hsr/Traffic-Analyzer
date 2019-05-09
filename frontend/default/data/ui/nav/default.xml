@@ -5,7 +5,10 @@
     <view name="internalDevices" />
     <view name="externalDevices" />
   </collection>
-  <view name="traffic" />
+  <collection label="Traffic">
+    <view name="traffic" />
+    <view name="adLocations"/>
+  </collection>
   <view name="protocols" />
   <view name="security" />
   <view name="locations" />
