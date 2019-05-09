@@ -9,6 +9,7 @@ from main.enrichers.ip_type_enricher import IpTypeEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
 from main.enrichers.stream_enricher import StreamEnricher
+from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 from test.test_dicts.keys import id_keys
 
@@ -24,7 +25,8 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "ip_type_enricher",
             "stream_enricher",
             "dns_lookup_enricher",
-            "ad_enricher"
+            "ad_enricher",
+            "threat_info_enricher"
         ]
 
     def setUp(self):
@@ -56,6 +58,8 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             elif key == "ad_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], AdEnricher))
 
+            elif key == "threat_info_enricher":
+                self.assertTrue(isinstance(self.enricher_dict[key], ThreatInfoEnricher))
             else:
                 self.assertTrue(False)
 

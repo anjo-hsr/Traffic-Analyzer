@@ -6,5 +6,6 @@ id_keys = [
     "ip",
     "stream",
     "dns",
-    "ad"
+    "ad",
+    "threat"
 ]
