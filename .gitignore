@@ -108,7 +108,3 @@ venv.bak/
 **/target
 *.iml
 *.swp
-
-# tmp files
-*.pcap
-*.pcapng
