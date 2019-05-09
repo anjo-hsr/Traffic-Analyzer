@@ -10,7 +10,8 @@ def get_information_dict():
         ("ip_type_information", None),
         ("stream_id", None),
         ("dns_lookup_information", None),
-        ("ad_value", None)
+        ("ad_value", None),
+        ("threat_information", None)
     ])
 
 

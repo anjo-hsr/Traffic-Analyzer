@@ -28,6 +28,7 @@ class Enricher:
         stream_id = self.enricher_classes["stream_enricher"].get_stream_id(packet)
         dns_lookup_information = self.enricher_classes["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
         ad_value = self.enricher_classes["ad_enricher"].test_urls(dns_lookup_information)
+        threat_type = self.enricher_classes["threat_info_enricher"].test_urls_threats(dns_lookup_information)
 
         fill_dict(self.information_dict, [
             ("location_information", location_information),
@@ -37,7 +38,8 @@ class Enricher:
             ("ip_type_information", ip_type_information),
             ("stream_id", stream_id),
             ("dns_lookup_information", dns_lookup_information),
-            ("ad_value", ad_value)
+            ("ad_value", ad_value),
+            ("threat_information", threat_type)
         ])
 
         return self.information_dict
