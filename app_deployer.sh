@@ -88,6 +88,7 @@ function fix_tshark() {
 
 function copy_pcaps() {
     for filename in ./docker/init_files/pcaps/*.pcap ./docker/init_files/pcaps/*.pcapng; do
+        [[ -f ${filename} ]] || continue
         docker cp ${filename} ${containerName}:/tmp/pcaps/
     done
 }
