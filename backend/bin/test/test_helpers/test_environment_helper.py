@@ -15,7 +15,9 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
     def setUpClass(cls):
         cls.environment_helper = EnvironmentHelper()
         cls.docker_init_files_base_path = path.join("..", "..", "..", "docker", "init_files")
-        cls.lookup_base_path = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "lookups")
+        cls.traffic_analyzer_base_path = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer")
+        cls.local_base_path = path.join(cls.traffic_analyzer_base_path, "local")
+        cls.lookup_base_path = path.join(cls.traffic_analyzer_base_path, "lookups")
         cls.tmp_base_path = path.join("/tmp")
         cls.file_path = path.join("..", "files")
 
@@ -25,7 +27,8 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
             "csv_tmp_path": cls.file_path,
             "csv_list_path": cls.file_path,
             "csv_capture_path": cls.file_path,
-            "dns_request_files": cls.file_path
+            "dns_request_files": cls.file_path,
+            "configuration_folder": path.join("..", "..", "..", "frontend", "local")
         }
         cls.production_variables = {
             "pcap_path": path.join(cls.tmp_base_path, "pcaps"),
@@ -33,7 +36,8 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
             "csv_tmp_path": path.join(cls.tmp_base_path, "csvs"),
             "csv_list_path": path.join(cls.lookup_base_path, "lists"),
             "csv_capture_path": path.join(cls.lookup_base_path, "captures"),
-            "dns_request_files": path.join(cls.lookup_base_path, "dns_request_files")
+            "dns_request_files": path.join(cls.lookup_base_path, "dns_request_files"),
+            "configuration_folder": path.join(cls.local_base_path)
         }
 
     @patch("psutil.process_iter")
