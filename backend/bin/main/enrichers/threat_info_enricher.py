@@ -1,9 +1,11 @@
 import json
-from os import getenv
+from os import path
 from urllib import request
 from urllib.request import urlopen
 
 from main.helpers.combine_helper import CombineHelper
+from main.helpers.environment_helper import EnvironmentHelper
+from main.helpers.file import file_read_helper
 
 
 class ThreatInfoEnricher:
@@ -18,6 +20,15 @@ class ThreatInfoEnricher:
             "UNWANTED_SOFTWARE": "5",
             "POTENTIALLY_HARMFUL_APPLICATION": "6"
         }
+        self.api_key = self.get_api_key()
+
+    @staticmethod
+    def get_api_key():
+        environment = EnvironmentHelper().get_environment()
+        config_file = "traffic-analyzer.conf"
+        key = "safe_browsing_api_key"
+        file_path = path.join(environment["configuration_folder"], config_file)
+        return file_read_helper.get_config_value(file_path, key)
 
     def test_urls_threats(self, urls):
         url_array = urls.split(",")
@@ -35,10 +46,9 @@ class ThreatInfoEnricher:
         return CombineHelper.join_with_quotes(threat_numbers)
 
     def get_urls_threat_infomation(self, urls):
-        if urls:
-            print("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + getenv("GOOGLE_API_KEY"))
-            req = request.Request(
-                "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + getenv("GOOGLE_API_KEY"))
+        if urls and self.api_key != "":
+            print("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
+            req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
             req_data = self.generate_request_data(urls)
             req.add_header('Content-Type', 'application/json')
             response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
