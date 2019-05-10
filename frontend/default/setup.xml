@@ -7,8 +7,6 @@
             <label>Safe Browsing API key</label>
             <type>text</type>
         </input>
-<!--    </block>
-    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Paths">-->
         <input field="pcap_location">
             <label>PCAP Location</label>
             <type>text</type>
