@@ -1,5 +1,5 @@
 <setup>
-    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Safe Browsing">
+    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Custom Configuration">
         <text>
             &lt;i&gt;Configure Safe Browsing API&lt;/i&gt;
         </text>
@@ -7,24 +7,24 @@
             <label>Safe Browsing API key</label>
             <type>text</type>
         </input>
-    </block>
-    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Paths">
+<!--    </block>
+    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Paths">-->
         <input field="pcap_location">
             <label>PCAP Location</label>
             <type>text</type>
         </input>
     </block>
-<!--    <block title="Configure pcap collection"
+    <block title="Configure pcap collection"
            endpoint="data/inputs/script"
-           entity="%24SPLUNK_HOME%252Fetc%252Fapps%252Ftraffic-analyzer%252Fbin%252Fconvert_enrich.sh">
+           entity=".%2Fbin%2Fconvert_enrich.sh">
            <input field="interval">
                <label>Scheduled interval (in seconds or as cron schedule)</label>
                <type>text</type>
            </input>
-    </block>-->
+    </block>
     <block title="Configure collection of current information"
            endpoint="data/inputs/script"
-           entity="%24SPLUNK_HOME%252Fetc%252Fapps%252Ftraffic-analyzer%252Fbin%252Fdownload.sh">
+           entity=".%2Fbin%2Fdownload.sh">
            <input field="interval">
                <label>Scheduled interval (in seconds or as cron schedule)</label>
                <type>text</type>

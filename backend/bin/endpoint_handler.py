@@ -59,12 +59,37 @@ class ConfigApp(admin.MConfigHandler):
     normalize them, and save them somewhere
     '''
 
+    # def handleEdit(self, confInfo):
+    #     name = self.callerArgs.id
+    #     args = self.callerArgs
+    #
+    #     self.check_stanza("Safe Browsing", "safe_browsing_api_key")
+    #     self.check_stanza("Paths", "pcap_location")
+    #
+    #     '''
+    #     Since we are using a conf file to store parameters,
+    # write them to the [setupentity] stanza
+    #     in app_name/local/myappsetup.conf
+    #     '''
+    #
+    # def check_stanza(self, stanza, field):
+    #     data = {}
+    #     if self.callerArgs.data[field][0] in [None, '']:
+    #         self.callerArgs.data[field][0] = ''
+    #         data[field] = self.callerArgs.data[field]
+    #
+    #     config_name = "traffic-analyzer"
+    #     self.write_conf(config_name, stanza, data)
+
     def handleEdit(self, confInfo):
         name = self.callerArgs.id
         args = self.callerArgs
 
-        self.check_stanza("Safe Browsing", "safe_browsing_api_key")
-        self.check_stanza("Paths", "pcap_location")
+        if args.data['safe_browsing_api_key'][0] in [None, '']:
+            args.data['safe_browsing_api_key'][0] = ''
+
+        if args.data['pcap_location'][0] in [None, '']:
+            args.data['pcap_location'][0] = ''
 
         '''
         Since we are using a conf file to store parameters, 
@@ -72,15 +97,7 @@ class ConfigApp(admin.MConfigHandler):
         in app_name/local/myappsetup.conf  
         '''
 
-    def check_stanza(self, stanza, field):
-        data = {}
-        if self.callerArgs.data[field][0] in [None, '']:
-            self.callerArgs.data[field][0] = ''
-            data[field] = self.callerArgs.data[field]
-
-        config_name = "traffic-analyzer"
-        self.write_conf(config_name, stanza, data)
-
+        self.writeConf('traffic-analyzer', 'Custom Configuration', args.data)
 
 # initialize the handler
 admin.init(ConfigApp, admin.CONTEXT_NONE)
