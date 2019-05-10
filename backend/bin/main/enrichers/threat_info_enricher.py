@@ -1,6 +1,7 @@
 import json
 from os import path
 from urllib import request
+from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from main.helpers.combine_helper import CombineHelper
@@ -21,6 +22,7 @@ class ThreatInfoEnricher:
             "POTENTIALLY_HARMFUL_APPLICATION": "6"
         }
         self.api_key = self.get_api_key()
+        self.is_api_key_correct = True
 
     @staticmethod
     def get_api_key():
@@ -46,14 +48,17 @@ class ThreatInfoEnricher:
         return CombineHelper.join_with_quotes(threat_numbers)
 
     def get_urls_threat_infomation(self, urls):
-        if urls and self.api_key != "":
-            print("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
+        if self.is_api_key_correct and urls and self.api_key != "":
             req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
             req_data = self.generate_request_data(urls)
             req.add_header('Content-Type', 'application/json')
-            response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
-            response_dict = json.loads(response)
-            self.update_threat_dict(response_dict)
+            print(req_data)
+            try:
+                response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
+                response_dict = json.loads(response.decode("utf-8"))
+                self.update_threat_dict(response_dict)
+            except HTTPError:
+                self.is_api_key_correct = False
 
         return self.reduce_threat_information(urls)
 
