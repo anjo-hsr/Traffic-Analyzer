@@ -1,10 +1,10 @@
 import splunk.admin as admin
 
-# import your required python modules
-
 '''
 Copyright (C) 2005 - 2010 Splunk Inc. All Rights Reserved.
 Description:  This skeleton python script handles the parameters in the configuration page.
+
+Adapted from anjo-hsr
 
       handleList method: lists configurable parameters in the configuration page
       corresponds to handleractions = list in restmap.conf
@@ -48,75 +48,39 @@ class ConfigApp(admin.MConfigHandler):
         if configuration_dictionary is not None:
             for stanza, settings in configuration_dictionary.items():
                 for key, value in settings.items():
-                    if self.check_element(key, value, field_name_list):
+                    if self.is_tuple_empty(key, value, field_name_list):
                         value = ""
 
                     configuration_information[stanza].append(key, value)
 
-    @staticmethod
-    def check_element(key, value, field_name_list):
-        return key in field_name_list and value in [None, ""]
+    def is_tuple_empty(self, key, value, field_name_list):
+        return key in field_name_list and self.is_empty(value)
 
     '''
     After user clicks Save on setup page, take updated parameters,
     normalize them, and save them somewhere
     '''
 
-
-    # def handleEdit(self, confInfo):
-    #     name = self.callerArgs.id
-    #     args = self.callerArgs
-    #
-    #     self.check_stanza("Safe Browsing", "safe_browsing_api_key")
-    #     self.check_stanza("Paths", "pcap_location")
-    #
-    #     '''
-    #     Since we are using a conf file to store parameters,
-    # write them to the [setupentity] stanza
-    #     in app_name/local/myappsetup.conf
-    #     '''
-    #
-    # def check_stanza(self, stanza, field):
-    #     data = {}
-    #     if self.callerArgs.data[field][0] in [None, '']:
-    #         self.callerArgs.data[field][0] = ''
-    #         data[field] = self.callerArgs.data[field]
-    #
-    #     config_name = "traffic-analyzer"
-    #     self.write_conf(config_name, stanza, data)
-
-    def handleEdit(self, confInfo):
-        name = self.callerArgs.id
+    def handleEdit(self, _):
         args = self.callerArgs
 
-        if args.data['safe_browsing_api_key'][0] in [None, '']:
-            args.data['safe_browsing_api_key'][0] = ''
-
-        if args.data['pcap_location'][0] in [None, '']:
-            args.data['pcap_location'][0] = ''
-
-    # def handleEdit(self, _):
-    #     self.write_config("Safe Browsing", "safe_browsing_api_key")
-    #     self.write_config("Paths", "pcap_location")
-
+        self.check_field_value("safe_browsing_api_key")
+        self.check_field_value("pcap_location")
 
         '''
-        Since we are using a conf file to store parameters, 
-    write them to the [setupentity] stanza
-        in app_name/local/myappsetup.conf  
+        Since we are using a conf file to store parameters, write them to the [setupentity]
+        stanza in app_name/local/myappsetup.conf  
         '''
 
+        self.writeConf("traffic-analyzer", "Custom Configuration", args.data)
 
-        self.writeConf('traffic-analyzer', 'Custom Configuration', args.data)
+    def check_field_value(self, field):
+        if self.is_empty(self.callerArgs.data[field][0]):
+            self.callerArgs.data[field][0] = ""
 
-    # def write_config(self, stanza, field):
-    #     data = {}
-    #     if self.callerArgs.data[field][0] in [None, '']:
-    #         self.callerArgs.data[field][0] = ''
-    #         data[field] = self.callerArgs.data[field]
-    #
-    #     config_name = "traffic-analyzer"
-    #     self.write_conf(config_name, stanza, data)
+    @staticmethod
+    def is_empty(value):
+        return value in [None, ""]
 
 
 # initialize the handler
