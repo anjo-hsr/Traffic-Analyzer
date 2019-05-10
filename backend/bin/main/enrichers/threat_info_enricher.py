@@ -86,13 +86,13 @@ class ThreatInfoEnricher:
         for match in response_dict["matches"]:
             url = match["threat"]["url"]
             threat_type = match["threatType"]
-            self.threat_type_dict[url] = threat_type
+            self.threat_dict[url] = threat_type
 
     def reduce_threat_information(self, urls):
         reduced_list = set()
         for url in urls:
-            if url != "" and url in self.threat_type_dict:
-                for threatType in self.threat_type_dict[url].split(","):
+            if url != "" and url in self.threat_dict:
+                for threatType in self.threat_dict[url].split(","):
                     reduced_list.add(threatType)
 
         return reduced_list
