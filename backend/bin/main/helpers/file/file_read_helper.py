@@ -1,4 +1,5 @@
 from csv import DictReader
+from os import path
 
 
 def is_header(line_counter):
@@ -14,11 +15,12 @@ def get_config_value(file_path, key):
     value_index = 1
     value = ""
 
-    with open(file_path) as config_file:
-        for line in config_file:
-            key_value = line.replace(" ", "").strip().split("=")
-            if key_value[key_index] == key:
-                value = key_value[value_index]
-                break
+    if path.isfile(file_path):
+        with open(file_path) as config_file:
+            for line in config_file:
+                key_value = line.replace(" ", "").strip().split("=")
+                if key_value[key_index] == key:
+                    value = key_value[value_index]
+                    break
 
     return value
