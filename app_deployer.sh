@@ -92,12 +92,13 @@ function copy_pcaps() {
     done
 }
 
-function test_splunk_app(){
+function test_splunk_app() {
+    seconds=$1
     appName="traffic-analyzer"
     trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
 
-    echo -e "\nSleep for 20 seconds till the lists are imported"
-    sleep 20
+    echo -e "\nSleep for $seconds seconds till the lists are imported"
+    sleep ${seconds}
     tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
     tcpString="6,TCP,Transmission Control,,[RFC793]"
 
@@ -121,14 +122,14 @@ case "$1" in
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
-        test_splunk_app
+        test_splunk_app 20
         ;;
 
     update)
         install_requirements
         create_tar
         update_traffic-analyzer
-        test_splunk_app
+        test_splunk_app 5
         ;;
 
     force-update)
@@ -136,7 +137,7 @@ case "$1" in
         create_tar
         remove_traffic-analyzer
         update_traffic-analyzer
-        test_splunk_app
+        test_splunk_app 5
         ;;
 
     copy-pcaps)
