@@ -39,7 +39,7 @@ class ThreatInfoEnricher:
         if all(url == "" for url in url_array):
             return ""
 
-        filtered_urls = list(filter(self.is_url_not_in_dict, url_array))
+        filtered_urls = list(filter(lambda url: url not in self.threat_dict, url_array))
         for url in filtered_urls:
             self.threat_dict[url] = ""
 
@@ -62,26 +62,22 @@ class ThreatInfoEnricher:
 
         return self.reduce_threat_information(urls)
 
-    def is_url_not_in_dict(self, url):
-        return url not in self.threat_dict
-
     @staticmethod
     def generate_request_data(filtered_urls):
-        threat_entries = list(map(ThreatInfoEnricher.generate_url_entry, filtered_urls))
-        print(threat_entries)
+        url_entries = ThreatInfoEnricher.get_url_entries(filtered_urls)
         return {
             "threatInfo": {
                 "threatTypes": ["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE",
                                 "POTENTIALLY_HARMFUL_APPLICATION"],
                 "platformTypes": ["ANY_PLATFORM"],
                 "threatEntryTypes": ["URL"],
-                "threatEntries": threat_entries
+                "threatEntries": url_entries
             }
         }
 
     @staticmethod
-    def generate_url_entry(url):
-        return {"url": url}
+    def get_url_entries(filtered_urls):
+        return list(map(lambda url: {"url": url}, filtered_urls))
 
     def update_threat_dict(self, response_dict):
         if response_dict == {}:
@@ -106,9 +102,7 @@ class ThreatInfoEnricher:
 
     @staticmethod
     def remove_quotations(url):
-        url = url.replace('"', '')
-        url = url.replace("'", "")
-        return url
+        return url.replace('"', "").replace("'", "")
 
     def print(self):
         pass
