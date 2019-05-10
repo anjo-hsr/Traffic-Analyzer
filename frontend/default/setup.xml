@@ -1,0 +1,11 @@
+<setup>
+    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Safe Browsing">
+        <text>
+            &lt;i&gt;Configure Safe Browsing API&lt;/i&gt;
+        </text>
+        <input field="safe_browsing_api_key">
+            <label>Add Safe Browsing API key</label>
+            <type>text</type>
+        </input>
+    </block>
+</setup>

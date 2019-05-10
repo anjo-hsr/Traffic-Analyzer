@@ -52,7 +52,7 @@
       <title>Endpoints</title>
       <table>
         <search>
-         <query>$source_token$ eth_dst=$filteredMAC$ OR eth_src=$filteredMAC$
+          <query>$source_token$ eth_dst=$filteredMAC$ OR eth_src=$filteredMAC$
                 src_is_private_ip="false"
                   [search $source_token$ src_is_private_ip="false"
                   | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
