@@ -23,7 +23,7 @@ class ConfigApp(admin.MConfigHandler):
 
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
-            for arg in ['safe_browsing_api_key']:
+            for arg in ['safe_browsing_api_key', 'pcap_location']:
                 self.supportedArgs.addOptArg(arg)
 
     '''
@@ -50,6 +50,8 @@ class ConfigApp(admin.MConfigHandler):
                 for key, val in settings.items():
                     if key in ['safe_browsing_api_key'] and val in [None, '']:
                         val = ''
+                    if key in ['pcap_location'] and val in [None, '']:
+                        val = ''
                     confInfo[stanza].append(key, val)
 
     '''
@@ -61,8 +63,8 @@ class ConfigApp(admin.MConfigHandler):
         name = self.callerArgs.id
         args = self.callerArgs
 
-        if self.callerArgs.data['safe_browsing_api_key'][0] in [None, '']:
-            self.callerArgs.data['safe_browsing_api_key'][0] = ''
+        self.check_stanza("Safe Browsing", "safe_browsing_api_key")
+        self.check_stanza("Paths", "pcap_location")
 
         '''
         Since we are using a conf file to store parameters, 
@@ -70,7 +72,14 @@ class ConfigApp(admin.MConfigHandler):
         in app_name/local/myappsetup.conf  
         '''
 
-        self.writeConf('traffic-analyzer', 'Safe Browsing', self.callerArgs.data)
+    def check_stanza(self, stanza, field):
+        data = {}
+        if self.callerArgs.data[field][0] in [None, '']:
+            self.callerArgs.data[field][0] = ''
+            data[field] = self.callerArgs.data[field]
+
+        config_name = "traffic-analyzer"
+        self.write_conf(config_name, stanza, data)
 
 
 # initialize the handler

@@ -4,8 +4,30 @@
             &lt;i&gt;Configure Safe Browsing API&lt;/i&gt;
         </text>
         <input field="safe_browsing_api_key">
-            <label>Add Safe Browsing API key</label>
+            <label>Safe Browsing API key</label>
             <type>text</type>
         </input>
+    </block>
+    <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Paths">
+        <input field="pcap_location">
+            <label>PCAP Location</label>
+            <type>text</type>
+        </input>
+    </block>
+<!--    <block title="Configure pcap collection"
+           endpoint="data/inputs/script"
+           entity="%24SPLUNK_HOME%252Fetc%252Fapps%252Ftraffic-analyzer%252Fbin%252Fconvert_enrich.sh">
+           <input field="interval">
+               <label>Scheduled interval (in seconds or as cron schedule)</label>
+               <type>text</type>
+           </input>
+    </block>-->
+    <block title="Configure collection of current information"
+           endpoint="data/inputs/script"
+           entity="%24SPLUNK_HOME%252Fetc%252Fapps%252Ftraffic-analyzer%252Fbin%252Fdownload.sh">
+           <input field="interval">
+               <label>Scheduled interval (in seconds or as cron schedule)</label>
+               <type>text</type>
+           </input>
     </block>
 </setup>
