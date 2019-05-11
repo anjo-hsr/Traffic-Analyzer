@@ -1,5 +1,4 @@
 <nav search_view="search" color="#3c444c">
-  <!-- Use the collection tag to create a list of items -->
   <view name="overview" default="true"  />
   <collection label="Endpoints">
     <view name="internalDevices" />
