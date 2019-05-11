@@ -92,8 +92,8 @@ class ThreatInfoEnricher:
         reduced_list = set()
         for url in urls:
             if url != "" and url in self.threat_dict:
-                for threatType in self.threat_dict[url].split(","):
-                    reduced_list.add(threatType)
+                for threat_type in self.threat_dict[url].split(","):
+                    reduced_list.add(threat_type)
 
         return reduced_list
 
