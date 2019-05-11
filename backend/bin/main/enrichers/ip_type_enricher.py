@@ -16,14 +16,13 @@ class IpTypeEnricher:
     def extract_ip_types(dst_src_information):
         dst_ip = dst_src_information["dst"]["ip_address"]
         src_ip = dst_src_information["src"]["ip_address"]
+        return CombineHelper.delimiter.join([IpTypeEnricher.is_private(dst_ip), IpTypeEnricher.is_private(src_ip)])
 
+    @staticmethod
+    def is_private(ip_address):
         ip_helper = IpHelper()
-        dst_is_private = True
-        src_is_private = True
-        if dst_ip != "":
-            dst_is_private = ip_helper.is_private_ip(dst_ip)
+        is_private = False
+        if ip_address != "":
+            is_private = ip_helper.is_private_ip(ip_address)
 
-        if src_ip != "":
-            src_is_private = ip_helper.is_private_ip(src_ip)
-
-        return CombineHelper.delimiter.join([str(dst_is_private), str(src_is_private)])
+        return str(is_private)
