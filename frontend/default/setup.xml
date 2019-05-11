@@ -1,30 +1,41 @@
-<setup>
-  <block title="Configure Google Safe Browsing API" endpoint="traffic-analyzer/ta-conf" entity="Custom Configuration">
+<setup stylesheet="customStyle.css">
+  <block title="Configure api keys and paths"
+         endpoint="traffic-analyzer/ta-conf"
+         entity="Custom Configuration">
     <text>
-      &lt;i&gt;Configure Safe Browsing API&lt;/i&gt;
+      The Safe Browsing API is used to detect unsafe web resources. If no valid key is defined the detection
+      will be skipped.
+      &lt;br/&gt;
+      Generate an API key by following
+      &lt;a href="https://developers.google.com/safe-browsing/v4/get-started" target="_blank"&gt; this manual &lt;/a&gt;
     </text>
     <input field="safe_browsing_api_key">
       <label>Safe Browsing API key</label>
       <type>text</type>
     </input>
+    <text>
+      Define the path of the pcap directory. The path must be available in the servers file structure.
+    </text>
     <input field="pcap_location">
-      <label>PCAP Location</label>
+      <label>PCAP directory</label>
       <type>text</type>
     </input>
   </block>
-  <block title="Configure pcap collection"
+  <block title="Configure pcap collection scheudule"
          endpoint="data/inputs/script"
          entity=".%2Fbin%2Fconvert_enrich.sh">
     <input field="interval">
-      <label>Scheduled interval (in seconds or as cron schedule)</label>
+      <label>Scheduled interval [seconds or cron schedule]
+      </label>
       <type>text</type>
     </input>
   </block>
-  <block title="Configure collection of current information"
+  <block title="Configure public information collection scheudule"
          endpoint="data/inputs/script"
          entity=".%2Fbin%2Fdownload.sh">
     <input field="interval">
-      <label>Scheduled interval (in seconds or as cron schedule)</label>
+      <label>Scheduled interval [seconds or cron schedule]
+      </label>
       <type>text</type>
     </input>
   </block>
