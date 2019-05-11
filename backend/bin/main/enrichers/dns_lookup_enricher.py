@@ -29,18 +29,17 @@ class DnsLookupEnricher:
 
         src_ip = packet["ip.src"]
         dst_ip = packet["ip.dst"]
+        src_ip_information = self.generate_dns_information(src_ip, stream_id)
+        dst_ip_information = self.generate_dns_information(dst_ip, stream_id)
 
+        return CombineHelper.delimiter.join([dst_ip_information, src_ip_information])
+
+    def generate_dns_information(self, src_ip, stream_id):
         src_ip_information = self.dns_responses.get(src_ip, self.get_empty_dict(stream_id))
         src_a_records = CombineHelper.delimiter.join(src_ip_information["a_records"])
         src_ip_information = CombineHelper.delimiter.join(
             [src_ip_information["query_name"], src_a_records])
-
-        dst_ip_information = self.dns_responses.get(dst_ip, self.get_empty_dict(stream_id))
-        dst_a_records = CombineHelper.delimiter.join(dst_ip_information["a_records"])
-        dst_ip_information = CombineHelper.delimiter.join(
-            [dst_ip_information["query_name"], dst_a_records])
-
-        return CombineHelper.delimiter.join([dst_ip_information, src_ip_information])
+        return src_ip_information
 
     def save_dns_query(self, packet):
         dns_response_types = packet["dns.resp.type"].split(",")
