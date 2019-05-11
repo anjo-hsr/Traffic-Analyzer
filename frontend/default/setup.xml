@@ -1,4 +1,4 @@
-<setup stylesheet="customStyle.css">
+<setup>
   <block title="Configure api keys and paths"
          endpoint="traffic-analyzer/ta-conf"
          entity="Custom Configuration">
@@ -7,7 +7,8 @@
       will be skipped.
       &lt;br/&gt;
       Generate an API key by following
-      &lt;a href="https://developers.google.com/safe-browsing/v4/get-started" target="_blank"&gt; this manual &lt;/a&gt;
+      &lt;a href="https://developers.google.com/safe-browsing/v4/get-started"
+      target="_blank" rel="noopener noreferrer" &gt; this manual &lt;/a&gt;
     </text>
     <input field="safe_browsing_api_key">
       <label>Safe Browsing API key</label>
