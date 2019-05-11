@@ -34,6 +34,10 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
     def setUp(self):
         self.dns_lookup_enricher.dns_responses = {}
 
+    def test_header(self):
+        expected_header = "dst_query_name,dst_a_records,src_query_name,src_a_records"
+        self.assertEqual(self.dns_lookup_enricher.header, expected_header)
+
     def test_is_response(self):
         self.assertTrue(self.dns_lookup_enricher.is_response(self.dns_packet))
         self.assertFalse(self.dns_lookup_enricher.is_response(self.normal_packet))
