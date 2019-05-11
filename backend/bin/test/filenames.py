@@ -1,4 +1,4 @@
-def get_filenames():
+def get_filenames() -> None:
     return {
         "csv_filenames": ["capture-test_lower.csv", "capture-test_double_ending.py.csv",
                           "capture-test_upper.CSV", "capture-test_camel.Csv"],

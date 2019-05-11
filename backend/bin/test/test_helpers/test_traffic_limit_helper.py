@@ -6,38 +6,38 @@ from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 class TestTrafficLimitHelperMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.request_per_period = 2
         cls.period_time = 1
         cls.traffic_limit_helper = TrafficLimitHelper(cls.request_per_period, cls.period_time)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.traffic_limit_helper.reset_period_timestamp()
 
-    def test_get_timestamp(self):
+    def test_get_timestamp(self) -> None:
         timestamp = datetime.now().timestamp()
         self.assertAlmostEqual(TrafficLimitHelper.get_timestamp(), timestamp, 1)
 
-    def test_reset_period_timestamp(self):
+    def test_reset_period_timestamp(self) -> None:
         expected_counter = 0
         self.traffic_limit_helper.counter = expected_counter + 1
         self.traffic_limit_helper.reset_period_timestamp()
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
 
-    def test_increase_counter(self):
+    def test_increase_counter(self) -> None:
         expected_counter = 0
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
         self.traffic_limit_helper.check_request_load()
         expected_counter += 1
         self.assertEqual(self.traffic_limit_helper.counter, expected_counter)
 
-    def test_check_request_load_ok(self):
+    def test_check_request_load_ok(self) -> None:
         timestamp_before = datetime.now().timestamp()
         self.traffic_limit_helper.check_request_load()
         timestamp_after = datetime.now().timestamp()
         self.assertAlmostEqual(timestamp_after - timestamp_before, 0, 1)
 
-    def test_check_request_load_waiting(self):
+    def test_check_request_load_waiting(self) -> None:
         counter = 0
         while counter != self.request_per_period:
             self.traffic_limit_helper.check_request_load()

@@ -6,7 +6,7 @@ import main.downloaders.mac_vendor_downloader as get_mac
 
 class TestMacVendorDownloaderMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.row_dict = {
             "Assignment": "3CD92B",
             "Organization Name": "Hewlett Packard"
@@ -14,10 +14,10 @@ class TestMacVendorDownloaderMethods(unittest.TestCase):
         cls.vendor_mac = "3c:d9:2b"
         cls.expected_line = '3c:d9:2b,"Hewlett Packard"'
 
-    def test_convert_to_vendor_mac(self):
+    def test_convert_to_vendor_mac(self) -> None:
         self.assertEqual(get_mac.convert_mac_address(self.row_dict), self.vendor_mac)
 
-    def test_write_row_successful(self):
+    def test_write_row_successful(self) -> None:
         test_file_path = path.join(".", "test.csv")
         with open(test_file_path, mode="w") as test_file:
             get_mac.write_row(test_file, self.row_dict)

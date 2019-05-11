@@ -14,7 +14,7 @@ class IpInformationDownloader:
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
         self.limiter = limiter
 
-    def get_dst_src_information(self, dst_src):
+    def get_dst_src_information(self, dst_src) -> {}:
         dst = dst_src["dst"]
         src = dst_src["src"]
         self.get_ip_information(dst)
@@ -24,7 +24,7 @@ class IpInformationDownloader:
             "src": self.ip_information[src]
         }
 
-    def get_ip_information(self, ip_address):
+    def get_ip_information(self, ip_address) -> None:
         if ip_address in self.ip_information:
             return
 
@@ -37,7 +37,7 @@ class IpInformationDownloader:
         self.ip_information[ip_address] = IpInformationDownloader.get_ip_data(ip_address)
 
     @staticmethod
-    def get_private_ip_data(ip_address, ip_helper):
+    def get_private_ip_data(ip_address, ip_helper) -> {}:
         fqdn = ip_address
         if ip_address != "" and ip_helper.is_private_ip(ip_address):
             fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
@@ -52,7 +52,7 @@ class IpInformationDownloader:
         }
 
     @staticmethod
-    def get_fqdn(fqdn, ip_address):
+    def get_fqdn(fqdn, ip_address) -> str:
         try:
             fqdn = socket.getfqdn(ip_address)
         except socket.herror:
@@ -60,7 +60,7 @@ class IpInformationDownloader:
         return fqdn
 
     @staticmethod
-    def get_ip_data(ip_addr, counter=0):
+    def get_ip_data(ip_addr, counter=0) -> {}:
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
             response = requests.get(search_url)

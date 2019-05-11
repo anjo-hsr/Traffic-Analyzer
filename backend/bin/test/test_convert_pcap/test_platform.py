@@ -8,32 +8,32 @@ import main.helpers.tshark_helper as tshark_helper
 class TestPlatformMethods(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.windows_defaults = tshark_helper.get_windows_defaults()
 
     @patch("platform.system", MagicMock(return_value="Linux"))
     @patch("os.path.isfile", MagicMock(return_value=True))
-    def test_detect_platform_linux(self):
+    def test_detect_platform_linux(self) -> None:
         tshark_path_linux = "tshark"
         self.assertEqual(convert_pcap.detect_platform(), tshark_path_linux)
 
     @patch("platform.system", MagicMock(return_value="Windows"))
     @patch("os.path.isfile", MagicMock(return_value=True))
-    def test_detect_platform_windows_x86(self):
+    def test_detect_platform_windows_x86(self) -> None:
         self.assertEqual(convert_pcap.detect_platform(), self.windows_defaults["x86"])
 
     @patch("platform.system", MagicMock(return_value="Linux"))
     @patch("os.path.isfile", MagicMock(return_value=False))
-    def test_linux_wireshark_not_found(self):
+    def test_linux_wireshark_not_found(self) -> None:
         self.assertEqual(convert_pcap.detect_platform(), None)
 
     @patch("platform.system", MagicMock(return_value="Windows"))
     @patch("os.path.isfile", MagicMock(return_value=False))
-    def test_windows_wireshark_not_found(self):
+    def test_windows_wireshark_not_found(self) -> None:
         self.assertEqual(convert_pcap.detect_platform(), None)
 
     @patch("platform.system", MagicMock(return_value="Java"))
-    def test_unsupported_platform(self):
+    def test_unsupported_platform(self) -> None:
         self.assertEqual(convert_pcap.detect_platform(), None)
 
 

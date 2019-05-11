@@ -8,8 +8,8 @@ class EnvironmentHelper:
     def __init__(self):
         self.production_process_name = "splunkd"
 
-    def get_environment(self):
-        is_splunk_server = self.check_process(self.production_process_name)
+    def get_environment(self) -> {}:
+        is_splunk_server = self.is_process_running(self.production_process_name)
 
         environment_variables = {}
 
@@ -38,7 +38,7 @@ class EnvironmentHelper:
         return environment_variables
 
     @staticmethod
-    def check_process(process_name):
+    def is_process_running(process_name) -> bool:
         for process in psutil.process_iter(attrs=["name"]):
             if process.info["name"] == process_name:
                 return True

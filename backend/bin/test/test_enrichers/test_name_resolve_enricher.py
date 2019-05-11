@@ -5,7 +5,7 @@ from main.enrichers.name_resolve_enricher import NameResolverEnricher
 
 class TestNameResolveEnricherMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.name_resolver_enricher = NameResolverEnricher()
         cls.dst_src_information_local = {
             "dst": {
@@ -40,16 +40,16 @@ class TestNameResolveEnricherMethods(unittest.TestCase):
             }
         }
 
-    def test_header(self):
+    def test_header(self) -> None:
         expected_header = "dst_fqdn,src_fqdn"
         self.assertEqual(self.name_resolver_enricher.header, expected_header)
 
-    def test_extract_location_local_connection(self):
+    def test_extract_location_local_connection(self) -> None:
         fqdns = self.name_resolver_enricher.extract_fqdn(self.dst_src_information_local)
         empty_fqdns = '"10.0.0.1","10.0.0.2"'
         self.assertEqual(fqdns, empty_fqdns)
 
-    def test_extract_location_public_connection(self):
+    def test_extract_location_public_connection(self) -> None:
         fqdns = self.name_resolver_enricher.extract_fqdn(self.dst_src_information_public)
         expected_fqdns = '"google-public-dns-a.google.com","10.0.0.1"'
         self.assertEqual(fqdns, expected_fqdns)

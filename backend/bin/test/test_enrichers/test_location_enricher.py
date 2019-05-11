@@ -5,7 +5,7 @@ from main.enrichers.location_enricher import LocationEnricher
 
 class TestLocationEnricherMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.location_enricher = LocationEnricher()
         cls.dst_src_information_local = {
             "dst": {
@@ -40,16 +40,16 @@ class TestLocationEnricherMethods(unittest.TestCase):
             }
         }
 
-    def test_header(self):
+    def test_header(self) -> None:
         expected_header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
         self.assertEqual(self.location_enricher.header, expected_header)
 
-    def test_extract_location_local_connection(self):
+    def test_extract_location_local_connection(self) -> None:
         locations = self.location_enricher.extract_location(self.dst_src_information_local)
         empty_location = '"","","",""'
         self.assertEqual(locations, empty_location)
 
-    def test_extract_location_public_connection(self):
+    def test_extract_location_public_connection(self) -> None:
         locations = self.location_enricher.extract_location(self.dst_src_information_public)
         expected_fqnds = '"37.751","-97.822","",""'
         self.assertEqual(locations, expected_fqnds)

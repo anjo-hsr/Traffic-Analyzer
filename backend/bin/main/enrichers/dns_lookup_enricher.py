@@ -9,21 +9,21 @@ class DnsLookupEnricher:
         self.a_record_key = "1"
         self.aaaa_record_key = "28"
 
-    def is_response(self, packet):
+    def is_response(self, packet) -> bool:
         return packet["_ws.col.Protocol"] == "DNS" and packet["dns.flags.response"] == self.response_type_key
 
-    def is_a_or_aaaa_response_type(self, dns_response_type):
+    def is_a_or_aaaa_response_type(self, dns_response_type) -> bool:
         return dns_response_type in [self.a_record_key, self.aaaa_record_key]
 
     @staticmethod
-    def get_empty_dict(stream_id):
+    def get_empty_dict(stream_id) -> {}:
         return {
             "query_name": "",
             "a_records": [""],
             "stream_id": stream_id
         }
 
-    def detect_dns_request(self, packet, stream_id):
+    def detect_dns_request(self, packet, stream_id) -> str:
         if self.is_response(packet):
             self.save_dns_query(packet)
 
@@ -34,14 +34,14 @@ class DnsLookupEnricher:
 
         return CombineHelper.delimiter.join([dst_ip_information, src_ip_information])
 
-    def generate_dns_information(self, src_ip, stream_id):
+    def generate_dns_information(self, src_ip, stream_id) -> str:
         src_ip_information = self.dns_responses.get(src_ip, self.get_empty_dict(stream_id))
         src_a_records = CombineHelper.delimiter.join(src_ip_information["a_records"])
         src_ip_information = CombineHelper.delimiter.join(
             [src_ip_information["query_name"], src_a_records])
         return src_ip_information
 
-    def save_dns_query(self, packet):
+    def save_dns_query(self, packet) -> None:
         dns_response_types = packet["dns.resp.type"].split(",")
         if not any(self.is_a_or_aaaa_response_type(dns_response_type) for dns_response_type in dns_response_types):
             return

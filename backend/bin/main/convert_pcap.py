@@ -2,6 +2,7 @@ import platform
 import re
 import subprocess
 from os import path
+from typing import Optional
 
 import main.helpers.tshark_helper as tshark_helper
 from main.helpers.environment_helper import EnvironmentHelper
@@ -9,7 +10,7 @@ from main.helpers.file import file_move_helper, file_name_helper, file_path_help
 from main.helpers.print_helper import PrintHelper
 
 
-def run_tshark(filename):
+def run_tshark(filename) -> None:
     new_filename = get_new_filename(filename)
 
     with open(new_filename, "w") as out_file:
@@ -23,7 +24,7 @@ def run_tshark(filename):
     return None
 
 
-def detect_platform():
+def detect_platform() -> Optional[str]:
     program_path = None
 
     if platform.system() == "Windows":
@@ -35,7 +36,7 @@ def detect_platform():
     return program_path
 
 
-def test_tshark_windows():
+def test_tshark_windows() -> Optional[str]:
     windows_defaults = tshark_helper.get_windows_defaults()
     return_value = None
 
@@ -48,7 +49,7 @@ def test_tshark_windows():
     return return_value
 
 
-def test_tshark_linux():
+def test_tshark_linux() -> Optional[str]:
     if path.isfile("/usr/bin/tshark"):
         return "tshark"
 
@@ -60,7 +61,7 @@ def start_tshark(filename, out_file, program_path):
     subprocess.run([program_path] + arguments, stdout=out_file)
 
 
-def get_new_filename(filename):
+def get_new_filename(filename) -> str:
     new_filename = re.sub(
         r"^(.*[/\\])?(capture-)?(.*)pcap(ng)?$",
         r"\g<1>capture-\g<3>csv",
@@ -68,12 +69,12 @@ def get_new_filename(filename):
     return new_filename
 
 
-def main():
+def main() -> None:
     environment_helper = EnvironmentHelper()
     run(environment_helper.get_environment())
 
 
-def run(environment_variables):
+def run(environment_variables) -> None:
     pcap_path = environment_variables["pcap_path"]
     pcap_processed_path = environment_variables["pcap_processed_path"]
     csv_tmp_path = environment_variables["csv_tmp_path"]

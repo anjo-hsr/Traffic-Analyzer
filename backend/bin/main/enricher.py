@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from main.dicts.enrichers_dict import get_enricher_dict
 from main.dicts.information_dict import get_information_dict, fill_dict
 from main.downloaders.ip_information_downloader import IpInformationDownloader
@@ -11,12 +13,12 @@ class Enricher:
         self.information_dict = get_information_dict()
         self.ip_information_downloader = IpInformationDownloader(limiter)
 
-    def reset_variables(self):
+    def reset_variables(self) -> None:
         self.enricher_classes = get_enricher_dict()
         self.information_dict = get_information_dict()
         self.ip_information_downloader = IpInformationDownloader(self.limiter)
 
-    def get_information_dict(self, dst_src_information, packet):
+    def get_information_dict(self, dst_src_information, packet) -> OrderedDict:
         if dst_src_information is None and packet is None:
             return self.information_dict
 

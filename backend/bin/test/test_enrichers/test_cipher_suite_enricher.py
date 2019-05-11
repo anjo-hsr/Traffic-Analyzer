@@ -5,7 +5,7 @@ from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 
 class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.cipher_suite_enricher = CipherSuiteEnricher()
         cls.packets = {
             "client_hello": {
@@ -22,11 +22,11 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
                 "tcp.stream": 1
             }}
 
-    def test_header(self):
+    def test_header(self) -> None:
         expected_header = "cipher_suite_number"
         self.assertEqual(self.cipher_suite_enricher.header, expected_header)
 
-    def run_test_packet(self, expected_value, packet):
+    def run_test_packet(self, expected_value, packet) -> None:
         if expected_value == "":
             expected_cipher_suite = '"{}"'.format(expected_value)
         else:
@@ -35,15 +35,15 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         cipher_suite_number = self.cipher_suite_enricher.get_cipher_suite(packet)
         self.assertEqual(cipher_suite_number, expected_cipher_suite)
 
-    def test_get_cipher_suites_client_hello(self):
+    def test_get_cipher_suites_client_hello(self) -> None:
         expected_value = ""
         self.run_test_packet(expected_value, self.packets["client_hello"])
 
-    def test_get_cipher_suites_server_hello(self):
+    def test_get_cipher_suites_server_hello(self) -> None:
         expected_value = 49200
         self.run_test_packet(expected_value, self.packets["server_hello"])
 
-    def test_get_cipher_suites_tls_packet(self):
+    def test_get_cipher_suites_tls_packet(self) -> None:
         expected_value = 49200
         self.run_test_packet(expected_value, self.packets["first_packet"])
 

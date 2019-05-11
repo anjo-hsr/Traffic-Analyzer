@@ -3,7 +3,7 @@ import shlex
 from os import path, environ
 
 
-def get_windows_defaults():
+def get_windows_defaults() -> {}:
     # + "\\" is mandatory because path.join() will not add the backslash in between
     system_drive = environ["SYSTEMDRIVE"] + "\\"
 
@@ -16,7 +16,7 @@ def get_windows_defaults():
     return windows_defaults
 
 
-def get_arguments(filename):
+def get_arguments(filename) -> []:
     file_argumnets = ["-r", filename]
     export_arguments = " -T fields" \
                        " -e _ws.col.Time -e _ws.col.Protocol" \

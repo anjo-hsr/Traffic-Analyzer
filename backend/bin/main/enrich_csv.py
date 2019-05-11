@@ -10,7 +10,7 @@ from main.helpers.print_helper import PrintHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
-def enrich_file(dirpath, file, enricher, new_file):
+def enrich_file(dirpath, file, enricher, new_file) -> None:
     with \
             open(path.join(dirpath, file), mode="r", encoding='utf-8') as capture, \
             open(path.join(dirpath, new_file), 'w', encoding='utf-8') as output_file:
@@ -19,7 +19,7 @@ def enrich_file(dirpath, file, enricher, new_file):
         loop_through_lines(csv_reader, enricher, output_file)
 
 
-def loop_through_lines(csv_reader, enricher, output_file):
+def loop_through_lines(csv_reader, enricher, output_file) -> None:
     for index, packet in enumerate(csv_reader):
         ip_enumerate_character = ","
         packet["ip.dst"] = packet["ip.dst"].split(ip_enumerate_character)[0]
@@ -44,11 +44,11 @@ def loop_through_lines(csv_reader, enricher, output_file):
         file_write_helper.write_line(output_file, line)
 
 
-def main():
+def main() -> None:
     run(EnvironmentHelper().get_environment())
 
 
-def run(environment_variables, print_enrichers=False):
+def run(environment_variables, print_enrichers=False) -> None:
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
     limiter = TrafficLimitHelper(3, 1)
