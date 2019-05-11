@@ -63,4 +63,3 @@ class AdEnricher:
 
         self.url_to_ad_dict[url] = return_value
         return return_value
-
