@@ -4,8 +4,8 @@ from main.helpers.print_helper import PrintHelper
 
 class NameResolverEnricher:
     def __init__(self):
-        self.header = "dst_fqdn,src_fqdn"
         self.enricher_type = "name resolve enricher"
+        self.header = "dst_fqdn,src_fqdn"
 
     def print(self):
         PrintHelper.print_nothing(self.enricher_type)

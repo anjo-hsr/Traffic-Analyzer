@@ -32,6 +32,10 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
 
         cls.ad_enricher = AdEnricher(cls.blacklist_urls)
 
+    def test_header(self):
+        expected_header = "category"
+        self.assertEqual(self.ad_enricher.header, expected_header)
+
     def test_url_normal(self):
         for normal_url in self.normal_urls:
             self.assertFalse(self.ad_enricher.test_url(normal_url))

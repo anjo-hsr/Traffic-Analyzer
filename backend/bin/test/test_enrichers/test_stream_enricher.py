@@ -27,6 +27,10 @@ class TestStreamEnricherMethods(unittest.TestCase):
             "udp.srcport": ""
         }
 
+    def test_header(self):
+        expected_header = "traffic_analyzer_tcp_stream"
+        self.assertEqual(self.stream_enricher.header, expected_header)
+
     def test_generate_stream_id_public(self):
         tcp_packet_string = ",".join(self.public_packet[information] for information in self.public_packet)
         expected_stream_id = 27795967
