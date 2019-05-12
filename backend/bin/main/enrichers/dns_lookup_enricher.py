@@ -25,7 +25,7 @@ class DnsLookupEnricher(Enricher):
     def get_empty_dict(stream_id) -> Dict[str, Union[str, List[str]]]:
         return {
             "query_name": "",
-            "a_records": [""],
+            "a_records": {""},
             "stream_id": stream_id
         }
 

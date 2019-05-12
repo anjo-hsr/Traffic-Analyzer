@@ -6,7 +6,7 @@ from main.enrichers.ad_enricher import AdEnricher
 class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.blacklist_urls = [
+        cls.blacklist_domains = [
             "adserver.news.com.au",
             "yab-adimages.s3.amazonaws.com",
             "analytics.google.com",
@@ -17,49 +17,49 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
             "152.96.36.100",
             "8.8.8.8",
         ]
-        cls.normal_urls = [
+        cls.normal_domains = [
             "www.hsr.ch",
             "www.google.com",
         ]
-        cls.mixex_urls = [
+        cls.mixex_domains = [
             "analytics.google.com",
             "zrh04s15-in-f14.1e100.net",
         ]
-        cls.empty_urls = [
+        cls.empty_domains = [
             "",
             "",
         ]
 
-        cls.ad_enricher = AdEnricher(cls.blacklist_urls)
+        cls.ad_enricher = AdEnricher(cls.blacklist_domains)
 
     def test_header(self) -> None:
         expected_header = "category"
         self.assertEqual(self.ad_enricher.header, expected_header)
 
-    def test_url_normal(self) -> None:
-        for normal_url in self.normal_urls:
-            self.assertFalse(self.ad_enricher.is_url_ad(normal_url))
+    def test_domain_normal(self) -> None:
+        for normal_domain in self.normal_domains:
+            self.assertFalse(self.ad_enricher.is_ad_domain(normal_domain))
 
     def test_ips(self) -> None:
         for ip in self.ips:
-            self.assertFalse(self.ad_enricher.is_url_ad(ip))
+            self.assertFalse(self.ad_enricher.is_ad_domain(ip))
 
-    def test_url_blacklist(self) -> None:
-        for blacklist_url in self.blacklist_urls:
-            self.assertTrue(self.ad_enricher.is_url_ad(blacklist_url))
+    def test_domain_blacklist(self) -> None:
+        for blacklist_domain in self.blacklist_domains:
+            self.assertTrue(self.ad_enricher.is_ad_domain(blacklist_domain))
 
-    def test_url_blacklist_subdomain(self) -> None:
-        for blacklist_url in self.blacklist_urls:
-            blacklist_url = "subdomain." + blacklist_url
-            self.assertTrue(self.ad_enricher.is_url_ad(blacklist_url))
+    def test_domain_blacklist_subdomain(self) -> None:
+        for blacklist_domain in self.blacklist_domains:
+            blacklist_domain = "subdomain." + blacklist_domain
+            self.assertTrue(self.ad_enricher.is_ad_domain(blacklist_domain))
 
-    def test_url_mixed(self) -> None:
-        mixed_urls_string = ",".join(self.mixex_urls)
-        self.assertTrue(self.ad_enricher.test_urls(mixed_urls_string))
+    def test_domain_mixed(self) -> None:
+        mixed_domains_string = ",".join(self.mixex_domains)
+        self.assertTrue(self.ad_enricher.test_domains(mixed_domains_string))
 
-    def test_url_mixed_empty(self) -> None:
-        empty_urls_string = ",".join(self.empty_urls)
-        self.assertTrue(self.ad_enricher.test_urls(empty_urls_string))
+    def test_domain_mixed_empty(self) -> None:
+        empty_domains_string = ",".join(self.empty_domains)
+        self.assertTrue(self.ad_enricher.test_domains(empty_domains_string))
 
 
 if __name__ == "__main__":
