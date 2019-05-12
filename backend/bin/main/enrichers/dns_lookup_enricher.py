@@ -1,3 +1,5 @@
+from typing import Dict, Union, List
+
 from main.helpers.combine_helper import CombineHelper
 
 
@@ -16,7 +18,7 @@ class DnsLookupEnricher:
         return dns_response_type in [self.a_record_key, self.aaaa_record_key]
 
     @staticmethod
-    def get_empty_dict(stream_id) -> {}:
+    def get_empty_dict(stream_id) -> Dict[str, Union[str, List[str]]]:
         return {
             "query_name": "",
             "a_records": [""],

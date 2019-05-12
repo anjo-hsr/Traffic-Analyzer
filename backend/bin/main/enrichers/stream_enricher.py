@@ -1,4 +1,5 @@
 import hashlib
+from typing import Dict, Union
 
 from main.helpers.print_helper import PrintHelper
 
@@ -44,7 +45,7 @@ class StreamEnricher:
         return ";".join(inbound_outbound_list)
 
     @staticmethod
-    def generate_stream_id(combined_string) -> {}:
+    def generate_stream_id(combined_string) -> Dict[str, Union[str, int]]:
         hash_value = hashlib.sha256(combined_string.encode())
         stream_id = int(hash_value.hexdigest(), 16) % 100000000
         return {

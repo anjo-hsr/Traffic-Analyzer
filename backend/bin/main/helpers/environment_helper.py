@@ -1,4 +1,5 @@
 from os import path
+from typing import Dict
 
 import psutil
 
@@ -8,7 +9,7 @@ class EnvironmentHelper:
     def __init__(self):
         self.production_process_name = "splunkd"
 
-    def get_environment(self) -> {}:
+    def get_environment(self) -> Dict[str, str]:
         is_splunk_server = self.is_process_running(self.production_process_name)
 
         environment_variables = {}

@@ -1,3 +1,5 @@
+from typing import List
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -12,7 +14,7 @@ class BlacklistDict:
         self.generate_blacklist_dict(blacklist_urls)
 
     @staticmethod
-    def get_blacklist_urls() -> []:
+    def get_blacklist_urls() -> List[str]:
         url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
