@@ -51,7 +51,7 @@ class IpInformationDownloader:
             response = requests.get(search_url)
             response_json = json.loads(response.content.decode("utf-8"))
             geo_data = response_json["data"]["geo"]
-            return ip_addr.extract_data(geo_data, ip_addr)
+            return IpInformationDownloader.extract_data(geo_data, ip_addr)
 
         except socket.gaierror:
             if counter < 5:
