@@ -38,20 +38,20 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
 
     def test_url_normal(self) -> None:
         for normal_url in self.normal_urls:
-            self.assertFalse(self.ad_enricher.test_url(normal_url))
+            self.assertFalse(self.ad_enricher.is_url_ad(normal_url))
 
     def test_ips(self) -> None:
         for ip in self.ips:
-            self.assertFalse(self.ad_enricher.test_url(ip))
+            self.assertFalse(self.ad_enricher.is_url_ad(ip))
 
     def test_url_blacklist(self) -> None:
         for blacklist_url in self.blacklist_urls:
-            self.assertTrue(self.ad_enricher.test_url(blacklist_url))
+            self.assertTrue(self.ad_enricher.is_url_ad(blacklist_url))
 
     def test_url_blacklist_subdomain(self) -> None:
         for blacklist_url in self.blacklist_urls:
             blacklist_url = "subdomain." + blacklist_url
-            self.assertTrue(self.ad_enricher.test_url(blacklist_url))
+            self.assertTrue(self.ad_enricher.is_url_ad(blacklist_url))
 
     def test_url_mixed(self) -> None:
         mixed_urls_string = ",".join(self.mixex_urls)

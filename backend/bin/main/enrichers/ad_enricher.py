@@ -22,11 +22,11 @@ class AdEnricher:
                 continue
 
             url = self.remove_quotations(url)
-            is_ad = is_ad or self.test_url(url)
+            is_ad = is_ad or self.is_url_ad(url)
 
         return "1" if is_ad else "0"
 
-    def test_url(self, url) -> bool:
+    def is_url_ad(self, url) -> bool:
         if url in self.url_to_ad_dict:
             return self.url_to_ad_dict[url]
 
