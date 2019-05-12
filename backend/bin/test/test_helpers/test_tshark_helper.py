@@ -4,7 +4,7 @@ import main.helpers.tshark_helper as tshark_helper
 
 
 class TestTsharkHelperMethods(unittest.TestCase):
-    def test_tshark_get_arguments(self):
+    def test_tshark_get_arguments(self) -> None:
         filename = "test.pcap"
         args = ["-r", filename, "-T", "fields",
                 "-e", "_ws.col.Time", "-e", "_ws.col.Protocol",

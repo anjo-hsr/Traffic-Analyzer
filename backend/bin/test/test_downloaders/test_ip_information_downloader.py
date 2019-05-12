@@ -6,7 +6,7 @@ from main.downloaders.ip_information_downloader import IpInformationDownloader
 
 class TestIpInformationDownloader(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.private_ip = "10.0.0.1"
         cls.multicast_ip = "224.0.0.1"
         cls.public_ip = "8.8.8.8"
@@ -37,29 +37,29 @@ class TestIpInformationDownloader(unittest.TestCase):
             'longitude': -97.822,
         }
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.ip_information_downloader = IpInformationDownloader()
 
-    def assert_ip_data(self, ip_address, expected_ip_data):
+    def assert_ip_data(self, ip_address, expected_ip_data) -> None:
         self.ip_information_downloader.get_ip_information(ip_address)
         ip_data = self.ip_information_downloader.ip_information[ip_address]
         self.assertEqual(ip_data, expected_ip_data)
 
-    def test_get_ip_data_public(self):
+    def test_get_ip_data_public(self) -> None:
         ip_address = self.public_ip
         self.assert_ip_data(ip_address, self.ip_data_public)
 
     @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
-    def test_get_ip_information_private(self):
+    def test_get_ip_information_private(self) -> None:
         ip_address = self.private_ip
         self.assert_ip_data(ip_address, self.ip_data_private)
 
-    def test_get_ip_data_multicast(self):
+    def test_get_ip_data_multicast(self) -> None:
         ip_address = self.multicast_ip
         self.assert_ip_data(ip_address, self.ip_data_multicast)
 
     @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
-    def test_get_ip_information_twice(self):
+    def test_get_ip_information_twice(self) -> None:
         ip_address = self.private_ip
         length = 1
         self.assert_ip_data(ip_address, self.ip_data_private)

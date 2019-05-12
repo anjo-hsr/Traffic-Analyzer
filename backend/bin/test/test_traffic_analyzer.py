@@ -8,7 +8,7 @@ import main.traffic_analyzer as traffic_analyzer
 class TestTrafficAnalyzerMethods(unittest.TestCase):
     @patch("sys.stdout", new_callable=StringIO)
     @patch("sys.argv", "test")
-    def test_main_function(self, mock_stdout):
+    def test_main_function(self, mock_stdout) -> None:
         error_text = "Usage traffic_analyzer.py [option]\n\n" \
                      "Option:\n" \
                      "   download:    Download information from IANA and IEEE.\n" \

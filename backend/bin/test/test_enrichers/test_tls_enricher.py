@@ -5,7 +5,7 @@ from main.enrichers.tls_enricher import TlsEnricher
 
 class TestTlsEnricherMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.tls_enricher = TlsEnricher()
         cls.packets_tls1_2 = {
             "client_hello_tls1_2": {
@@ -48,11 +48,11 @@ class TestTlsEnricherMethods(unittest.TestCase):
                 "tcp.stream": 2
             }}
 
-    def test_header(self):
+    def test_header(self) -> None:
         expected_header = "tls_ssl_version_negotiated"
         self.assertEqual(self.tls_enricher.header, expected_header)
 
-    def run_test_packet(self, expected_value, packet):
+    def run_test_packet(self, expected_value, packet) -> None:
         if expected_value == "":
             expected_tls_ssl_version = '"{}"'.format(expected_value)
         else:
@@ -61,7 +61,7 @@ class TestTlsEnricherMethods(unittest.TestCase):
         tls_ssl_version = self.tls_enricher.get_tls_ssl_version(packet)
         self.assertEqual(tls_ssl_version, expected_tls_ssl_version)
 
-    def test_get_tls_ssl_version_tls1_2(self):
+    def test_get_tls_ssl_version_tls1_2(self) -> None:
         expected_value = ""
         self.run_test_packet(expected_value, self.packets_tls1_2["client_hello_tls1_2"])
         expected_value = "0x0303"
@@ -69,7 +69,7 @@ class TestTlsEnricherMethods(unittest.TestCase):
         expected_value = "0x0303"
         self.run_test_packet(expected_value, self.packets_tls1_2["first_packet_tls1_2"])
 
-    def test_get_tls_ssl_version_tls1_3(self):
+    def test_get_tls_ssl_version_tls1_3(self) -> None:
         expected_value = ""
         self.run_test_packet(expected_value, self.packets_tls1_3["client_hello_tls1_3"])
         expected_value = "0x0304"

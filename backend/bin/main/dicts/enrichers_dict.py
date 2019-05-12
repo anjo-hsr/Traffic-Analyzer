@@ -11,7 +11,7 @@ from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 from main.enrichers.tls_enricher import TlsEnricher
 
 
-def get_enricher_dict():
+def get_enricher_dict() -> OrderedDict:
     return OrderedDict([
         ("location_enricher", LocationEnricher()),
         ("fqdn_resolve_enricher", NameResolverEnricher()),

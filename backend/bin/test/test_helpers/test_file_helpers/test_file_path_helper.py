@@ -11,7 +11,7 @@ class TestFilePathHelperMethods(unittest.TestCase):
             ("/tmp/pcaps", [], ["test1.pcap", "test2.pcapng"])
         ])
     )
-    def test_get_file_paths_pcap(self):
+    def test_get_file_paths_pcap(self) -> None:
         expected_file_paths = [{"filename": "test1.pcap", "path": "/tmp/pcaps"},
                                {"filename": "test2.pcapng", "path": "/tmp/pcaps"}]
         file_paths = file_path_helper.get_file_paths("", file_name_helper.is_pcap_file)
@@ -23,7 +23,7 @@ class TestFilePathHelperMethods(unittest.TestCase):
             ("/tmp/csvs", [], ["capture-test1.csv", "capture-test2.csv"])
         ])
     )
-    def test_get_file_paths_csv(self):
+    def test_get_file_paths_csv(self) -> None:
         expected_file_paths = [{"filename": "capture-test1.csv", "path": "/tmp/csvs"},
                                {"filename": "capture-test2.csv", "path": "/tmp/csvs"}]
         file_paths = file_path_helper.get_file_paths("", file_name_helper.is_normal_csv_file)

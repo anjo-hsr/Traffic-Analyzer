@@ -6,10 +6,10 @@ from main.enricher import Enricher
 
 class TestEnrichmentClassesMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.enricher = Enricher()
 
-    def test_reset_variables(self):
+    def test_reset_variables(self) -> None:
         fqdn_key = "fqdn_information"
         fqdn_value = "www.hsr.ch"
         self.assertEqual(self.enricher.information_dict[fqdn_key], None)

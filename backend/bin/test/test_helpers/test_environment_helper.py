@@ -12,7 +12,7 @@ class Process:
 
 class TestEnrivonmentHelperMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.environment_helper = EnvironmentHelper()
         cls.docker_init_files_base_path = path.join("..", "..", "..", "docker", "init_files")
         cls.traffic_analyzer_base_path = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer")
@@ -41,13 +41,13 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
         }
 
     @patch("psutil.process_iter")
-    def test_development_variables(self, process_iter):
+    def test_development_variables(self, process_iter) -> None:
         process = Process("dev_test")
         process_iter.return_value = [process]
         self.assertEqual(self.environment_helper.get_environment(), self.development_variables)
 
     @patch("psutil.process_iter")
-    def test_production_variables(self, process_iter):
+    def test_production_variables(self, process_iter) -> None:
         process = Process("splunkd")
         process_iter.return_value = [process]
         self.assertEqual(self.environment_helper.get_environment(), self.production_variables)

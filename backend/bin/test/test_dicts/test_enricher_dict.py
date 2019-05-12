@@ -16,7 +16,7 @@ from test.test_dicts.keys import id_keys
 
 class TestEnrichmentClassesMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.enricher_keys = [
             "location_enricher",
             "fqdn_resolve_enricher",
@@ -29,10 +29,10 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "threat_info_enricher"
         ]
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.enricher_dict = get_enricher_dict()
 
-    def test_create_enrichers_classes(self):
+    def test_create_enrichers_classes(self) -> None:
         for key in self.enricher_dict.keys():
             if key == "location_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], LocationEnricher))
@@ -63,13 +63,13 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             else:
                 self.assertTrue(False)
 
-    def test_create_enrichers_is_dict(self):
+    def test_create_enrichers_is_dict(self) -> None:
         self.assertTrue(isinstance(self.enricher_dict, OrderedDict))
 
-    def test_create_enrichers_keys(self):
+    def test_create_enrichers_keys(self) -> None:
         self.assertEqual(list(self.enricher_dict.keys()), self.enricher_keys)
 
-    def test_enricher_dict_keys(self):
+    def test_enricher_dict_keys(self) -> None:
         id_index = 0
         enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict.keys()]
         self.assertEqual(enricher_classes_key_ids, id_keys)

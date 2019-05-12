@@ -5,14 +5,14 @@ from os import path
 sys.path.append(path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "bin"))
 
 
-def convert():
+def convert() -> None:
     import main.convert_pcap as convert_pcap
 
     print("Start converting")
     convert_pcap.main()
 
 
-def download():
+def download() -> None:
     import main.downloaders.cipher_downloader as get_ciphers
     import main.downloaders.mac_vendor_downloader as get_mac
 
@@ -21,25 +21,25 @@ def download():
     get_mac.main()
 
 
-def enrich():
+def enrich() -> None:
     import main.enrich_csv as enrich_csv
 
     print("Start enriching")
     enrich_csv.main()
 
 
-def run():
+def run() -> None:
     convert()
     enrich()
 
 
-def run_all():
+def run_all() -> None:
     download()
     convert()
     enrich()
 
 
-def main():
+def main() -> None:
     method = sys.argv[1]
 
     if method == "convert":

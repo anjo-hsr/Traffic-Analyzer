@@ -11,18 +11,18 @@ class TrafficLimitHelper:
         self.counter = 0
 
     @property
-    def waiting_time(self):
+    def waiting_time(self) -> float:
         return self.period_time - (self.get_timestamp() - self.period_start_timestamp)
 
     @staticmethod
-    def get_timestamp():
+    def get_timestamp() -> float:
         return datetime.now().timestamp()
 
-    def reset_period_timestamp(self):
+    def reset_period_timestamp(self) -> None:
         self.period_start_timestamp = self.get_timestamp()
         self.counter = 0
 
-    def check_request_load(self):
+    def check_request_load(self) -> None:
         waiting_time = self.waiting_time
         if (self.counter == self.requests_per_period) and waiting_time > 0:
             time.sleep(waiting_time)

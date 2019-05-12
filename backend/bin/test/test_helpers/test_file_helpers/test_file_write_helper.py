@@ -5,7 +5,7 @@ from main.helpers.file import file_write_helper
 
 
 class TestFileWriteHelperMethods(unittest.TestCase):
-    def test_write_line(self):
+    def test_write_line(self) -> None:
         line = "test123"
         test_file_path = path.join(".", "test.csv")
         with open(test_file_path, mode="w") as test_file:
