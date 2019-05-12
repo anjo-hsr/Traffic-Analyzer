@@ -9,17 +9,17 @@ class IpTypeEnricher:
         self.enricher_type = "ip_type_enricher"
         self.ip_dict = {}
 
-    def print(self):
+    def print(self) -> None:
         PrintHelper.print_nothing(self.enricher_type)
 
     @staticmethod
-    def extract_ip_types(dst_src_information):
+    def extract_ip_types(dst_src_information) -> None:
         dst_ip = dst_src_information["dst"]["ip_address"]
         src_ip = dst_src_information["src"]["ip_address"]
         return CombineHelper.delimiter.join([IpTypeEnricher.is_private(dst_ip), IpTypeEnricher.is_private(src_ip)])
 
     @staticmethod
-    def is_private(ip_address):
+    def is_private(ip_address) -> str:
         ip_helper = IpHelper()
         is_private = False
         if ip_address != "":

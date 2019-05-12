@@ -6,11 +6,11 @@ class CipherSuiteEnricher:
         self.header = "cipher_suite_number"
         self.stream_to_suites = {}
 
-    def print(self):
+    def print(self) -> None:
         print_text = "Print out for all {} streams to cipher suites entries"
         PrintHelper.print_dict(self.stream_to_suites, print_text)
 
-    def get_cipher_suite(self, packet):
+    def get_cipher_suite(self, packet) -> str:
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
         cipher_suite_number = packet["tls.handshake.ciphersuite"]

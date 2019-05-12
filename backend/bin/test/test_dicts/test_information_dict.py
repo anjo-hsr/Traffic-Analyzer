@@ -7,7 +7,7 @@ from test.test_dicts.keys import id_keys
 
 class TestInformationDict(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.information_keys = [
             "location_information",
             "fqdn_information",
@@ -19,16 +19,16 @@ class TestInformationDict(unittest.TestCase):
             "ad_value"
         ]
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.information_dict = get_information_dict()
 
-    def test_create_enrichers_is_dict(self):
+    def test_create_enrichers_is_dict(self) -> None:
         self.assertTrue(isinstance(self.information_dict, OrderedDict))
 
-    def test_create_information_keys(self):
+    def test_create_information_keys(self) -> None:
         self.assertEqual(list(self.information_dict.keys()), self.information_keys)
 
-    def test_information_dict_keys(self):
+    def test_information_dict_keys(self) -> None:
         id_index = 0
         information_enricher_key_ids = [key.split("_")[id_index] for key in self.information_dict.keys()]
         self.assertEqual(information_enricher_key_ids, id_keys)

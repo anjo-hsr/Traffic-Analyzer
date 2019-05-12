@@ -7,12 +7,12 @@ from main.helpers.print_helper import PrintHelper
 
 class TestPrintHelperMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.cities = ["Rapperswil", "Zurich"]
         cls.cantons = {"Rapperswil": "St. Gallen", "Zurich": "Zurich"}
 
     @patch("sys.stdout", new_callable=StringIO)
-    def test_print_dict(self, mock_stdout):
+    def test_print_dict(self, mock_stdout) -> None:
         text_with_placeholders = "Print out for all {} cities"
         PrintHelper.print_list(self.cities, text_with_placeholders)
 
@@ -21,7 +21,7 @@ class TestPrintHelperMethods(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
     @patch("sys.stdout", new_callable=StringIO)
-    def test_print_list(self, mock_stdout):
+    def test_print_list(self, mock_stdout) -> None:
         text_with_placeholders = "Print out for all {} cities to canton entries"
         PrintHelper.print_dict(self.cantons, text_with_placeholders)
 
@@ -31,7 +31,7 @@ class TestPrintHelperMethods(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
     @patch("sys.stdout", new_callable=StringIO)
-    def test_print_error(self, mock_stdout):
+    def test_print_error(self, mock_stdout) -> None:
         error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
 
         PrintHelper.print_error(error_text)
@@ -43,7 +43,7 @@ class TestPrintHelperMethods(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
     @patch("sys.stdout", new_callable=StringIO)
-    def test_print_nothing(self, mock_stdout):
+    def test_print_nothing(self, mock_stdout) -> None:
         error_text = "print helper tester"
         PrintHelper.print_nothing(error_text)
         print_text = "Nothing to print for print helper tester.\n"

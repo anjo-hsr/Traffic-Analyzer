@@ -1,3 +1,5 @@
+from typing import List
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -12,20 +14,20 @@ class BlacklistDict:
         self.generate_blacklist_dict(blacklist_urls)
 
     @staticmethod
-    def get_blacklist_urls():
+    def get_blacklist_urls() -> List[str]:
         url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         return [url for url in soup.pre.text.split("\n") if url != ""]
 
-    def generate_blacklist_dict(self, blacklist_urls):
+    def generate_blacklist_dict(self, blacklist_urls) -> None:
         for url in blacklist_urls:
             url_parts = url.split(".")
             start_index = len(url_parts) - 1
             dict_to_write = self.blacklist_dict
             self.write_url_into_dict(dict_to_write, url_parts, url, start_index)
 
-    def write_url_into_dict(self, dict_to_write, url_parts, url, index):
+    def write_url_into_dict(self, dict_to_write, url_parts, url, index) -> None:
         if index < 1:
             return
 

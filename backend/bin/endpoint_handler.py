@@ -20,7 +20,7 @@ class ConfigApp(admin.MConfigHandler):
     Set up supported arguments
     '''
 
-    def setup(self):
+    def setup(self) -> None:
         if self.requestedAction == admin.ACTION_EDIT:
             for arg in ['safe_browsing_api_key', 'pcap_location']:
                 self.supportedArgs.addOptArg(arg)
@@ -42,7 +42,7 @@ class ConfigApp(admin.MConfigHandler):
     For text fields, if the conf file says None, set to the empty string.
     '''
 
-    def handleList(self, configuration_information):
+    def handleList(self, configuration_information) -> None:
         configuration_dictionary = self.readConf("traffic-analyzer")
         field_name_list = ["safe_browsing_api_key", "pcap_location"]
         if configuration_dictionary is not None:
@@ -53,7 +53,7 @@ class ConfigApp(admin.MConfigHandler):
 
                     configuration_information[stanza].append(key, value)
 
-    def is_tuple_empty(self, key, value, field_name_list):
+    def is_tuple_empty(self, key, value, field_name_list) -> bool:
         return key in field_name_list and self.is_empty(value)
 
     '''
@@ -61,7 +61,7 @@ class ConfigApp(admin.MConfigHandler):
     normalize them, and save them somewhere
     '''
 
-    def handleEdit(self, _):
+    def handleEdit(self, _) -> None:
         args = self.callerArgs
 
         self.check_field_value("safe_browsing_api_key")
@@ -74,12 +74,12 @@ class ConfigApp(admin.MConfigHandler):
 
         self.writeConf("traffic-analyzer", "Custom Configuration", args.data)
 
-    def check_field_value(self, field):
+    def check_field_value(self, field) -> None:
         if self.is_empty(self.callerArgs.data[field][0]):
             self.callerArgs.data[field][0] = ""
 
     @staticmethod
-    def is_empty(value):
+    def is_empty(value) -> bool:
         return value in [None, ""]
 
 

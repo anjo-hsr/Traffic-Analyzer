@@ -11,10 +11,10 @@ class AdEnricher:
         self.blacklist_dict = BlacklistDict(blacklist_urls)
         self.url_to_ad_dict = {}
 
-    def print(self):
+    def print(self) -> None:
         PrintHelper.print_nothing(self.enricher_type)
 
-    def test_urls(self, urls):
+    def test_urls(self, urls) -> str:
         url_array = urls.split(",")
         is_ad = False
         for url in url_array:
@@ -22,28 +22,28 @@ class AdEnricher:
                 continue
 
             url = self.remove_quotations(url)
-            is_ad = is_ad or self.test_url(url)
+            is_ad = is_ad or self.is_url_ad(url)
 
         return "1" if is_ad else "0"
 
-    def test_url(self, url):
+    def is_url_ad(self, url) -> bool:
         if url in self.url_to_ad_dict:
             return self.url_to_ad_dict[url]
 
         dict_to_test = self.blacklist_dict.blacklist_dict
-        is_ad = self.test_url_against_dict(url, dict_to_test)
+        is_ad = self.is_url_in_dict(url, dict_to_test)
 
         is_ad = is_ad or dict_to_test == {}
         self.url_to_ad_dict[url] = is_ad
         return is_ad
 
     @staticmethod
-    def remove_quotations(url):
+    def remove_quotations(url) -> str:
         url = url.replace('"', '')
         url = url.replace("'", "")
         return url
 
-    def test_url_against_dict(self, url, dict_to_test):
+    def is_url_in_dict(self, url, dict_to_test) -> bool:
         return_value = False
 
         if IpHelper.is_ip(url):

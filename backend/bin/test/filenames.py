@@ -1,4 +1,7 @@
-def get_filenames():
+from typing import List, Dict
+
+
+def get_filenames() -> Dict[str, List[str]]:
     return {
         "csv_filenames": ["capture-test_lower.csv", "capture-test_double_ending.py.csv",
                           "capture-test_upper.CSV", "capture-test_camel.Csv"],

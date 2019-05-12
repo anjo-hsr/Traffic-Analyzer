@@ -12,7 +12,7 @@ class TestFileMoveHelperMethods(unittest.TestCase):
         "main.helpers.environment_helper.EnvironmentHelper.get_environment",
         MagicMock(return_value={"csv_tmp_path": path.join(".")})
     )
-    def test_download_and_remove(self):
+    def test_download_and_remove(self) -> None:
         environment_helper = EnvironmentHelper()
         environment_variables = environment_helper.get_environment()
 
@@ -28,7 +28,7 @@ class TestFileMoveHelperMethods(unittest.TestCase):
         file_move_helper.remove_file(file_path)
         self.assertFalse(path.isfile(file_path))
 
-    def test_move_file(self):
+    def test_move_file(self) -> None:
         source_path = path.join(".", "test_file")
         destination_path = path.join(".", "test_file-moved")
 
@@ -44,7 +44,7 @@ class TestFileMoveHelperMethods(unittest.TestCase):
         self.assertFalse(path.isfile(source_path))
         self.assertFalse(path.isfile(destination_path))
 
-    def test_move_file_same_path(self):
+    def test_move_file_same_path(self) -> None:
         source_path = path.join(".", ".test_file")
         destination_path = path.join(".", ".test_file")
 

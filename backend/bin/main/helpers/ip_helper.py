@@ -3,7 +3,7 @@ import ipaddress
 
 class IpHelper:
     @staticmethod
-    def is_global_ip(ip_address):
+    def is_global_ip(ip_address) -> bool:
         try:
             ip = ipaddress.ip_address(ip_address)
 
@@ -14,7 +14,7 @@ class IpHelper:
             return False
 
     @staticmethod
-    def is_multicast_ip(ip_address):
+    def is_multicast_ip(ip_address) -> bool:
         try:
             ip = ipaddress.ip_address(ip_address)
             return ip.is_multicast
@@ -22,7 +22,7 @@ class IpHelper:
             return False
 
     @staticmethod
-    def is_private_ip(ip_address):
+    def is_private_ip(ip_address) -> bool:
         try:
             ip = ipaddress.ip_address(ip_address)
             return ip.is_private
@@ -30,7 +30,7 @@ class IpHelper:
             return False
 
     @staticmethod
-    def is_ip(ip_address):
+    def is_ip(ip_address) -> bool:
         try:
             ipaddress.ip_address(ip_address)
             return True

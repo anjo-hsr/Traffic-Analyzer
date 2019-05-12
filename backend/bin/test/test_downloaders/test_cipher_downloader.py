@@ -6,7 +6,7 @@ import main.downloaders.cipher_downloader as get_ciphers
 
 class TestCipherDownloaderMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.row_dict = {
             "Value": "0xC0, 0x30",
             "Description": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -14,7 +14,7 @@ class TestCipherDownloaderMethods(unittest.TestCase):
         }
         cls.expected_line = "49200,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,Y"
 
-    def test_calculate_hex(self):
+    def test_calculate_hex(self) -> None:
         hex_dict = {
             "0x00,0x20": 32,
             "0xc0,0x28": 49192
@@ -22,11 +22,11 @@ class TestCipherDownloaderMethods(unittest.TestCase):
         for hex_line in hex_dict:
             self.assertEqual(get_ciphers.calculate_hex(hex_line), hex_dict[hex_line])
 
-    def test_combine_information(self):
+    def test_combine_information(self) -> None:
         actual_line = get_ciphers.combine_information(self.row_dict)
         self.assertEqual(actual_line, self.expected_line)
 
-    def test_write_row_successful(self):
+    def test_write_row_successful(self) -> None:
         test_file_path = path.join(".", "test.csv")
         with open(test_file_path, mode="w") as test_file:
             get_ciphers.write_row(test_file, self.row_dict)
@@ -36,7 +36,7 @@ class TestCipherDownloaderMethods(unittest.TestCase):
 
         remove(test_file_path)
 
-    def test_write_row_failing(self):
+    def test_write_row_failing(self) -> None:
         test_file_path = path.join(".", "test.csv")
         row_dict = self.row_dict.copy()
         row_dict["Value"] = "0xC0, 0x2F-30"
