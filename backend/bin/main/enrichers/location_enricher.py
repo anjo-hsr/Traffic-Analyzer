@@ -1,14 +1,12 @@
+from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
-from main.helpers.print_helper import PrintHelper
 
 
-class LocationEnricher:
+class LocationEnricher(Enricher):
     def __init__(self):
-        self.enricher_type = "location enricher"
-        self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
-
-    def print(self) -> None:
-        PrintHelper.print_nothing(self.enricher_type)
+        enricher_type = "location enricher"
+        header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
+        Enricher.__init__(self, enricher_type, header)
 
     @staticmethod
     def extract_location(dst_src_information) -> str:

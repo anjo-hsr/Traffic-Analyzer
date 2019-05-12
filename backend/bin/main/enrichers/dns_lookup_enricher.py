@@ -1,11 +1,15 @@
 from typing import Dict, Union, List
 
+from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
 
 
-class DnsLookupEnricher:
+class DnsLookupEnricher(Enricher):
     def __init__(self):
-        self.header = "dst_query_name,dst_a_records,src_query_name,src_a_records"
+        enricher_type = "dns lookup enricher"
+        header = "dst_query_name,dst_a_records,src_query_name,src_a_records"
+        Enricher.__init__(self, enricher_type, header)
+
         self.dns_responses = {}
         self.response_type_key = "1"
         self.a_record_key = "1"
