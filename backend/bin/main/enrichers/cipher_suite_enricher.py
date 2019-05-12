@@ -1,9 +1,13 @@
+from main.enrichers.enricher import Enricher
 from main.helpers.print_helper import PrintHelper
 
 
-class CipherSuiteEnricher:
+class CipherSuiteEnricher(Enricher):
     def __init__(self):
-        self.header = "cipher_suite_number"
+        enricher_type = "cipher_suite_enricher"
+        header = "cipher_suite_number"
+        Enricher.__init__(self, enricher_type, header)
+
         self.stream_to_suites = {}
 
     def print(self) -> None:

@@ -1,12 +1,16 @@
 import hashlib
 from typing import Dict, Union
 
+from main.enrichers.enricher import Enricher
 from main.helpers.print_helper import PrintHelper
 
 
-class StreamEnricher:
+class StreamEnricher(Enricher):
     def __init__(self):
-        self.header = "traffic_analyzer_tcp_stream"
+        enricher_type = "stream enricher"
+        header = "traffic_analyzer_tcp_stream"
+        Enricher.__init__(self, enricher_type, header)
+
         self.stream_ids = {"": ""}
 
     def print(self) -> None:

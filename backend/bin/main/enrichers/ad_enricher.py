@@ -1,18 +1,17 @@
 from main.dicts.blacklist_dict import BlacklistDict
+from main.enrichers.enricher import Enricher
 from main.helpers.ip_helper import IpHelper
-from main.helpers.print_helper import PrintHelper
 
 
-class AdEnricher:
+class AdEnricher(Enricher):
     def __init__(self, blacklist_urls=None):
-        self.enricher_type = "ad_enricher"
-        self.header = "category"
+        enricher_type = "ad enricher"
+        header = "category"
+        Enricher.__init__(self, enricher_type, header)
+
         self.ip_to_category = {}
         self.blacklist_dict = BlacklistDict(blacklist_urls)
         self.url_to_ad_dict = {}
-
-    def print(self) -> None:
-        PrintHelper.print_nothing(self.enricher_type)
 
     def test_urls(self, urls) -> str:
         url_array = urls.split(",")

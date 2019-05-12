@@ -6,7 +6,7 @@ from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
-class Enricher:
+class EnricherJar:
     def __init__(self, limiter=TrafficLimitHelper(2, 1)):
         self.limiter = limiter
         self.enricher_classes = get_enricher_dict()
