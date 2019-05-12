@@ -56,7 +56,7 @@ def test_tshark_linux() -> Optional[str]:
     return None
 
 
-def start_tshark(filename, out_file, program_path):
+def start_tshark(filename, out_file, program_path) -> None:
     arguments = tshark_helper.get_arguments(filename)
     subprocess.run([program_path] + arguments, stdout=out_file)
 

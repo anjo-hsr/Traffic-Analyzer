@@ -8,11 +8,11 @@ class StreamEnricher:
         self.header = "traffic_analyzer_tcp_stream"
         self.stream_ids = {"": ""}
 
-    def print(self):
+    def print(self) -> None:
         print_text = "Print out for {} tcp stream entries"
         PrintHelper.print_dict(self.stream_ids, print_text)
 
-    def get_stream_id(self, packet):
+    def get_stream_id(self, packet) -> str:
         inbound_outbound_string = self.get_combined_strings(packet)
         if inbound_outbound_string in self.stream_ids:
             return self.stream_ids[inbound_outbound_string]
@@ -23,7 +23,7 @@ class StreamEnricher:
         return stream_entry["stream_id"]
 
     @staticmethod
-    def get_combined_strings(packet):
+    def get_combined_strings(packet) -> str:
         dst_ip = packet["ip.dst"]
         src_ip = packet["ip.src"]
         tcp_dst_port = packet["tcp.dstport"]
@@ -44,7 +44,7 @@ class StreamEnricher:
         return ";".join(inbound_outbound_list)
 
     @staticmethod
-    def generate_stream_id(combined_string):
+    def generate_stream_id(combined_string) -> {}:
         hash_value = hashlib.sha256(combined_string.encode())
         stream_id = int(hash_value.hexdigest(), 16) % 100000000
         return {
