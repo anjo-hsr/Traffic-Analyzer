@@ -7,7 +7,7 @@ class CipherSuiteEnricher(Enricher):
         enricher_type = "cipher_suite_enricher"
         header = "cipher_suite_number"
         Enricher.__init__(self, enricher_type, header)
-        
+
         self.stream_to_suites = {}
 
     def print(self) -> None:
