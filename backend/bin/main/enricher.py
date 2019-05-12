@@ -19,7 +19,7 @@ class Enricher:
         self.information_dict = get_information_dict()
         self.ip_information_downloader = IpInformationDownloader(self.limiter)
 
-    def get_information_dict(self, dst_src_information, packet) -> OrderedDict[str, Optional[str]]:
+    def get_information_dict(self, dst_src_information, packet) -> OrderedDict:
         if dst_src_information is None and packet is None:
             return self.information_dict
 
