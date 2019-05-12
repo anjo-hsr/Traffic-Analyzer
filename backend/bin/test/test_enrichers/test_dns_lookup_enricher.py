@@ -53,7 +53,7 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
     def test_get_empty_dict(self) -> None:
         expected_dict = {
             "query_name": "",
-            "a_records": [""],
+            "a_records": {""},
             "stream_id": self.stream_id
         }
         self.assertDictEqual(self.dns_lookup_enricher.get_empty_dict(self.stream_id), expected_dict)
