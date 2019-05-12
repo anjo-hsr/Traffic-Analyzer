@@ -82,7 +82,7 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
         self.dns_lookup_enricher.save_dns_query(self.dns_packet)
         dict_key = self.dns_packet["dns.a"]
         expected_dict_entry = {
-            "a_records": ["lb-ext-web1.hsr.ch"],
+            "a_records": {"lb-ext-web1.hsr.ch"},
             "query_name": "www.hsr.ch"
         }
         self.assertEqual(self.dns_lookup_enricher.dns_responses[dict_key], expected_dict_entry)
