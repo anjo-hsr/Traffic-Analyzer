@@ -21,8 +21,6 @@ def run_tshark(filename) -> None:
 
         start_tshark(filename, out_file, program_path)
 
-    return None
-
 
 def detect_platform() -> Optional[str]:
     program_path = None
@@ -50,10 +48,11 @@ def test_tshark_windows() -> Optional[str]:
 
 
 def test_tshark_linux() -> Optional[str]:
+    return_value = None
     if path.isfile("/usr/bin/tshark"):
-        return "tshark"
+        return_value = "tshark"
 
-    return None
+    return return_value
 
 
 def start_tshark(filename, out_file, program_path) -> None:
