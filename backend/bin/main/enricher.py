@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from typing import Optional
 
 from main.dicts.enrichers_dict import get_enricher_dict
 from main.dicts.information_dict import get_information_dict, fill_dict
