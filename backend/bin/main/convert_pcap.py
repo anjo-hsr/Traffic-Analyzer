@@ -21,6 +21,8 @@ def run_tshark(filename) -> None:
 
         start_tshark(filename, out_file, program_path)
 
+    return None
+
 
 def detect_platform() -> Optional[str]:
     program_path = None
