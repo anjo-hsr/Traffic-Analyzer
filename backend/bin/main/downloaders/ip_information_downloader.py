@@ -38,21 +38,6 @@ class IpInformationDownloader:
         self.ip_information[ip_address] = self.get_ip_data(ip_address)
 
     @staticmethod
-    def get_private_ip_data(ip_address, ip_helper) -> Dict[str, str]:
-        fqdn = ip_address
-        if ip_address != "" and ip_helper.is_private_ip(ip_address):
-            fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
-
-        return {
-            "ip_address": ip_address,
-            "rdns": fqdn,
-            "asn": "",
-            "isp": "",
-            "latitude": "",
-            "longitude": ""
-        }
-
-    @staticmethod
     def get_fqdn(fqdn, ip_address) -> str:
         try:
             fqdn = socket.getfqdn(ip_address)
@@ -67,16 +52,37 @@ class IpInformationDownloader:
             response = requests.get(search_url)
             response_json = json.loads(response.content.decode("utf-8"))
             geo_data = response_json["data"]["geo"]
-            return {
-                "ip_address": ip_addr,
-                "rdns": geo_data["rdns"],
-                "asn": geo_data["asn"],
-                "isp": geo_data["isp"],
-                "latitude": geo_data["latitude"],
-                "longitude": geo_data["longitude"],
-            }
+            return ip_addr.extract_data(geo_data, ip_addr)
 
         except socket.gaierror:
             if counter < 5:
                 time.sleep(2)
                 IpInformationDownloader.get_ip_data(ip_addr, counter + 1)
+
+            return IpInformationDownloader.get_private_ip_data(ip_addr, IpHelper())
+
+    @staticmethod
+    def extract_data(geo_data, ip_addr) -> Dict[str, str]:
+        return {
+            "ip_address": ip_addr,
+            "rdns": geo_data["rdns"],
+            "asn": geo_data["asn"],
+            "isp": geo_data["isp"],
+            "latitude": geo_data["latitude"],
+            "longitude": geo_data["longitude"],
+        }
+
+    @staticmethod
+    def get_private_ip_data(ip_address, ip_helper) -> Dict[str, str]:
+        fqdn = ip_address
+        if ip_address != "" and ip_helper.is_private_ip(ip_address):
+            fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
+
+        return {
+            "ip_address": ip_address,
+            "rdns": fqdn,
+            "asn": "",
+            "isp": "",
+            "latitude": "",
+            "longitude": ""
+        }
