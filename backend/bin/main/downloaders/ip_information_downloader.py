@@ -29,9 +29,8 @@ class IpInformationDownloader:
         if ip_address in self.ip_information:
             return
 
-        ip_helper = IpHelper()
-        if ip_address == "" or not ip_helper.is_global_ip(ip_address):
-            self.ip_information[ip_address] = IpInformationDownloader.get_private_ip_data(ip_address, ip_helper)
+        if ip_address == "" or not IpHelper.is_global_ip(ip_address):
+            self.ip_information[ip_address] = IpInformationDownloader.get_private_ip_data(ip_address)
             return
 
         self.limiter.check_request_load()
@@ -59,7 +58,7 @@ class IpInformationDownloader:
                 time.sleep(2)
                 IpInformationDownloader.get_ip_data(ip_addr, counter + 1)
 
-            return IpInformationDownloader.get_private_ip_data(ip_addr, IpHelper())
+            return IpInformationDownloader.get_private_ip_data(ip_addr)
 
     @staticmethod
     def extract_data(geo_data, ip_addr) -> Dict[str, str]:
@@ -73,9 +72,9 @@ class IpInformationDownloader:
         }
 
     @staticmethod
-    def get_private_ip_data(ip_address, ip_helper) -> Dict[str, str]:
+    def get_private_ip_data(ip_address) -> Dict[str, str]:
         fqdn = ip_address
-        if ip_address != "" and ip_helper.is_private_ip(ip_address):
+        if ip_address != "" and IpHelper.is_private_ip(ip_address):
             fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
 
         return {

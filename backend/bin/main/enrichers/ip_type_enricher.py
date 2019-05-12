@@ -19,9 +19,8 @@ class IpTypeEnricher(Enricher):
 
     @staticmethod
     def is_private(ip_address) -> str:
-        ip_helper = IpHelper()
         is_private = False
         if ip_address != "":
-            is_private = ip_helper.is_private_ip(ip_address)
+            is_private = IpHelper.is_private_ip(ip_address)
 
         return str(is_private)
