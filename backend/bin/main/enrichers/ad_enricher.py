@@ -38,9 +38,7 @@ class AdEnricher(Enricher):
 
     @staticmethod
     def remove_quotations(url) -> str:
-        url = url.replace('"', '')
-        url = url.replace("'", "")
-        return url
+        return url.replace('"', '').replace("'", "")
 
     def is_url_in_dict(self, url, dict_to_test) -> bool:
         return_value = False
