@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 
-def get_information_dict() -> OrderedDict:
+def get_information_dict() -> OrderedDict[str, None]:
     return OrderedDict([
         ("location_information", None),
         ("fqdn_information", None),

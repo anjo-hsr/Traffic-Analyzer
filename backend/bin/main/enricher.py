@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from typing import Optional
 
 from main.dicts.enrichers_dict import get_enricher_dict
 from main.dicts.information_dict import get_information_dict, fill_dict
@@ -18,7 +19,7 @@ class Enricher:
         self.information_dict = get_information_dict()
         self.ip_information_downloader = IpInformationDownloader(self.limiter)
 
-    def get_information_dict(self, dst_src_information, packet) -> OrderedDict:
+    def get_information_dict(self, dst_src_information, packet) -> OrderedDict[str, Optional[str]]:
         if dst_src_information is None and packet is None:
             return self.information_dict
 
