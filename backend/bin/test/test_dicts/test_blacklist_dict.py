@@ -6,27 +6,27 @@ from main.dicts.blacklist_dict import BlacklistDict
 class TestBlacklistDictMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.blacklist_urls = [
+        cls.blacklist_domains = [
             "adserver.news.com.au",
             "yab-adimages.s3.amazonaws.com",
             "analytics.google.com",
             "adserver01.de",
             "webtrends.telegraph.co.uk",
         ]
-        cls.normal_urls = [
+        cls.normal_domains = [
             "www.hsr.ch",
             "www.google.com",
         ]
-        cls.mixex_urls = [
+        cls.mixex_domains = [
             "analytics.google.com",
             "zrh04s15-in-f14.1e100.net",
         ]
-        cls.empty_urls = [
+        cls.empty_domains = [
             "",
             "",
         ]
 
-        cls.blacklist_dict = BlacklistDict(cls.blacklist_urls)
+        cls.blacklist_dict = BlacklistDict(cls.blacklist_domains)
 
     def test_create_blacklist_dict(self) -> None:
         expected_dict = {

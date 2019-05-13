@@ -29,7 +29,7 @@ class EnricherJar:
         ip_type_information = self.enricher_classes["ip_type_enricher"].extract_ip_types(dst_src_information)
         stream_id = self.enricher_classes["stream_enricher"].get_stream_id(packet)
         dns_lookup_information = self.enricher_classes["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
-        ad_value = self.enricher_classes["ad_enricher"].test_urls(dns_lookup_information)
+        ad_value = self.enricher_classes["ad_enricher"].test_domains(dns_lookup_information)
 
         fill_dict(self.information_dict, [
             ("location_information", location_information),
