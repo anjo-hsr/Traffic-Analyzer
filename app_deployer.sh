@@ -28,15 +28,21 @@ function wait_till_container_is_running() {
 }
 
 function create_tar() {
+    echo -e "test: ${1}"
+    if [[ -z "$1" ]]; then
+        tarPath="./docker/init_files/traffic-analyzer"
+    else
+        tarPath=$1
+    fi
     echo -e "\nCreate traffic-analyzer.tar.gz"
     tar --exclude="./docker" --exclude="bin/files" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
-        -zcvf ./docker/init_files/traffic-analyzer/traffic-analyzer.tar.gz \
+        -zcvf "${tarPath}/traffic-analyzer.tar.gz" \
         -C backend/ bin \
         -C ../frontend/ appserver default local lookups metadata static \
         --transform "s,^,traffic-analyzer/,"
 
-    echo -e "File traffic-analyzer.tar.gz file created"
+    echo -e "File traffic-analyzer.tar.gz file created under ${tarPath}"
 }
 
 function remove_traffic-analyzer() {
@@ -140,6 +146,10 @@ case "$1" in
         test_splunk_app 5
         ;;
 
+    generate-app)
+        create_tar $2
+        ;;
+
     copy-pcaps)
         copy_pcaps
         ;;
@@ -149,6 +159,6 @@ case "$1" in
         ;;
 
     *)
-        echo $"Usage: $0 {start|update|force-update|copy-pcaps|test-app}"
+        echo $"Usage: $0 {start|update|force-update|generate-app|copy-pcaps|test-app}"
         exit 1
 esac
