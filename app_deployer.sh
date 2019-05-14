@@ -146,7 +146,7 @@ case "$1" in
         test_splunk_app 5
         ;;
 
-    generate-app)
+    generate-tar)
         create_tar $2
         ;;
 
@@ -159,6 +159,6 @@ case "$1" in
         ;;
 
     *)
-        echo $"Usage: $0 {start|update|force-update|generate-app|copy-pcaps|test-app}"
+        echo $"Usage: $0 {start|update|force-update|generate-tar|copy-pcaps|test-app}"
         exit 1
 esac
