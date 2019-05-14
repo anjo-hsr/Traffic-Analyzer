@@ -21,7 +21,7 @@ def run_tshark(filename) -> None:
             return
 
         start_tshark(filename, out_file, program_path)
-    
+
     return
 
 
