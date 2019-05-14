@@ -37,13 +37,14 @@ class ThreatInfoEnricher:
         url_array = list(map(self.remove_quotations, url_array))
 
         if all(url == "" for url in url_array):
-            return ""
+            return '""'
 
         filtered_urls = list(filter(lambda url: url not in self.threat_dict, url_array))
         for url in filtered_urls:
             self.threat_dict[url] = ""
 
-        matched_threat_types = self.get_urls_threat_infomation(filtered_urls)
+        self.get_urls_threat_infomation(filtered_urls)
+        matched_threat_types = self.reduce_threat_information(url_array)
         threat_numbers = list(map(self.get_threat_number, matched_threat_types))
         return CombineHelper.join_with_quotes(threat_numbers)
 
@@ -52,15 +53,12 @@ class ThreatInfoEnricher:
             req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
             req_data = self.generate_request_data(urls)
             req.add_header('Content-Type', 'application/json')
-            print(req_data)
             try:
                 response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
                 response_dict = json.loads(response.decode("utf-8"))
                 self.update_threat_dict(response_dict)
             except HTTPError:
                 self.is_api_key_correct = False
-
-        return self.reduce_threat_information(urls)
 
     @staticmethod
     def generate_request_data(filtered_urls):
