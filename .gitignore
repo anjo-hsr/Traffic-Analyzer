@@ -112,3 +112,6 @@ venv.bak/
 # tmp files
 *.pcap
 *.pcapng
+
+# tar.gz files
+*.tar.gz
