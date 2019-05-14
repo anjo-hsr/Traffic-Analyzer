@@ -18,8 +18,11 @@ def run_tshark(filename) -> None:
         if program_path is None:
             error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
             PrintHelper.print_error(error_text)
+            return
 
         start_tshark(filename, out_file, program_path)
+    
+    return
 
 
 def detect_platform() -> Optional[str]:
