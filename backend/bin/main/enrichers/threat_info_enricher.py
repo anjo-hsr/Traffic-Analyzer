@@ -1,5 +1,6 @@
 import json
 from os import path
+from typing import Union, List, Dict, Set
 from urllib import request
 from urllib.error import HTTPError
 from urllib.request import urlopen
@@ -29,14 +30,14 @@ class ThreatInfoEnricher(Enricher):
         self.is_api_key_correct = True
 
     @staticmethod
-    def get_api_key():
+    def get_api_key() -> str:
         environment = EnvironmentHelper().get_environment()
         config_file = "traffic-analyzer.conf"
         key = "safe_browsing_api_key"
         file_path = path.join(environment["configuration_folder"], config_file)
         return file_read_helper.get_config_value(file_path, key)
 
-    def test_urls_threats(self, urls):
+    def test_urls_threats(self, urls) -> str:
         url_array = urls.split(",")
         url_array = list(map(self.remove_quotations, url_array))
 
@@ -52,7 +53,7 @@ class ThreatInfoEnricher(Enricher):
         threat_numbers = list(map(self.get_threat_number, matched_threat_types))
         return CombineHelper.join_with_quotes(threat_numbers)
 
-    def get_urls_threat_infomation(self, urls):
+    def get_urls_threat_infomation(self, urls) -> None:
         if self.is_api_key_correct and urls and self.api_key != "":
             req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
             req_data = self.generate_request_data(urls)
@@ -65,7 +66,7 @@ class ThreatInfoEnricher(Enricher):
                 self.is_api_key_correct = False
 
     @staticmethod
-    def generate_request_data(filtered_urls):
+    def generate_request_data(filtered_urls) -> Dict["str", Dict[str, Union[List[str], str]]]:
         url_entries = ThreatInfoEnricher.get_url_entries(filtered_urls)
         return {
             "threatInfo": {
@@ -78,10 +79,10 @@ class ThreatInfoEnricher(Enricher):
         }
 
     @staticmethod
-    def get_url_entries(filtered_urls):
+    def get_url_entries(filtered_urls) -> List[Dict[str, str]]:
         return list(map(lambda url: {"url": url}, filtered_urls))
 
-    def update_threat_dict(self, response_dict):
+    def update_threat_dict(self, response_dict) -> None:
         if response_dict == {}:
             return
 
@@ -90,7 +91,7 @@ class ThreatInfoEnricher(Enricher):
             threat_type = match["threatType"]
             self.threat_dict[url] = threat_type
 
-    def reduce_threat_information(self, urls):
+    def reduce_threat_information(self, urls) -> Set[str]:
         reduced_list = set()
         for url in urls:
             if url != "" and url in self.threat_dict:
@@ -99,9 +100,9 @@ class ThreatInfoEnricher(Enricher):
 
         return reduced_list
 
-    def get_threat_number(self, threat_string_entry):
+    def get_threat_number(self, threat_string_entry) -> str:
         return self.threat_type_dict[threat_string_entry]
 
     @staticmethod
-    def remove_quotations(url):
+    def remove_quotations(url) -> str:
         return url.replace('"', "").replace("'", "")
