@@ -1,9 +1,13 @@
+from main.enrichers.enricher import Enricher
 from main.helpers.print_helper import PrintHelper
 
 
-class TlsEnricher:
+class TlsEnricher(Enricher):
     def __init__(self):
-        self.header = "tls_ssl_version_negotiated"
+        enricher_type = "tls enricher"
+        header = "tls_ssl_version_negotiated"
+        Enricher.__init__(self, enricher_type, header)
+
         self.stream_to_handshake_version = {}
 
     def print(self) -> None:

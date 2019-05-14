@@ -6,7 +6,7 @@ from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
-class Enricher:
+class EnricherJar:
     def __init__(self, limiter=TrafficLimitHelper(2, 1)):
         self.limiter = limiter
         self.enricher_classes = get_enricher_dict()
@@ -29,7 +29,7 @@ class Enricher:
         ip_type_information = self.enricher_classes["ip_type_enricher"].extract_ip_types(dst_src_information)
         stream_id = self.enricher_classes["stream_enricher"].get_stream_id(packet)
         dns_lookup_information = self.enricher_classes["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
-        ad_value = self.enricher_classes["ad_enricher"].test_urls(dns_lookup_information)
+        ad_value = self.enricher_classes["ad_enricher"].test_domains(dns_lookup_information)
         threat_type = self.enricher_classes["threat_info_enricher"].test_urls_threats(dns_lookup_information)
 
         fill_dict(self.information_dict, [

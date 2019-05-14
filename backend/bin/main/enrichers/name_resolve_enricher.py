@@ -1,14 +1,12 @@
+from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
-from main.helpers.print_helper import PrintHelper
 
 
-class NameResolverEnricher:
+class NameResolverEnricher(Enricher):
     def __init__(self):
-        self.enricher_type = "name resolve enricher"
-        self.header = "dst_fqdn,src_fqdn"
-
-    def print(self) -> None:
-        PrintHelper.print_nothing(self.enricher_type)
+        enricher_type = "name resolve enricher"
+        header = "dst_fqdn,src_fqdn"
+        Enricher.__init__(self, enricher_type, header)
 
     @staticmethod
     def extract_fqdn(dst_src_information) -> str:

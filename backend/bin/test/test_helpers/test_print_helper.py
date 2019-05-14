@@ -2,6 +2,7 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
+from main.enricher_jar import EnricherJar
 from main.helpers.print_helper import PrintHelper
 
 
@@ -43,9 +44,25 @@ class TestPrintHelperMethods(unittest.TestCase):
         self.assertEqual(mock_stdout.getvalue(), print_text)
 
     @patch("sys.stdout", new_callable=StringIO)
+    def test_print_enrichers(self, mock_stdout) -> None:
+        print_text = "Nothing to print for location enricher.\n" \
+                     "Nothing to print for name resolve enricher.\n" \
+                     "Print out for all 0 streams to cipher suites entries\n\n\n\n" \
+                     "Print out for 0 streams to tls version entries\n\n\n\n" \
+                     "Nothing to print for ip type enricher.\n" \
+                     "Print out for 1 tcp stream entries\n" \
+                     " --> \n\n\n\n" \
+                     "Nothing to print for dns lookup enricher.\n" \
+                     "Nothing to print for ad enricher.\n"
+
+        enricher_jar = EnricherJar()
+        PrintHelper.print_enrichers(enricher_jar.enricher_classes)
+        self.assertEqual(mock_stdout.getvalue(), print_text)
+
+    @patch("sys.stdout", new_callable=StringIO)
     def test_print_nothing(self, mock_stdout) -> None:
-        error_text = "print helper tester"
-        PrintHelper.print_nothing(error_text)
+        enricher_type = "print helper tester"
+        PrintHelper.print_nothing(enricher_type)
         print_text = "Nothing to print for print helper tester.\n"
         self.assertEqual(mock_stdout.getvalue(), print_text)
 

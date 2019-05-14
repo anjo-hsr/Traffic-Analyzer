@@ -1,8 +1,10 @@
 import sys
 
-from os import path
+from os import path, environ
 
-sys.path.append(path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer", "bin"))
+if "SPLUNK_HOME" in environ:
+    splunk_home = environ["SPLUNK_HOME"]
+    sys.path.append(path.join(splunk_home, "etc", "apps", "traffic-analyzer", "bin"))
 
 
 def convert() -> None:

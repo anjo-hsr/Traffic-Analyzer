@@ -10,12 +10,12 @@ class CombineHelper:
         return dst_src
 
     @staticmethod
-    def combine_packet_information(joined_default_cells, enricher, packet) -> str:
-        ip_information_downloader = enricher.ip_information_downloader
+    def combine_packet_information(joined_default_cells, enricher_jar, packet) -> str:
+        ip_information_downloader = enricher_jar.ip_information_downloader
         dst_src = CombineHelper.get_dst_src(packet)
         dst_src_information = ip_information_downloader.get_dst_src_information(dst_src)
 
-        information_dict = enricher.get_information_dict(dst_src_information, packet)
+        information_dict = enricher_jar.get_information_dict(dst_src_information, packet)
         enriched_line = CombineHelper.delimiter.join(str(value) for value in information_dict.values())
         return CombineHelper.combine_fields([joined_default_cells, enriched_line])
 

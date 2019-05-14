@@ -1,11 +1,15 @@
 from typing import Dict, Union, List
 
+from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
 
 
-class DnsLookupEnricher:
+class DnsLookupEnricher(Enricher):
     def __init__(self):
-        self.header = "dst_query_name,dst_a_records,src_query_name,src_a_records"
+        enricher_type = "dns lookup enricher"
+        header = "dst_query_name,dst_a_records,src_query_name,src_a_records"
+        Enricher.__init__(self, enricher_type, header)
+
         self.dns_responses = {}
         self.response_type_key = "1"
         self.a_record_key = "1"
@@ -21,7 +25,7 @@ class DnsLookupEnricher:
     def get_empty_dict(stream_id) -> Dict[str, Union[str, List[str]]]:
         return {
             "query_name": "",
-            "a_records": [""],
+            "a_records": {""},
             "stream_id": stream_id
         }
 
@@ -48,17 +52,22 @@ class DnsLookupEnricher:
         if not any(self.is_a_or_aaaa_response_type(dns_response_type) for dns_response_type in dns_response_types):
             return
 
-        dns_query_name = packet["dns.qry.name"]
         dns_response_names = packet["dns.resp.name"].split(",")
+        dns_query_name = packet["dns.qry.name"]
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")
 
-        filtered_dns_response_names = []
+        filtered_dns_response_names = self.get_dns_response_names_set(dns_response_names, dns_response_types)
+        self.write_dns_response_entry(dns_query_name, dns_response_ips, filtered_dns_response_names)
 
+    def get_dns_response_names_set(self, dns_response_names, dns_response_types) -> set:
+        filtered_dns_response_names = set()
         for index, dns_response_type in enumerate(dns_response_types):
-            if self.is_a_or_aaaa_response_type(dns_response_type) \
-                    and not dns_response_names[index] in filtered_dns_response_names:
-                filtered_dns_response_names.append(dns_response_names[index])
+            if self.is_a_or_aaaa_response_type(dns_response_type):
+                filtered_dns_response_names.add(dns_response_names[index])
 
+        return filtered_dns_response_names
+
+    def write_dns_response_entry(self, dns_query_name, dns_response_ips, filtered_dns_response_names) -> None:
         for dns_response_ip in dns_response_ips:
             if dns_response_ip == "":
                 continue
