@@ -4,14 +4,18 @@ from urllib import request
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
+from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_read_helper
 
 
-class ThreatInfoEnricher:
+class ThreatInfoEnricher(Enricher):
     def __init__(self):
-        self.header = "threat_type"
+        header = "threat_type"
+        enricher_type = "threat enricher"
+        Enricher.__init__(self, enricher_type, header)
+
         self.threat_dict = {"": ""}
         self.threat_type_dict = {
             "": "",
@@ -101,6 +105,3 @@ class ThreatInfoEnricher:
     @staticmethod
     def remove_quotations(url):
         return url.replace('"', "").replace("'", "")
-
-    def print(self):
-        pass
