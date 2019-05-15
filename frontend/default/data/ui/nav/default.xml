@@ -1,4 +1,4 @@
-<nav search_view="search" color="#3c444c">
+<nav search_view="search" color="3C444C">
   <view name="overview" default="true"/>
   <collection label="Endpoints">
     <view name="internalDevices"/>

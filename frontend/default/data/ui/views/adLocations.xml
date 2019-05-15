@@ -64,8 +64,8 @@
           <latest></latest>
         </search>
         <option name="mapping.fieldColors">
-          {"no ad": 0x2bc3ff,
-          "ad":0xfff029}
+          {"no ad": #2BC3FF,
+          "ad":#FFF029}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
