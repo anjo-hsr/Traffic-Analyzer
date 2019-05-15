@@ -54,16 +54,19 @@
         <search>
           <query>$source_token$
                 | dedup dst_fqdn
-                | join ad_category
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_category]
-                | table dst_fqdn, dst_latitude, dst_longitude, ad_category, dst_query_name
+                | rename ad_category as ad_id
+                | join ad_id
+                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
+                | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, ad_category
                 | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
                 | geostats count by ad_category latfield=latitude longfield=longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
-        <option name="mapping.fieldColors">{0: 0x2bc3ff, 1: 0xfff029}</option>
+        <option name="mapping.fieldColors">
+          {"no ad": 0x2bc3ff, "ad":0xfff029}
+        </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
         <option name="trellis.enabled">0</option>
