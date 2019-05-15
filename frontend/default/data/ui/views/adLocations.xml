@@ -54,12 +54,11 @@
         <search>
           <query>$source_token$
                 | dedup dst_fqdn
-                | rename category as category_id
-                | join category_id
-                  [search sourcetype=list source="*traffic_categories.csv" | rename id as category_id]
-                | table dst_fqdn, dst_latitude, dst_longitude, category, dst_query_name
+                | join ad_category
+                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_category]
+                | table dst_fqdn, dst_latitude, dst_longitude, ad_category, dst_query_name
                 | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
-                | geostats count by category latfield=latitude longfield=longitude
+                | geostats count by ad_category latfield=latitude longfield=longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
@@ -81,14 +80,13 @@
         <search>
           <query>$source_token$
                 | dedup dst_fqdn
-                | rename category as category_id
-                | join category_id
-                  [search sourcetype=list source="*traffic_categories.csv" | rename id as category_id]
-                | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, category
+                | join ad_category
+                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_category]
+                | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, ad_category
                 | rename dst_fqdn as Reverse_Lookup, dst_query_name as DNS_Query,
                   dst_latitude as latitude, dst_longitude as longitude
                 | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | table DNS_Query, Reverse_Lookup, category
+                | table DNS_Query, Reverse_Lookup, ad_category as AD_Category
           </query>
           <earliest>0</earliest>
           <latest></latest>

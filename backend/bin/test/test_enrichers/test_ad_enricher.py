@@ -33,7 +33,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         cls.ad_enricher = AdEnricher(cls.blacklist_domains)
 
     def test_header(self) -> None:
-        expected_header = "category"
+        expected_header = "ad_category"
         self.assertEqual(self.ad_enricher.header, expected_header)
 
     def test_domain_normal(self) -> None:
