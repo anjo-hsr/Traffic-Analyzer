@@ -1,5 +1,4 @@
 import json
-from os import path
 from typing import Union, List, Dict, Set
 from urllib import request
 from urllib.error import HTTPError
@@ -7,7 +6,6 @@ from urllib.request import urlopen
 
 from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
-from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_read_helper
 
 
