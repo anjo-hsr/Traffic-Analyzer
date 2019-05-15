@@ -58,8 +58,7 @@
                 | join ad_id
                   [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
                 | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, ad_category
-                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
-                | geostats count by ad_category latfield=latitude longfield=longitude
+                | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
@@ -87,10 +86,10 @@
                 | join ad_category
                   [search sourcetype=list source="*ad_categories.csv" | rename id as ad_category]
                 | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, ad_category
-                | rename dst_fqdn as Reverse_Lookup, dst_query_name as DNS_Query,
+                | rename dst_fqdn as "Reverse Lookup", dst_query_name as "DNS Query", ad_category as "AD Category",
                   dst_latitude as latitude, dst_longitude as longitude
                 | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | table DNS_Query, Reverse_Lookup, ad_category as AD_Category
+                | table "DNS Query", "Reverse Lookup", "AD Category"
           </query>
           <earliest>0</earliest>
           <latest></latest>
