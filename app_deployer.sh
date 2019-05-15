@@ -28,12 +28,12 @@ function wait_till_container_is_running() {
 }
 
 function create_tar() {
-    echo -e "test: ${1}"
     if [[ -z "$1" ]]; then
         tarPath="./docker/init_files/traffic-analyzer"
     else
         tarPath=$1
     fi
+    
     echo -e "\nCreate traffic-analyzer.tar.gz"
     tar --exclude="./docker" --exclude="bin/files" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
