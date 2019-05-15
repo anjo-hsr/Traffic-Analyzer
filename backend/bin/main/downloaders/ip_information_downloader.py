@@ -58,7 +58,6 @@ class IpInformationDownloader:
             if counter < 5:
                 time.sleep(2)
                 IpInformationDownloader.get_ip_data(ip_addr, counter + 1)
-            pass
 
         return IpInformationDownloader.get_private_ip_data(ip_addr)
 
