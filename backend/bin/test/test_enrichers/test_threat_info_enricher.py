@@ -85,11 +85,6 @@ class TestThreatInfoEnricherMethods(unittest.TestCase):
             self.assertEqual(self.threat_info_enricher.get_threat_number(threat_type), str(threat_number))
             threat_number += 1
 
-    def test_remove_quotations(self):
-        string_with_quotations = '"hsr","rapperswil","st. gallen","switzerland"'
-        expected_string = "hsr,rapperswil,st. gallen,switzerland"
-        self.assertEqual(self.threat_info_enricher.remove_quotations(string_with_quotations), expected_string)
-
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestThreatInfoEnricherMethods)
