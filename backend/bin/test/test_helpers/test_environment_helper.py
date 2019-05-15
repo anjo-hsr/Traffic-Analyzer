@@ -22,7 +22,6 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
         cls.file_path = path.join("..", "files")
 
         cls.development_variables = {
-            "pcap_path": path.join(cls.docker_init_files_base_path, "pcaps"),
             "pcap_processed_path": path.join(cls.docker_init_files_base_path, "pcaps"),
             "csv_tmp_path": cls.file_path,
             "csv_list_path": cls.file_path,
@@ -31,7 +30,6 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
             "configuration_folder": path.join("..", "..", "..", "frontend", "local")
         }
         cls.production_variables = {
-            "pcap_path": path.join(cls.tmp_base_path, "pcaps"),
             "pcap_processed_path": path.join(cls.tmp_base_path, "pcaps_processed"),
             "csv_tmp_path": path.join(cls.tmp_base_path, "csvs"),
             "csv_list_path": path.join(cls.lookup_base_path, "lists"),
