@@ -7,7 +7,7 @@
   <collection label="Traffic">
     <view name="traffic"/>
     <collection label="Maps">
-      <view name="unwantedTraffic"/>
+      <view name="trafficTypes"/>
       <view name="adLocations"/>
       <view name="threatLocations"/>
     </collection>
