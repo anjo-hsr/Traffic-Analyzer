@@ -7,8 +7,8 @@ function stop_splunk(){
 }
 
 function delete_containers() {
-    docker rm $(docker ps -af "name=$containerName")
-    echo -e "\nContainers deleted\n-----------\nStart deleting all $imageName images\n"
+    docker rm $(docker ps -af "name=${containerName}")
+    echo -e "\nContainers deleted\n-----------\nStart deleting all ${imageName} images\n"
     docker rmi ${imageName}
     echo -e "\nImages deleted\n"
 }
@@ -28,12 +28,12 @@ function wait_till_container_is_running() {
 }
 
 function create_tar() {
-    echo -e "test: ${1}"
     if [[ -z "$1" ]]; then
         tarPath="./docker/init_files/traffic-analyzer"
     else
         tarPath=$1
     fi
+    
     echo -e "\nCreate traffic-analyzer.tar.gz"
     tar --exclude="./docker" --exclude="bin/files" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
@@ -94,13 +94,13 @@ function fix_tshark() {
 
 function copy_pcaps() {
     for filename in ./docker/init_files/pcaps/*.pcap ./docker/init_files/pcaps/*.pcapng; do
+        [[ -f ${filename} ]] || continue
         docker cp ${filename} ${containerName}:/tmp/pcaps/
     done
 }
 
 function test_splunk_app() {
     seconds=$1
-    appName="traffic-analyzer"
     trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
 
     echo -e "\nSleep for $seconds seconds till the lists are imported"
@@ -118,9 +118,10 @@ function test_splunk_app() {
 
 containerName="splunk_traffic-analyzer"
 imageName="${containerName}_image"
+appName="traffic-analyzer"
 
 case "$1" in
-    start)
+    create)
         stop_splunk
         delete_containers
         building_splunk
@@ -159,6 +160,12 @@ case "$1" in
         ;;
 
     *)
-        echo $"Usage: $0 {start|update|force-update|generate-tar|copy-pcaps|test-app}"
+        echo -e    $"Usage: $0 {create|update|force-update|generate-tar|copy-pcaps|test-app}\n"\
+                    "   - create:         Remove ${containerName} containers and ${imageName} images and generates new image and container with installed ${appName}\n"\
+                    "   - update:         Update ${appName} splunk app\n"\
+                    "   - force-update:   Remove and reinstall ${appName} splunk app\n"\
+                    "   - generate-tar:   Generates only tar.gz app file. Define path with.\n"\
+                    "   - copy-pcaps:     Copy pcaps from ./docker/docker_init folder into container\n"\
+                    "   - test-app:       Test splunk app by checking some imported events."
         exit 1
 esac

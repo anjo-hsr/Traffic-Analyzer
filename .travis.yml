@@ -35,7 +35,7 @@ jobs:
     - stage: build
       script:
         - dos2unix ./app_deployer.sh
-        - ./app_deployer.sh start
+        - ./app_deployer.sh create
     - stage: sonar
       script:
         - cd ./backend

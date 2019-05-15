@@ -49,7 +49,7 @@
   </fieldset>
   <row>
     <panel>
-      <Title>Choropleth Map</Title>
+      <title>Choropleth Map</title>
       <map>
         <search>
           <query>$source_token$
@@ -78,13 +78,14 @@
       <table>
         <search>
           <query>$source_token$
-                | table dst_fqdn, dst_latitude, dst_longitude, traffic_analyzer_tcp_stream
+                | table dst_query_name, dst_fqdn, dst_latitude, dst_longitude, traffic_analyzer_tcp_stream
                 | dedup traffic_analyzer_tcp_stream
-                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
+                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
+                  dst_latitude as latitude, dst_longitude as longitude
                 | lookup geo_countries longitude, latitude
                 | $selectedCountryFilter$
-                | stats count(traffic_analyzer_tcp_stream) by Destination
-                | table Destination, count(traffic_analyzer_tcp_stream)
+                | stats count(traffic_analyzer_tcp_stream) by "Reverse Lookup", "DNS Query"
+                | table "DNS Query", "Reverse Lookup", count(traffic_analyzer_tcp_stream)
                 | rename count(traffic_analyzer_tcp_stream) as "# of connections"
                 | sort - "# of connections"
           </query>

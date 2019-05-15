@@ -1,5 +1,5 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Ad Locations</label>
+  <label>Traffic Types</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -54,18 +54,24 @@
         <search>
           <query>$source_token$
                 | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | table dst_latitude, dst_longitude, ad_category
-                | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
+                | eval threat_category=if(threat_category="",0,split(threat_category,","))
+                | mvexpand threat_category
+                | sort threat_category desc
+                | dedup dst_fqdn
+                | eval traffic_type=case(
+                  threat_category&lt;ad_category, "ad",
+                  threat_category&gt;ad_category, "threat",
+                  true(), "normal")
+                | table dst_latitude, dst_longitude, traffic_type
+                | geostats count by traffic_type latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
         <option name="mapping.fieldColors">
-          {"no ad": 0x2bc3ff,
-          "ad":0xfff029}
+          {"normal": 0x2bc3ff,
+          "ad": 0xfff029,
+          "threat": 0xff2850}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
@@ -86,12 +92,16 @@
                 | rename dst_latitude as latitude, dst_longitude as longitude
                 | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
                 | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | where ad_id != 0
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
-                | table "DNS Query", "Reverse Lookup", "AD Category"
+                | eval threat_category=if(threat_category="",0,split(threat_category,","))
+                | mvexpand threat_category
+                | sort threat_category desc
+                | dedup dst_fqdn
+                | eval traffic_type=case(
+                  threat_category&lt;ad_category, "ad",
+                  threat_category&gt;ad_category, "threat",
+                  true(), "normal")
+                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", traffic_type as "Traffic Type"
+                | table "DNS Query", "Reverse Lookup", "Traffic Type"
           </query>
           <earliest>0</earliest>
           <latest></latest>

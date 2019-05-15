@@ -6,7 +6,7 @@ from main.helpers.ip_helper import IpHelper
 class AdEnricher(Enricher):
     def __init__(self, blacklist_domains=None):
         enricher_type = "ad enricher"
-        header = "category"
+        header = "ad_category"
         Enricher.__init__(self, enricher_type, header)
 
         self.ip_to_category = {}

@@ -1,5 +1,5 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Ad Locations</label>
+  <label>Threat Locations</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -50,22 +50,40 @@
   <row>
     <panel>
       <title>Cluster Map</title>
+      <input type="dropdown" token="threat_category_token" searchWhenChanged="true">
+        <label>Threat Category</label>
+        <choice value="1">threat type unspecified</choice>
+        <choice value="2">malware</choice>
+        <choice value="3">social engineering</choice>
+        <choice value="4">unwanted software</choice>
+        <choice value="5">potentially harmful application</choice>
+      </input>
       <map>
         <search>
           <query>$source_token$
                 | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | table dst_latitude, dst_longitude, ad_category
-                | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
+                | eval threat_category=if(threat_category="","",split(threat_category,","))
+                | mvexpand threat_category
+                | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
+                | sort threat_category desc
+                | dedup dst_fqdn
+                | rename threat_category as threat_id
+                | join threat_id
+                  [search sourcetype=list source="*threat_types.csv"
+                  | rename id as threat_id, category as threat_category]
+                | table dst_latitude, dst_longitude, threat_category
+                | geostats count by threat_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
         <option name="mapping.fieldColors">
-          {"no ad": 0x2bc3ff,
-          "ad":0xfff029}
+          {"no threat": 0x2bc3ff,
+          "threat type unspecified": 0xff2850,
+          "malware": 0xff2850,
+          "social engineering": 0xff2850,
+          "unwanted software": 0xff2850,
+          "potentially harmful application": 0xff2850}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
@@ -86,12 +104,19 @@
                 | rename dst_latitude as latitude, dst_longitude as longitude
                 | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
                 | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | where ad_id != 0
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
-                | table "DNS Query", "Reverse Lookup", "AD Category"
+                | eval threat_category=if(threat_category="","",split(threat_category,","))
+                | mvexpand threat_category
+                | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
+                | sort threat_category desc
+                | dedup dst_fqdn
+                | rename threat_category as threat_id
+                | where threat_id != 0
+                | join threat_id
+                  [search sourcetype=list source="*threat_types.csv"
+                  | rename id as threat_id, category as threat_category]
+                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
+                  threat_category as "Threat Category"
+                | table DNS_Query, Reverse_Lookup, "Threat Category"
           </query>
           <earliest>0</earliest>
           <latest></latest>

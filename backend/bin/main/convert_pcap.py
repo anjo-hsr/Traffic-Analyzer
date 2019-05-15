@@ -6,7 +6,7 @@ from typing import Optional
 
 import main.helpers.tshark_helper as tshark_helper
 from main.helpers.environment_helper import EnvironmentHelper
-from main.helpers.file import file_move_helper, file_name_helper, file_path_helper
+from main.helpers.file import file_move_helper, file_name_helper, file_path_helper, file_read_helper
 from main.helpers.print_helper import PrintHelper
 
 
@@ -77,7 +77,10 @@ def main() -> None:
 
 
 def run(environment_variables) -> None:
-    pcap_path = environment_variables["pcap_path"]
+    config_name = "traffic-analyzer.conf"
+    key = "pcap_location"
+    pcap_path = file_read_helper.get_config_value(config_name, key)
+
     pcap_processed_path = environment_variables["pcap_processed_path"]
     csv_tmp_path = environment_variables["csv_tmp_path"]
 

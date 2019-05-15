@@ -53,7 +53,8 @@ class TestPrintHelperMethods(unittest.TestCase):
                      "Print out for 1 tcp stream entries\n" \
                      " --> \n\n\n\n" \
                      "Nothing to print for dns lookup enricher.\n" \
-                     "Nothing to print for ad enricher.\n"
+                     "Nothing to print for ad enricher.\n" \
+                     "Nothing to print for threat enricher.\n"
 
         enricher_jar = EnricherJar()
         PrintHelper.print_enrichers(enricher_jar.enricher_classes)

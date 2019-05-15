@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch, mock_open, MagicMock
 
 from main.helpers.file import file_read_helper
 
@@ -25,6 +26,20 @@ class TestFileReadHelperMethods(unittest.TestCase):
         }
         for key in line_dict:
             self.assertEqual(file_read_helper.is_header(key), line_dict[key])
+
+    @patch("os.path.isfile", MagicMock(return_value=True))
+    @patch("main.helpers.file.file_read_helper.open", new=mock_open(read_data="[Stanza]\n"
+                                                                              "test_key=test_value\n"
+                                                                              "hsr = rapperswil"))
+    def test_get_config_value(self):
+        file_path = "test_path"
+        search_key = "test_key"
+        expected_value = "test_value"
+        self.assertEqual(file_read_helper.get_config_value(file_path, search_key), expected_value)
+
+        search_key = "hsr"
+        expected_value = "rapperswil"
+        self.assertEqual(file_read_helper.get_config_value(file_path, search_key), expected_value)
 
 
 if __name__ == "__main__":
