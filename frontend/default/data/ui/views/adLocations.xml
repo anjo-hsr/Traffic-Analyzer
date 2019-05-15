@@ -57,14 +57,15 @@
                 | rename ad_category as ad_id
                 | join ad_id
                   [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, ad_category
+                | table dst_fqdn, dst_latitude, dst_longitude, ad_category
                 | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
         <option name="mapping.fieldColors">
-          {"no ad": 0x2bc3ff, "ad":0xfff029}
+          {"no ad": 0x2bc3ff,
+          "ad":0xfff029}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
@@ -82,13 +83,13 @@
       <table>
         <search>
           <query>$source_token$
-                | dedup dst_fqdn
-                | join ad_category
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_category]
-                | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, ad_category
-                | rename dst_fqdn as "Reverse Lookup", dst_query_name as "DNS Query", ad_category as "AD Category",
-                  dst_latitude as latitude, dst_longitude as longitude
+                | rename dst_latitude as latitude, dst_longitude as longitude
                 | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
+                | dedup dst_fqdn
+                | rename ad_category as ad_id
+                | join ad_id
+                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
+                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
                 | table "DNS Query", "Reverse Lookup", "AD Category"
           </query>
           <earliest>0</earliest>

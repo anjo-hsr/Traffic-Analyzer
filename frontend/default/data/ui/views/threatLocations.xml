@@ -69,11 +69,9 @@
                 | dedup dst_fqdn
                 | rename threat_category as threat_id
                 | join threat_id
-                    [search sourcetype=list source="*threat_types.csv"
-                    | rename id as threat_id, category as threat_category]
-                | table dst_fqdn, dst_latitude, dst_longitude, threat_category, dst_query_name
-                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
-                | geostats count by threat_category latfield=latitude longfield=longitude
+                    [search sourcetype=list source="*threat_types.csv" | rename id as threat_id, category as threat_category]
+                | table dst_latitude, dst_longitude, threat_category
+                | geostats count by threat_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
@@ -102,19 +100,19 @@
       <table>
         <search>
           <query>$source_token$
+                | rename dst_latitude as latitude, dst_longitude as longitude
+                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
                 | dedup dst_fqdn
                 | eval threat_category=if(threat_category="","",split(threat_category,","))
                 | mvexpand threat_category
                 | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
                 | sort threat_category desc
                 | dedup dst_fqdn
-                | join threat_category
-                    [search sourcetype=list source="*threat_types.csv" | rename id as threat_category]
-                | table dst_fqdn, dst_query_name, dst_latitude, dst_longitude, category
-                | rename dst_fqdn as Reverse_Lookup, dst_query_name as DNS_Query,
-                  dst_latitude as latitude, dst_longitude as longitude
-                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | table DNS_Query, Reverse_Lookup, category
+                | rename threat_category as threat_id
+                | join threat_id
+                    [search sourcetype=list source="*threat_types.csv" | rename id as threat_id, category as threat_category]
+                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", threat_category as "Threat Category"
+                | table DNS_Query, Reverse_Lookup, "Threat Category"
           </query>
           <earliest>0</earliest>
           <latest></latest>
