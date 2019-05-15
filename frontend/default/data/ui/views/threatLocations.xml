@@ -67,8 +67,10 @@
                 | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
                 | sort threat_category desc
                 | dedup dst_fqdn
-                | join threat_category
-                    [search sourcetype=list source="*threat_types.csv" | rename id as threat_category]
+                | rename threat_category as threat_id
+                | join threat_id
+                    [search sourcetype=list source="*threat_types.csv"
+                    | rename id as threat_id, category as threat_category]
                 | table dst_fqdn, dst_latitude, dst_longitude, threat_category, dst_query_name
                 | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
                 | geostats count by threat_category latfield=latitude longfield=longitude
@@ -77,7 +79,12 @@
           <latest></latest>
         </search>
         <option name="mapping.fieldColors">
-          {0: 0x2bc3ff, 1: 0xff2850, 2: 0xff2850, 3: 0xff2850, 4: 0xff2850, 5: 0xff2850}
+          {"no threat": 0x2bc3ff,
+          "threat type unspecified": 0xff2850,
+          "malware": 0xff2850,
+          "social engineering": 0xff2850,
+          "unwanted software": 0xff2850,
+          "potentially harmful application": 0xff2850}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
