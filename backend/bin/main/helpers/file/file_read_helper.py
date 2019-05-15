@@ -12,7 +12,7 @@ def get_csv_dict_reader(csv_file) -> DictReader:
     return DictReader(csv_file, delimiter=',')
 
 
-def get_config_value(config_name, key):
+def get_config_value(config_name, key) -> str:
     environment = EnvironmentHelper().get_environment()
     file_path = path.join(environment["configuration_folder"], config_name)
 

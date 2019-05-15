@@ -5,6 +5,7 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from main.enrichers.enricher import Enricher
+from main.helpers import string_helper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.file import file_read_helper
 
@@ -35,7 +36,7 @@ class ThreatInfoEnricher(Enricher):
 
     def test_urls_threats(self, urls) -> str:
         url_array = urls.split(",")
-        url_array = list(map(self.remove_quotations, url_array))
+        url_array = list(map(string_helper.remove_quotations, url_array))
 
         if all(url == "" for url in url_array):
             return '""'
@@ -98,7 +99,3 @@ class ThreatInfoEnricher(Enricher):
 
     def get_threat_number(self, threat_string_entry) -> str:
         return self.threat_type_dict[threat_string_entry]
-
-    @staticmethod
-    def remove_quotations(url) -> str:
-        return url.replace('"', "").replace("'", "")

@@ -1,5 +1,6 @@
 from main.dicts.blacklist_dict import BlacklistDict
 from main.enrichers.enricher import Enricher
+from main.helpers import string_helper
 from main.helpers.ip_helper import IpHelper
 
 
@@ -20,7 +21,7 @@ class AdEnricher(Enricher):
             if domain == "":
                 continue
 
-            domain = self.remove_quotations(domain)
+            domain = string_helper.remove_quotations(domain)
             is_ad = is_ad or self.is_ad_domain(domain)
 
         return "1" if is_ad else "0"
@@ -35,10 +36,6 @@ class AdEnricher(Enricher):
         is_ad = is_ad or dict_to_test == {}
         self.domain_to_ad_dict[domain] = is_ad
         return is_ad
-
-    @staticmethod
-    def remove_quotations(domain) -> str:
-        return domain.replace('"', '').replace("'", "")
 
     def is_domain_in_dict(self, domain, dict_to_test) -> bool:
         return_value = False

@@ -31,5 +31,5 @@ class CombineHelper:
         return CombineHelper.delimiter.join('"{}"'.format(packet[field_name]) for field_name in field_names)
 
     @staticmethod
-    def join_with_quotes(fields):
+    def join_with_quotes(fields) -> str:
         return '"' + CombineHelper.delimiter.join(fields) + '"'
