@@ -110,6 +110,7 @@
                 | sort threat_category desc
                 | dedup dst_fqdn
                 | rename threat_category as threat_id
+                | where threat_id != 0
                 | join threat_id
                   [search sourcetype=list source="*threat_types.csv"
                   | rename id as threat_id, category as threat_category]

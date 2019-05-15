@@ -59,9 +59,10 @@
                   | dedup eth_src
                   | table eth_src]
                 | where ip_src!=""
-                | table ip_src, src_fqdn
+                | table ip_src, src_query_name, src_fqdn
+                | fillnull value=""
                 | dedup ip_src
-                | rename ip_src as ip
+                | rename ip_src as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
                 | join type=left ip
                   [search $source_token$
                   | stats sum(frame_cap_len) as "bytes out" by ip_src

@@ -62,7 +62,7 @@
                   threat_category&lt;ad_category, "ad",
                   threat_category&gt;ad_category, "threat",
                   true(), "normal")
-                | table dst_fqdn, dst_latitude, dst_longitude, traffic_type
+                | table dst_latitude, dst_longitude, traffic_type
                 | geostats count by traffic_type latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
