@@ -58,10 +58,12 @@
                 | mvexpand threat_category
                 | sort threat_category desc
                 | dedup dst_fqdn
-                | eval traffic_type=case(threat_category&lt;ad_category, "ad", threat_category&gt;ad_category, "threat", 1=1, "normal")
-                | table dst_fqdn, dst_latitude, dst_longitude, traffic_type, dst_query_name
-                | rename dst_fqdn as Destination, dst_latitude as latitude, dst_longitude as longitude
-                | geostats count by traffic_type latfield=latitude longfield=longitude
+                | eval traffic_type=case(
+                  threat_category&lt;ad_category, "ad",
+                  threat_category&gt;ad_category, "threat",
+                  true(), "normal")
+                | table dst_fqdn, dst_latitude, dst_longitude, traffic_type
+                | geostats count by traffic_type latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
@@ -85,16 +87,19 @@
       <table>
         <search>
           <query>$source_token$
+                | rename dst_latitude as latitude, dst_longitude as longitude
+                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
                 | dedup dst_fqdn
                 | eval threat_category=if(threat_category="",0,split(threat_category,","))
                 | mvexpand threat_category
                 | sort threat_category desc
                 | dedup dst_fqdn
-                | eval traffic_type=case(threat_category&lt;ad_category, "ad", threat_category&gt;ad_category, "threat", 1=1, "normal")
-                | rename dst_fqdn as Reverse_Lookup, dst_query_name as DNS_Query,
-                  dst_latitude as latitude, dst_longitude as longitude, traffic_type as Traffic_Type
-                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | table DNS_Query, Reverse_Lookup, Traffic_Type
+                | eval traffic_type=case(
+                  threat_category&lt;ad_category, "ad",
+                  threat_category&gt;ad_category, "threat",
+                  true(), "normal")
+                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", traffic_type as "Traffic Type"
+                | table "DNS Query", "Reverse Lookup", "Traffic Type"
           </query>
           <earliest>0</earliest>
           <latest></latest>
