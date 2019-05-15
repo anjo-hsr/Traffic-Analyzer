@@ -131,7 +131,8 @@
                 | eventstats count as amount by recommended
                 | eventstats count as totalAmount
                 | where recommended="N" | dedup recommended
-                | eval percOfTotal= 100 / totalAmount * amount | table percOfTotal
+                | eval percOfTotal= 100 / totalAmount * amount
+                | table percOfTotal
                 | appendpipe [stats count | where count=0]
           </query>
         </search>
@@ -139,11 +140,12 @@
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeColors">["0x20c028","0xfcfc37","0xfccc37","0xfc9937", "0xfc4737"]</option>
+        <option name="rangeValues">[4.99,19.99,34.99,49.99]</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
         <option name="unit">%</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
