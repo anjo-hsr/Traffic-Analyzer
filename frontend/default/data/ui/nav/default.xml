@@ -5,12 +5,9 @@
     <view name="externalDevices"/>
   </collection>
   <collection label="Traffic">
-    <view name="traffic"/>
-    <collection label="Maps">
-      <view name="trafficTypes"/>
-      <view name="adLocations"/>
-      <view name="threatLocations"/>
-    </collection>
+    <view name="trafficTypes"/>
+    <view name="adLocations"/>
+    <view name="threatLocations"/>
   </collection>
   <view name="protocols"/>
   <view name="security"/>
