@@ -49,16 +49,18 @@ class IpInformationDownloader:
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
             response = requests.get(search_url)
-            response_json = json.loads(response.content.decode("utf-8"))
-            geo_data = response_json["data"]["geo"]
-            return IpInformationDownloader.extract_data(geo_data, ip_addr)
+            if response.status_code == 200:
+                response_json = json.loads(response.content.decode("utf-8"))
+                geo_data = response_json["data"]["geo"]
+                return IpInformationDownloader.extract_data(geo_data, ip_addr)
 
         except socket.gaierror:
             if counter < 5:
                 time.sleep(2)
                 IpInformationDownloader.get_ip_data(ip_addr, counter + 1)
+            pass
 
-            return IpInformationDownloader.get_private_ip_data(ip_addr)
+        return IpInformationDownloader.get_private_ip_data(ip_addr)
 
     @staticmethod
     def extract_data(geo_data, ip_addr) -> Dict[str, str]:

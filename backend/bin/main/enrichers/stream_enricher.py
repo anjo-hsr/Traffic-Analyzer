@@ -35,14 +35,15 @@ class StreamEnricher(Enricher):
         tcp_src_port = packet["tcp.srcport"]
         udp_dst_port = packet["udp.dstport"]
         udp_src_port = packet["udp.srcport"]
+        protocol = packet["_ws.col.Protocol"]
 
         are_ports_set = (tcp_dst_port != "" and tcp_src_port != "") or \
                         (udp_dst_port != "" and udp_src_port != "")
         if not are_ports_set:
             return ""
 
-        inbound = ",".join([dst_ip, src_ip, tcp_dst_port, tcp_src_port, udp_dst_port, udp_src_port])
-        outbound = ",".join([src_ip, dst_ip, tcp_src_port, tcp_dst_port, udp_src_port, udp_dst_port])
+        inbound = ",".join([dst_ip, src_ip, tcp_dst_port, tcp_src_port, udp_dst_port, udp_src_port, protocol])
+        outbound = ",".join([src_ip, dst_ip, tcp_src_port, tcp_dst_port, udp_src_port, udp_dst_port, protocol])
         inbound_outbound_list = [inbound, outbound]
         inbound_outbound_list.sort()
 
