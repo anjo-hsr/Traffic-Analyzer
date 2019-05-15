@@ -1,5 +1,5 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Unwanted Traffic</label>
+  <label>Traffic Types</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
