@@ -62,6 +62,11 @@ class DnsLookupEnricher(Enricher):
     def get_dns_response_names_set(self, dns_response_names, dns_response_types) -> set:
         filtered_dns_response_names = set()
         for index, dns_response_type in enumerate(dns_response_types):
+            # Check must be done because some DNS packets could contain more dns_response_types
+            # than dns_response_names. Otherwise an list index out of range will be thrown.
+            if index >= len(dns_response_names):
+                break
+
             if self.is_a_or_aaaa_response_type(dns_response_type):
                 filtered_dns_response_names.add(dns_response_names[index])
 
