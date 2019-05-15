@@ -183,6 +183,9 @@
                 | sort "# of streams" desc
           </query>
         </search>
+        <format type="color" field="Recommended">
+          <colorPalette type="map">{"N":#FC4737}</colorPalette>
+        </format>
       </table>
     </panel>
     <panel>
