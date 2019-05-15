@@ -49,7 +49,7 @@
   </fieldset>
   <row>
     <panel>
-      <Title>Choropleth Map</Title>
+      <title>Choropleth Map</title>
       <map>
         <search>
           <query>$source_token$
