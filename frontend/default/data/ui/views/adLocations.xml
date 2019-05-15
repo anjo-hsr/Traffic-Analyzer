@@ -63,6 +63,7 @@
           <earliest>0</earliest>
           <latest></latest>
         </search>
+        <option name="mapping.fieldColors">{0: 0x2bc3ff, 1: 0xfff029}</option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
         <option name="trellis.enabled">0</option>
