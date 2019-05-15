@@ -52,11 +52,11 @@
       <title>Cluster Map</title>
       <input type="dropdown" token="threat_category_token" searchWhenChanged="true">
         <label>Threat Category</label>
-        <choice value="2">threat type unspecified</choice>
-        <choice value="3">malware</choice>
-        <choice value="4">social engineering</choice>
-        <choice value="5">unwanted software</choice>
-        <choice value="6">potentially harmful application</choice>
+        <choice value="1">threat type unspecified</choice>
+        <choice value="2">malware</choice>
+        <choice value="3">social engineering</choice>
+        <choice value="4">unwanted software</choice>
+        <choice value="5">potentially harmful application</choice>
       </input>
       <map>
         <search>

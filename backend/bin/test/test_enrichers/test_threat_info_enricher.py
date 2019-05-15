@@ -80,7 +80,7 @@ class TestThreatInfoEnricherMethods(unittest.TestCase):
     def test_get_threat_number(self):
         threat_types = ["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE",
                         "POTENTIALLY_HARMFUL_APPLICATION"]
-        threat_number = 2
+        threat_number = 1
         for threat_type in threat_types:
             self.assertEqual(self.threat_info_enricher.get_threat_number(threat_type), str(threat_number))
             threat_number += 1

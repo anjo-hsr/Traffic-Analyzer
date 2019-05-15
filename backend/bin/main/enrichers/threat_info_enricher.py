@@ -20,11 +20,11 @@ class ThreatInfoEnricher(Enricher):
         self.threat_dict = {"": ""}
         self.threat_type_dict = {
             "": "",
-            "THREAT_TYPE_UNSPECIFIED": "2",
-            "MALWARE": "3",
-            "SOCIAL_ENGINEERING": "4",
-            "UNWANTED_SOFTWARE": "5",
-            "POTENTIALLY_HARMFUL_APPLICATION": "6"
+            "THREAT_TYPE_UNSPECIFIED": "1",
+            "MALWARE": "2",
+            "SOCIAL_ENGINEERING": "3",
+            "UNWANTED_SOFTWARE": "4",
+            "POTENTIALLY_HARMFUL_APPLICATION": "5"
         }
         self.api_key = self.get_api_key()
         self.is_api_key_correct = True
