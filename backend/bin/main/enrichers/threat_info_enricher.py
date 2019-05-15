@@ -13,7 +13,7 @@ from main.helpers.file import file_read_helper
 
 class ThreatInfoEnricher(Enricher):
     def __init__(self):
-        header = "threat_type"
+        header = "threat_category"
         enricher_type = "threat enricher"
         Enricher.__init__(self, enricher_type, header)
 
