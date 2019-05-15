@@ -6,8 +6,11 @@
   </collection>
   <collection label="Traffic">
     <view name="traffic"/>
-    <view name="adLocations"/>
-    <view name="threatLocations"/>
+    <collection label="Maps">
+      <view name="unwantedTraffic"/>
+      <view name="adLocations"/>
+      <view name="threatLocations"/>
+    </collection>
   </collection>
   <view name="protocols"/>
   <view name="security"/>
