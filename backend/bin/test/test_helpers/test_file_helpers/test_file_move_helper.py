@@ -20,8 +20,8 @@ class TestFileMoveHelperMethods(unittest.TestCase):
         file_path = path.join(environment_variables["csv_tmp_path"], filename)
         self.assertFalse(path.isfile(file_path))
 
-        url = "https://raw.githubusercontent.com/anjo-hsr/Traffic-Analyzer/master/README.md"
-        downloaded_filename = DownloadHelper.store_file(url)
+        domain = "https://raw.githubusercontent.com/anjo-hsr/Traffic-Analyzer/master/README.md"
+        downloaded_filename = DownloadHelper.store_file(domain)
         self.assertTrue(downloaded_filename, file_path)
         self.assertTrue(path.isfile(file_path))
 

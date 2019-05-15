@@ -34,26 +34,26 @@ class ThreatInfoEnricher(Enricher):
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
 
-    def test_urls_threats(self, urls) -> str:
-        url_array = urls.split(",")
-        url_array = list(map(string_helper.remove_quotations, url_array))
+    def test_domains_threats(self, domains) -> str:
+        domain_array = domains.split(",")
+        domain_array = list(map(string_helper.remove_quotations, domain_array))
 
-        if all(url == "" for url in url_array):
+        if all(domain == "" for domain in domain_array):
             return '""'
 
-        filtered_urls = list(filter(lambda url: url not in self.threat_dict, url_array))
-        for url in filtered_urls:
-            self.threat_dict[url] = ""
+        filtered_domains = list(filter(lambda domain: domain not in self.threat_dict, domain_array))
+        for domain in filtered_domains:
+            self.threat_dict[domain] = ""
 
-        self.get_urls_threat_infomation(filtered_urls)
-        matched_threat_types = self.reduce_threat_information(url_array)
+        self.get_domains_threat_infomation(filtered_domains)
+        matched_threat_types = self.reduce_threat_information(domain_array)
         threat_numbers = list(map(self.get_threat_number, matched_threat_types))
         return CombineHelper.join_with_quotes(threat_numbers)
 
-    def get_urls_threat_infomation(self, urls) -> None:
-        if self.is_api_key_correct and urls and self.api_key != "":
+    def get_domains_threat_infomation(self, domains) -> None:
+        if self.is_api_key_correct and domains and self.api_key != "":
             req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
-            req_data = self.generate_request_data(urls)
+            req_data = self.generate_request_data(domains)
             req.add_header('Content-Type', 'application/json')
             try:
                 response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
@@ -63,36 +63,36 @@ class ThreatInfoEnricher(Enricher):
                 self.is_api_key_correct = False
 
     @staticmethod
-    def generate_request_data(filtered_urls) -> Dict["str", Dict[str, Union[List[str], str]]]:
-        url_entries = ThreatInfoEnricher.get_url_entries(filtered_urls)
+    def generate_request_data(filtered_domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
+        domain_entries = ThreatInfoEnricher.get_domain_entries(filtered_domains)
         return {
             "threatInfo": {
                 "threatTypes": ["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE",
                                 "POTENTIALLY_HARMFUL_APPLICATION"],
                 "platformTypes": ["ANY_PLATFORM"],
                 "threatEntryTypes": ["URL"],
-                "threatEntries": url_entries
+                "threatEntries": domain_entries
             }
         }
 
     @staticmethod
-    def get_url_entries(filtered_urls) -> List[Dict[str, str]]:
-        return list(map(lambda url: {"url": url}, filtered_urls))
+    def get_domain_entries(filtered_domains) -> List[Dict[str, str]]:
+        return list(map(lambda domain: {"url": domain}, filtered_domains))
 
     def update_threat_dict(self, response_dict) -> None:
         if response_dict == {}:
             return
 
         for match in response_dict["matches"]:
-            url = match["threat"]["url"]
+            domain = match["threat"]["url"]
             threat_type = match["threatType"]
-            self.threat_dict[url] = threat_type
+            self.threat_dict[domain] = threat_type
 
-    def reduce_threat_information(self, urls) -> Set[str]:
+    def reduce_threat_information(self, domains) -> Set[str]:
         reduced_list = set()
-        for url in urls:
-            if url != "" and url in self.threat_dict:
-                for threat_type in self.threat_dict[url].split(","):
+        for domain in domains:
+            if domain != "" and domain in self.threat_dict:
+                for threat_type in self.threat_dict[domain].split(","):
                     reduced_list.add(threat_type)
 
         return reduced_list
