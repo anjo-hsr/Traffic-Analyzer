@@ -31,11 +31,9 @@ class ThreatInfoEnricher(Enricher):
 
     @staticmethod
     def get_api_key() -> str:
-        environment = EnvironmentHelper().get_environment()
-        config_file = "traffic-analyzer.conf"
+        config_name = "traffic-analyzer.conf"
         key = "safe_browsing_api_key"
-        file_path = path.join(environment["configuration_folder"], config_file)
-        return file_read_helper.get_config_value(file_path, key)
+        return file_read_helper.get_config_value(config_name, key)
 
     def test_urls_threats(self, urls) -> str:
         url_array = urls.split(",")
