@@ -20,12 +20,14 @@ def get_config_value(config_name, key) -> str:
     value_index = 1
     value = ""
 
-    if path.isfile(file_path):
-        with open(file_path) as config_file:
-            for line in config_file:
-                key_value = line.replace(" ", "").strip().split("=")
-                if key_value[key_index] == key:
-                    value = key_value[value_index]
-                    break
+    if not path.isfile(file_path):
+        return value
+
+    with open(file_path) as config_file:
+        for line in config_file:
+            key_value = line.replace(" ", "").strip().split("=")
+            if key_value[key_index] == key:
+                value = key_value[value_index]
+                break
 
     return value
