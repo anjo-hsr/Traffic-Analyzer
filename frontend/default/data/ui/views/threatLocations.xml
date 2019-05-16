@@ -25,11 +25,11 @@
       <default>*</default>
     </input>
     <input type="dropdown" token="ip_range" searchWhenChanged="false">
-      <label>Private IP-Range</label>
-      <choice value="default">Default</choice>
+      <label>Define internal IP range</label>
+      <choice value="default">Default (RFC 1918)</choice>
       <choice value="custom">Custom</choice>
       <change>
-        <condition label="Default">
+        <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
           <unset token="use_custom_ip_range"></unset>
           <set token="custom_ip_range">1.2.3.4/32</set>
@@ -43,7 +43,7 @@
       <default>default</default>
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
-      <label>Additional private IP range:</label>
+      <label>Internal IP range:</label>
       <default></default>
     </input>
   </fieldset>
@@ -78,12 +78,12 @@
           <latest></latest>
         </search>
         <option name="mapping.fieldColors">
-          {"no threat": 0x2bc3ff,
-          "threat type unspecified": 0xff2850,
-          "malware": 0xff2850,
-          "social engineering": 0xff2850,
-          "unwanted software": 0xff2850,
-          "potentially harmful application": 0xff2850}
+          {"no threat": #2BC3FF,
+          "threat type unspecified": #FF2850,
+          "malware": #FF2850,
+          "social engineering": #FF2850,
+          "unwanted software": #FF2850,
+          "potentially harmful application": #FF2850}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>

@@ -25,11 +25,11 @@
       <default>*</default>
     </input>
     <input type="dropdown" token="ip_range" searchWhenChanged="false">
-      <label>Private IP-Range</label>
-      <choice value="default">Default</choice>
+      <label>Define internal IP range</label>
+      <choice value="default">Default (RFC 1918)</choice>
       <choice value="custom">Custom</choice>
       <change>
-        <condition label="Default">
+        <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
           <unset token="use_custom_ip_range"></unset>
           <set token="custom_ip_range">1.2.3.4/32</set>
@@ -43,7 +43,7 @@
       <default>default</default>
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
-      <label>Additional private IP range:</label>
+      <label>Internal IP range:</label>
       <default></default>
     </input>
   </fieldset>
@@ -131,7 +131,8 @@
                 | eventstats count as amount by recommended
                 | eventstats count as totalAmount
                 | where recommended="N" | dedup recommended
-                | eval percOfTotal= 100 / totalAmount * amount | table percOfTotal
+                | eval percOfTotal= 100 / totalAmount * amount
+                | table percOfTotal
                 | appendpipe [stats count | where count=0]
           </query>
         </search>
@@ -139,11 +140,12 @@
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeColors">["#20C028","#FCFC37","#FCCC37","#FC9937", "#FC4737"]</option>
+        <option name="rangeValues">[4.99,19.99,34.99,49.99]</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
         <option name="unit">%</option>
-        <option name="useColors">0</option>
+        <option name="useColors">1</option>
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
@@ -165,7 +167,7 @@
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
         <option name="numberPrecision">0</option>
-        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeColors">["#53A051","#0877A6","#F8BE34","#F1813F","#DC4E41"]</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
         <option name="useColors">0</option>
