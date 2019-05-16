@@ -44,14 +44,14 @@ class AdEnricher(Enricher):
             return return_value
 
         for domain_part in reversed(domain.split(".")):
-            return_value = dict_to_test.get(domain_part, {})
-            if isinstance(return_value, dict):
-                if return_value == {}:
+            dict_value = dict_to_test.get(domain_part, {})
+            if isinstance(dict_value, dict):
+                if dict_value == {}:
                     break
 
-                dict_to_test = return_value
+                dict_to_test = dict_value
 
-            if isinstance(return_value, str):
+            if isinstance(dict_value, str):
                 return_value = True
                 break
 
