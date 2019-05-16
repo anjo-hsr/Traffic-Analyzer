@@ -29,7 +29,7 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             default_header = csv_reader.fieldnames
             enricher_classes = enricher_jar.enricher_classes
             helper_headers = [enricher_classes[helper_key].header for helper_key in enricher_classes]
-            line = CombineHelper.combine_fields(default_header + helper_headers, False)
+            line = CombineHelper.join_list_elements(default_header + helper_headers, False)
 
             # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
             # for encrypted traffic. ssl.* could be deprecated in future releases

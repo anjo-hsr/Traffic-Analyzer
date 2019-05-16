@@ -13,4 +13,4 @@ class NameResolverEnricher(Enricher):
         dst_data = dst_src_information["dst"]
         src_data = dst_src_information["src"]
         fqdns = [dst_data["rdns"], src_data["rdns"]]
-        return CombineHelper.delimiter.join('"{}"'.format(fqdn) for fqdn in fqdns)
+        return CombineHelper.join_list_elements(fqdns, True)
