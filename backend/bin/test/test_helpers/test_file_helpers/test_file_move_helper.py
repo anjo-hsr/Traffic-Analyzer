@@ -32,7 +32,7 @@ class TestFileMoveHelperMethods(unittest.TestCase):
         source_path = path.join(".", "test_file")
         destination_path = path.join(".", "test_file-moved")
 
-        open(source_path, 'a').close()
+        open(source_path, "a").close()
         self.assertTrue(path.isfile(source_path))
         self.assertNotEqual(path.isfile(source_path), path.isfile(destination_path))
 
@@ -48,7 +48,7 @@ class TestFileMoveHelperMethods(unittest.TestCase):
         source_path = path.join(".", ".test_file")
         destination_path = path.join(".", ".test_file")
 
-        open(source_path, 'a').close()
+        open(source_path, "a").close()
         self.assertTrue(path.isfile(source_path))
         self.assertEqual(path.isfile(source_path), path.isfile(destination_path))
 

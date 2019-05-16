@@ -17,7 +17,7 @@ class BlacklistDict:
     def get_blacklist_domains() -> List[str]:
         url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
         response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, "html.parser")
         return [url for url in soup.pre.text.split("\n") if url != ""]
 
     def generate_blacklist_dict(self, blacklist_domains) -> None:

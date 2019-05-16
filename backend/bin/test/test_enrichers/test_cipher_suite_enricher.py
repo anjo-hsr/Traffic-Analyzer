@@ -30,7 +30,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         if expected_value == "":
             expected_cipher_suite = '"{}"'.format(expected_value)
         else:
-            expected_cipher_suite = '{}'.format(expected_value)
+            expected_cipher_suite = "{}".format(expected_value)
 
         cipher_suite_number = self.cipher_suite_enricher.get_cipher_suite(packet)
         self.assertEqual(cipher_suite_number, expected_cipher_suite)

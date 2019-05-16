@@ -54,7 +54,7 @@ class ThreatInfoEnricher(Enricher):
         if self.is_api_key_correct and domains and self.api_key != "":
             req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
             req_data = self.generate_request_data(domains)
-            req.add_header('Content-Type', 'application/json')
+            req.add_header("Content-Type", "application/json")
             try:
                 response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
                 response_dict = json.loads(response.decode("utf-8"))
