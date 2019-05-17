@@ -108,7 +108,7 @@
                 | stats count as amount by recommended
                 | where recommended="N"
                 | table amount
-                | appendpipe [stats count | where count=0]
+                | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -133,7 +133,7 @@
                 | where recommended="N" | dedup recommended
                 | eval percOfTotal= 100 / totalAmount * amount
                 | table percOfTotal
-                | appendpipe [stats count | where count=0]
+                | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -160,7 +160,7 @@
                 | top issecure
                 | where issecure="no"
                 | table count
-                | appendpipe [stats count | where count=0]
+                | appendpipe [stats count | where count=0 | eval count=0 | table count]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -182,7 +182,7 @@
                 | top issecure
                 | where issecure="no"
                 | table percent
-                | appendpipe [stats count | where count=0]
+                | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
           </query>
         </search>
         <option name="colorBy">value</option>
