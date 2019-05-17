@@ -13,16 +13,15 @@ from main.helpers.print_helper import PrintHelper
 def run_tshark(filename) -> None:
     new_filename = get_new_filename(filename)
 
+    program_path = detect_platform()
+    if program_path is None:
+        error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
+        PrintHelper.print_error(error_text)
+        return
+
     with open(new_filename, "w") as out_file:
-        program_path = detect_platform()
-        if program_path is None:
-            error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
-            PrintHelper.print_error(error_text)
-            return
-
         start_tshark(filename, out_file, program_path)
-
-    return
+        return
 
 
 def detect_platform() -> Optional[str]:
