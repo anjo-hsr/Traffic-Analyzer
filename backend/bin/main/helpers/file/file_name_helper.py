@@ -1,4 +1,5 @@
 import re
+from os import path
 
 
 def is_pcap_file(file) -> bool:
@@ -18,7 +19,7 @@ def is_enriched_csv_file(file) -> bool:
 
 def get_new_filename(filename, new_extension, prefix="", suffix="") -> str:
     new_filename = re.sub(
-        r"^(.*[/\\])?(" + prefix + r")?(.*)(" + suffix + r")?\.(.*)$",
-        r"\g<1>" + prefix + r"\g<3>" + suffix + r"." + new_extension,
+        "(" + prefix + r")?(.*)(" + suffix + r")?\.(.*)$",
+        prefix + r"\g<2>" + suffix + r"." + new_extension,
         str(filename).lower())
     return new_filename
