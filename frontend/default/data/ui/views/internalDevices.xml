@@ -59,7 +59,11 @@
                   src_is_private_ip == "True","True", "False")
                 | where src_is_private_extended == "True"
                 | where ip_src!="" AND ip_src!="0.0.0.0"
-                | table eth_src, ip_src
+                | eval eth_short=substr(eth_src,1,8)
+                | join type=left eth_short
+                  [search sourcetype="list" source="*mac_vendor.csv"]
+                | fillnull value="no vendor found"
+                | table eth_src, vendor, ip_src
                 | dedup ip_src
                 | rename ip_src as ip
                 | join type=left ip
