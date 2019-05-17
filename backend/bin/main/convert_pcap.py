@@ -1,5 +1,4 @@
 import platform
-import re
 import subprocess
 from os import path
 from typing import Optional
@@ -7,6 +6,7 @@ from typing import Optional
 import main.helpers.tshark_helper as tshark_helper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_name_helper, file_path_helper, file_read_helper
+from main.helpers.file.file_name_helper import get_new_filename
 from main.helpers.print_helper import PrintHelper
 
 
@@ -17,7 +17,7 @@ def run_tshark(filename) -> None:
         PrintHelper.print_error(error_text)
         return
 
-    new_filename = get_new_filename(filename)
+    new_filename = get_new_filename(filename, "csv", "capture-")
     with open(new_filename, "w") as out_file:
         start_tshark(filename, out_file, program_path)
         return
@@ -59,14 +59,6 @@ def test_tshark_linux() -> Optional[str]:
 def start_tshark(filename, out_file, program_path) -> None:
     arguments = tshark_helper.get_arguments(filename)
     subprocess.run([program_path] + arguments, stdout=out_file)
-
-
-def get_new_filename(filename) -> str:
-    new_filename = re.sub(
-        r"^(.*[/\\])?(capture-)?(.*)pcap(ng)?$",
-        r"\g<1>capture-\g<3>csv",
-        str(filename).lower())
-    return new_filename
 
 
 def main() -> None:
