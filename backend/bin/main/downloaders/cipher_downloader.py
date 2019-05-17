@@ -17,7 +17,7 @@ def combine_information(row) -> str:
     cipher_suite_number = calculate_hex(row["Value"])
     description = row["Description"]
     recommended = row["Recommended"]
-    line = CombineHelper.combine_fields([cipher_suite_number, description, recommended])
+    line = CombineHelper.join_list_elements([cipher_suite_number, description, recommended])
     return line
 
 

@@ -22,7 +22,7 @@ class ConfigApp(admin.MConfigHandler):
 
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
-            for arg in ['safe_browsing_api_key', 'pcap_location']:
+            for arg in ["safe_browsing_api_key", "pcap_location"]:
                 self.supportedArgs.addOptArg(arg)
 
     '''

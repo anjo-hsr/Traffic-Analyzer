@@ -30,11 +30,11 @@ class TestIpInformationDownloader(unittest.TestCase):
 
         cls.ip_data_public = {
             "ip_address": cls.public_ip,
-            'rdns': 'google-public-dns-a.google.com',
-            'asn': 15169,
-            'isp': 'Google LLC',
-            'latitude': 37.751,
-            'longitude': -97.822,
+            "rdns": "google-public-dns-a.google.com",
+            "asn": 15169,
+            "isp": "Google LLC",
+            "latitude": 37.751,
+            "longitude": -97.822,
         }
 
     def setUp(self) -> None:

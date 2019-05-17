@@ -42,7 +42,5 @@ class EnvironmentHelper:
 
     @staticmethod
     def is_process_running(process_name) -> bool:
-        for process in psutil.process_iter(attrs=["name"]):
-            if process.info["name"] == process_name:
-                return True
-        return False
+        return any(process.info["name"] in process_name
+                   for process in psutil.process_iter(attrs=["name"]))

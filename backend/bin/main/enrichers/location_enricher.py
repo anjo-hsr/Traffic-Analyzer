@@ -15,7 +15,7 @@ class LocationEnricher(Enricher):
         dst_lat_long = [dst_data["latitude"], dst_data["longitude"]]
         src_lat_long = [src_data["latitude"], src_data["longitude"]]
 
-        pos_dest = CombineHelper.delimiter.join('"{}"'.format(position_data) for position_data in dst_lat_long)
-        pos_src = CombineHelper.delimiter.join('"{}"'.format(position_data) for position_data in src_lat_long)
+        pos_dest = CombineHelper.join_list_elements(dst_lat_long, True)
+        pos_src = CombineHelper.join_list_elements(src_lat_long, True)
 
         return CombineHelper.delimiter.join([pos_dest, pos_src])

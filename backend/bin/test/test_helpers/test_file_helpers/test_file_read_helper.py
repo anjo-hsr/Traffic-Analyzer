@@ -28,9 +28,8 @@ class TestFileReadHelperMethods(unittest.TestCase):
             self.assertEqual(file_read_helper.is_header(key), line_dict[key])
 
     @patch("os.path.isfile", MagicMock(return_value=True))
-    @patch("main.helpers.file.file_read_helper.open", new=mock_open(read_data="[Stanza]\n"
-                                                                              "test_key=test_value\n"
-                                                                              "hsr = rapperswil"))
+    @patch("main.helpers.file.file_read_helper.open",
+           new=mock_open(read_data="[Stanza]\n" + "test_key=test_value\n" + "hsr = rapperswil"))
     def test_get_config_value(self):
         file_path = "test_path"
         search_key = "test_key"
@@ -40,6 +39,14 @@ class TestFileReadHelperMethods(unittest.TestCase):
         search_key = "hsr"
         expected_value = "rapperswil"
         self.assertEqual(file_read_helper.get_config_value(file_path, search_key), expected_value)
+
+    @patch("os.path.isfile", MagicMock(return_value=True))
+    @patch("main.helpers.file.file_read_helper.open",
+           new=mock_open(read_data=b"[Stanza]\n" + b"test_key=test_value\n" + b"hsr = rapperswil"))
+    def test_get_config_value(self):
+        file_path = "test_path"
+        expected_hash = "73ab4e71d2aca11a7fd9f7294692f090e804eb7e4093bb3035879cf216d49a6c"
+        self.assertEqual(file_read_helper.get_file_hashsum(file_path), expected_hash)
 
 
 if __name__ == "__main__":

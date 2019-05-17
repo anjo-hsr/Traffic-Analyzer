@@ -35,7 +35,7 @@ class TestCombineHelperMethods(unittest.TestCase):
         elements = [row, fqdns_string, locations_string]
 
         expected_line = self.csv_delimiter.join('"{0}"'.format(element) for element in elements)
-        given_line = CombineHelper.combine_fields([self.row, fqdns_string, locations_string], True)
+        given_line = CombineHelper.join_list_elements([self.row, fqdns_string, locations_string], True)
         self.assertEqual(given_line, expected_line)
 
     def test_combine_fields_without_quotes(self) -> None:
@@ -43,7 +43,7 @@ class TestCombineHelperMethods(unittest.TestCase):
         locations_string = self.csv_delimiter.join([self.locations[self.destination], self.locations[self.source]])
 
         expected_line = self.csv_delimiter.join([self.row, fqdns_string, locations_string])
-        given_line = CombineHelper.combine_fields([self.row, fqdns_string, locations_string])
+        given_line = CombineHelper.join_list_elements([self.row, fqdns_string, locations_string])
         self.assertEqual(given_line, expected_line)
 
     def test_combine_default_fields(self) -> None:
