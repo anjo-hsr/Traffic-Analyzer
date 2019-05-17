@@ -2,15 +2,15 @@ import subprocess
 from os import path
 
 import main.helpers.tshark_helper as tshark_helper
-from main.helpers import platform_detection_helper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_name_helper, file_path_helper, file_read_helper
 from main.helpers.file.file_name_helper import get_new_filename
+from main.helpers.platform_detection_helper import PlatformDetectionHelper
 from main.helpers.print_helper import PrintHelper
 
 
 def run_tshark(filename) -> None:
-    program_path = platform_detection_helper.detect_platform()
+    program_path = PlatformDetectionHelper.detect_platform()
     if program_path is None:
         error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
         PrintHelper.print_error(error_text)
