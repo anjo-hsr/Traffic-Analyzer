@@ -12,7 +12,7 @@ from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 def enrich_file(dirpath, file, enricher_jar, new_file) -> None:
     with \
-            open(path.join(dirpath, file), mode="r", encoding="utf-8") as capture, \
+            open(path.join(dirpath, file), encoding="utf-8") as capture, \
             open(path.join(dirpath, new_file), "w", encoding="utf-8") as output_file:
         csv_reader = file_read_helper.get_csv_dict_reader(capture)
 

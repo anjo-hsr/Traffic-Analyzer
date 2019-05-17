@@ -19,7 +19,7 @@ class TestMacVendorDownloaderMethods(unittest.TestCase):
 
     def test_write_row_successful(self) -> None:
         test_file_path = path.join(".", "test.csv")
-        with open(test_file_path, mode="w") as test_file:
+        with open(test_file_path, "w") as test_file:
             get_mac.write_row(test_file, self.row_dict)
 
         with open(test_file_path) as test_file:

@@ -28,7 +28,7 @@ class TestCipherDownloaderMethods(unittest.TestCase):
 
     def test_write_row_successful(self) -> None:
         test_file_path = path.join(".", "test.csv")
-        with open(test_file_path, mode="w") as test_file:
+        with open(test_file_path, "w") as test_file:
             get_ciphers.write_row(test_file, self.row_dict)
 
         with open(test_file_path) as test_file:
@@ -40,7 +40,7 @@ class TestCipherDownloaderMethods(unittest.TestCase):
         test_file_path = path.join(".", "test.csv")
         row_dict = self.row_dict.copy()
         row_dict["Value"] = "0xC0, 0x2F-30"
-        with open(test_file_path, mode="w") as test_file:
+        with open(test_file_path, "w") as test_file:
             get_ciphers.write_row(test_file, row_dict)
 
         with open(test_file_path) as test_file:

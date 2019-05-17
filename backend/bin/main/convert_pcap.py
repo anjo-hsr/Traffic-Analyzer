@@ -46,7 +46,7 @@ def run(environment_variables) -> None:
 
     for file_path in file_path_helper.get_file_paths(pcap_path, file_name_helper.is_pcap_file):
         try:
-            file_hashes = [line.replace("\n", "") for line in list(open(hash_path, 'r'))]
+            file_hashes = [line.replace("\n", "") for line in list(open(hash_path))]
         except FileNotFoundError:
             file_hashes = []
 

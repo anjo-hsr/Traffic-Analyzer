@@ -12,8 +12,8 @@ class DownloadHelper:
         filename = DownloadHelper.store_file(url)
 
         with \
-                open(filename, mode="r", encoding="utf-8") as csv_file, \
-                open(destination_file, mode="w", encoding="utf-8") as output_file:
+                open(filename, encoding="utf-8") as csv_file, \
+                open(destination_file, "w", encoding="utf-8") as output_file:
             DownloadHelper.write_download_file(write_row, csv_file, output_file, header)
 
         return filename
