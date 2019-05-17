@@ -7,7 +7,7 @@ from main.helpers import tshark_helper
 
 class PlatformDetectionHelper:
     @staticmethod
-    def detect_platform() -> Optional[str]:
+    def detect_tshark() -> Optional[str]:
         program_path = None
 
         if platform.system() == "Windows":

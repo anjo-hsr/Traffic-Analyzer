@@ -10,7 +10,7 @@ from main.helpers.print_helper import PrintHelper
 
 
 def run_tshark(filename) -> None:
-    program_path = PlatformDetectionHelper.detect_platform()
+    program_path = PlatformDetectionHelper.detect_tshark()
     if program_path is None:
         error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
         PrintHelper.print_error(error_text)
