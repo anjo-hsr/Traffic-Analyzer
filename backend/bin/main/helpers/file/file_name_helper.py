@@ -1,5 +1,4 @@
 import re
-from os import path
 
 
 def is_pcap_file(file) -> bool:
