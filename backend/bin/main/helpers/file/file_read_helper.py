@@ -1,6 +1,7 @@
 import hashlib
 from csv import DictReader
 from os import path
+from typing import List
 
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.print_helper import PrintHelper
@@ -33,6 +34,13 @@ def get_config_value(config_name, key) -> str:
                 break
 
         return value
+
+
+def get_file_hashes(hash_path, hash_path_exists) -> List[str]:
+    if not hash_path_exists:
+        return []
+
+    return [line.replace("\n", "") for line in list(open(hash_path))]
 
 
 def get_file_hashsum(file_path, block_size=65536) -> str:
