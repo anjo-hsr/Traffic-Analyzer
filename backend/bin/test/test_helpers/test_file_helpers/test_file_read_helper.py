@@ -28,9 +28,8 @@ class TestFileReadHelperMethods(unittest.TestCase):
             self.assertEqual(file_read_helper.is_header(key), line_dict[key])
 
     @patch("os.path.isfile", MagicMock(return_value=True))
-    @patch("main.helpers.file.file_read_helper.open", new=mock_open(read_data="[Stanza]\n"
-                                                                              "test_key=test_value\n"
-                                                                              "hsr = rapperswil"))
+    @patch("main.helpers.file.file_read_helper.open",
+           new=mock_open(read_data="[Stanza]\n" + "test_key=test_value\n" + "hsr = rapperswil"))
     def test_get_config_value(self):
         file_path = "test_path"
         search_key = "test_key"
