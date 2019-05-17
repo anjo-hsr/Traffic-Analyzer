@@ -83,9 +83,10 @@ def run(environment_variables) -> None:
     csv_tmp_path = environment_variables["csv_tmp_path"]
 
     for file_path in file_path_helper.get_file_paths(pcap_path, file_name_helper.is_pcap_file):
-        run_tshark(path.join(file_path["path"], file_path["filename"]))
+        full_file_path = path.join(file_path["path"], file_path["filename"])
+        run_tshark(full_file_path)
         file_move_helper.move_file(
-            path.join(file_path["path"], file_path["filename"]),
+            path.join(full_file_path),
             path.join(pcap_processed_path, file_path["filename"])
         )
 
