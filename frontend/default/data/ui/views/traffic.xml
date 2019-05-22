@@ -20,6 +20,7 @@
               | dedup source
               | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
               | table shortSource
+              | sort shortSource
         </query>
       </search>
     </input>
