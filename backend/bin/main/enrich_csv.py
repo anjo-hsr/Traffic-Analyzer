@@ -11,7 +11,7 @@ from main.helpers.print_helper import PrintHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
-def enrich_file(dirpath, file, enricher_jar, new_file) -> None:
+def enrich_file(dirpath, file, new_file, enricher_jar) -> None:
     with \
             open(path.join(dirpath, file), encoding="utf-8") as capture, \
             open(path.join(dirpath, new_file), "w", encoding="utf-8") as output_file:
@@ -58,7 +58,7 @@ def run(environment_variables, print_enrichers=False) -> None:
     for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_normal_csv_file):
         original_filename = file_path["filename"]
         temp_filename = get_new_filename(original_filename, "csv", "", "-enriched")
-        enrich_file(file_path["path"], file_path["filename"], enricher_jar, temp_filename)
+        enrich_file(file_path["path"], file_path["filename"], temp_filename, enricher_jar)
         remove(path.join(file_path["path"], file_path["filename"]))
 
         file_move_helper.move_file(
