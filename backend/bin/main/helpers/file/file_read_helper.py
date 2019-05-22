@@ -36,8 +36,8 @@ def get_config_value(config_name, key) -> str:
         return value
 
 
-def get_file_hashes(hash_path, hash_path_exists) -> List[str]:
-    if not hash_path_exists:
+def get_file_hashes(hash_path) -> List[str]:
+    if not path.isfile(hash_path):
         return []
 
     return [line.replace("\n", "") for line in list(open(hash_path))]
