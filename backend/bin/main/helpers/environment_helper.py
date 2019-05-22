@@ -17,9 +17,7 @@ class EnvironmentHelper:
         if is_splunk_server:
             splunk_app_folder = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer")
             splunk_app_lookup_folder = path.join(splunk_app_folder, "lookups")
-            tmp_folder = "/tmp"
 
-            environment_variables["pcap_processed_path"] = path.join(tmp_folder, "pcaps_processed")
             environment_variables["csv_tmp_path"] = path.join(splunk_app_folder, "bin", "files")
             environment_variables["csv_capture_path"] = path.join(splunk_app_lookup_folder, "captures")
             environment_variables["csv_list_path"] = path.join(splunk_app_lookup_folder, "lists")
@@ -28,10 +26,8 @@ class EnvironmentHelper:
 
         else:
             file_path = path.join("..", "files")
-            docker_init_files_path = path.join("..", "..", "..", "docker", "init_files")
             frontend_folder = path.join("..", "..", "..", "frontend")
 
-            environment_variables["pcap_processed_path"] = path.join(docker_init_files_path, "pcaps")
             environment_variables["csv_tmp_path"] = file_path
             environment_variables["csv_capture_path"] = file_path
             environment_variables["csv_list_path"] = file_path
