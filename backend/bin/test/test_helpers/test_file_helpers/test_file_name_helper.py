@@ -17,11 +17,11 @@ class TestFileNameHelperMethods(unittest.TestCase):
 
     def test_get_new_filename_without_prefix(self) -> None:
         new_pcap_filenames = [
-            file_name_helper.get_new_filename(filename, "csv", "capture-")
+            file_name_helper.get_new_filename(filename, "csv", "prefix-")
             for filename in self.pcap_filenames_without_prefix
         ]
         new_pcapng_filenames = [
-            file_name_helper.get_new_filename(filename, "csv", "capture-")
+            file_name_helper.get_new_filename(filename, "csv", "prefix-")
             for filename in self.pcapng_filenames_without_prefix
         ]
         csv_filenames_lower = [filename.lower() for filename in self.csv_filenames]
@@ -31,11 +31,11 @@ class TestFileNameHelperMethods(unittest.TestCase):
 
     def test_get_new_filename_with_prefix(self) -> None:
         new_pcap_filenames = [
-            file_name_helper.get_new_filename(filename, "csv", "capture-")
+            file_name_helper.get_new_filename(filename, "csv", "prefix-")
             for filename in self.pcap_filenames_with_prefix
         ]
         new_pcapng_filenames = [
-            file_name_helper.get_new_filename(filename, "csv", "capture-")
+            file_name_helper.get_new_filename(filename, "csv", "prefix-")
             for filename in self.pcapng_filenames_with_prefix
         ]
         csv_filenames_lower = [filename.lower() for filename in self.csv_filenames]
