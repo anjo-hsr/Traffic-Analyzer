@@ -22,8 +22,8 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
 
         cls.development_variables = {
             "csv_tmp_path": cls.file_path,
-            "csv_list_path": cls.file_path,
-            "csv_capture_path": cls.file_path,
+            "csv_list_path": path.join(cls.file_path, "lists"),
+            "csv_capture_path": path.join(cls.file_path, "captures"),
             "dns_request_files": cls.file_path,
             "configuration_folder": path.join("..", "..", "..", "frontend", "local")
         }
