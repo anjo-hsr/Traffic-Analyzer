@@ -28,7 +28,7 @@ class EnricherJar:
         tls_ssl_version = self.enricher_classes["tls_ssl_version_enricher"].get_tls_ssl_version(packet)
         ip_type_information = self.enricher_classes["ip_type_enricher"].extract_ip_types(dst_src_information)
         stream_id = self.enricher_classes["stream_enricher"].get_stream_id(packet)
-        dns_lookup_information = self.enricher_classes["dns_lookup_enricher"].detect_dns_request(packet, stream_id)
+        dns_lookup_information = self.enricher_classes["dns_lookup_enricher"].detect_dns_request(packet)
         ad_value = self.enricher_classes["ad_enricher"].test_domains(dns_lookup_information)
         threat_type = self.enricher_classes["threat_info_enricher"].test_domains_threats(dns_lookup_information)
 
