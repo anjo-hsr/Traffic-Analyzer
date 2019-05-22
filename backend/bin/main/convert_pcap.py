@@ -16,7 +16,7 @@ def run_tshark(filename, pcap_file_path, csv_file_path) -> None:
         PrintHelper.print_error(error_text)
         return
 
-    csv_filename = get_new_filename(filename, "csv", "capture-")
+    csv_filename = get_new_filename(filename, "csv")
 
     full_pcap_filename = path.join(pcap_file_path, filename)
     full_csv_filename = path.join(csv_file_path, csv_filename)
