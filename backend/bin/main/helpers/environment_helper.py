@@ -20,7 +20,7 @@ class EnvironmentHelper:
             tmp_folder = "/tmp"
 
             environment_variables["pcap_processed_path"] = path.join(tmp_folder, "pcaps_processed")
-            environment_variables["csv_tmp_path"] = path.join(tmp_folder, "csvs")
+            environment_variables["csv_tmp_path"] = path.join(splunk_app_folder, "bin", "files")
             environment_variables["csv_capture_path"] = path.join(splunk_app_lookup_folder, "captures")
             environment_variables["csv_list_path"] = path.join(splunk_app_lookup_folder, "lists")
             environment_variables["dns_request_files"] = path.join(splunk_app_lookup_folder, "dns_request_files")
