@@ -57,7 +57,7 @@ def run(environment_variables, print_enrichers=False) -> None:
 
     for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_normal_csv_file):
         original_filename = file_path["filename"]
-        temp_filename = get_new_filename(original_filename, ".csv", "", "-enriched")
+        temp_filename = get_new_filename(original_filename, "csv", "", "-enriched")
         enrich_file(file_path["path"], file_path["filename"], enricher_jar, temp_filename)
         remove(path.join(file_path["path"], file_path["filename"]))
 
