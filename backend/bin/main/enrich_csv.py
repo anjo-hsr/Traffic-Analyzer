@@ -59,14 +59,13 @@ def run(environment_variables, print_enrichers=False) -> None:
         enrich_file(file_path["path"], file_path["filename"], enricher_jar, new_file)
         remove(path.join(file_path["path"], file_path["filename"]))
 
+        file_move_helper.move_file(
+            path.join(file_path["path"], new_file),
+            path.join(csv_capture_path, new_file)
+        )
+
     if print_enrichers:
         PrintHelper.print_enrichers(enricher_jar.enricher_classes)
-
-    for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_enriched_csv_file):
-        file_move_helper.move_file(
-            path.join(file_path["path"], file_path["filename"]),
-            path.join(csv_capture_path, file_path["filename"])
-        )
 
 
 if __name__ == "__main__":
