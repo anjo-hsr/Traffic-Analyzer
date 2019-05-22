@@ -2,12 +2,12 @@
 
 function stop_splunk(){
     echo -e "\nStop all running $containerName containers\n"
-    docker stop $(docker ps -af "name=$containerName")
+    docker stop $(docker ps -aq -f "name=$containerName")
     echo -e "\nContainers stopped\n-----------\nStart deleting $containerName containers\n"
 }
 
 function delete_containers() {
-    docker rm $(docker ps -af "name=${containerName}")
+    docker rm $(docker ps -aq -f "name=${containerName}")
     echo -e "\nContainers deleted\n-----------\nStart deleting all ${imageName} images\n"
     docker rmi ${imageName}
     echo -e "\nImages deleted\n"
