@@ -45,8 +45,8 @@ class DnsLookupEnricher(Enricher):
 
     def save_dns_query(self, packet) -> None:
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")
-        filtered_dns_reponse_ips = list(filter(lambda ip: IpHelper.is_ip(ip), dns_response_ips))
-        if len(filtered_dns_reponse_ips) == 0:
+        filtered_dns_reponse_ips = list(filter(IpHelper.is_ip, dns_response_ips))
+        if not filtered_dns_reponse_ips:
             return
 
         dns_response_names = packet["dns.resp.name"].split(",")
