@@ -53,13 +53,6 @@ class TestFileNameHelperMethods(unittest.TestCase):
         for filename in self.csv_filenames:
             self.assertFalse(file_name_helper.is_pcap_file(filename))
 
-    def test_is_normal_csv(self) -> None:
-        for filename in self.csv_filenames:
-            self.assertTrue(file_name_helper.is_normal_csv_file(filename))
-
-        for filename in self.csv_enriched_filenames:
-            self.assertFalse(file_name_helper.is_normal_csv_file(filename))
-
     def test_is_enriched_csv(self) -> None:
         pass
 
