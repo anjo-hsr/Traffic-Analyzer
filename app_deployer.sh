@@ -35,7 +35,7 @@ function create_tar() {
     fi
     
     echo -e "\nCreate traffic-analyzer.tar.gz"
-    tar --exclude="./docker" --exclude="bin/files" --exclude="*.gitignore" --exclude="bin/test" \
+    tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
         -zcvf "${tarPath}/traffic-analyzer.tar.gz" \
         -C backend/ bin \
