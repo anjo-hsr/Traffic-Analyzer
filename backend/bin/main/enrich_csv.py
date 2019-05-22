@@ -6,6 +6,7 @@ from main.helpers.combine_helper import CombineHelper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_name_helper, file_read_helper, file_write_helper, \
     file_path_helper
+from main.helpers.file.file_name_helper import get_new_filename
 from main.helpers.print_helper import PrintHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
@@ -55,13 +56,14 @@ def run(environment_variables, print_enrichers=False) -> None:
     enricher_jar = EnricherJar(limiter)
 
     for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_normal_csv_file):
-        new_file = re.sub(".csv$", "-enriched.csv", str(file_path["filename"]))
-        enrich_file(file_path["path"], file_path["filename"], enricher_jar, new_file)
+        original_filename = file_path["filename"]
+        temp_filename = get_new_filename(original_filename, ".csv", "", "-enriched")
+        enrich_file(file_path["path"], file_path["filename"], enricher_jar, temp_filename)
         remove(path.join(file_path["path"], file_path["filename"]))
 
         file_move_helper.move_file(
-            path.join(file_path["path"], new_file),
-            path.join(csv_capture_path, new_file)
+            path.join(file_path["path"], temp_filename),
+            path.join(csv_capture_path, original_filename)
         )
 
     if print_enrichers:
