@@ -29,8 +29,8 @@ class EnvironmentHelper:
             frontend_folder = path.join("..", "..", "..", "frontend")
 
             environment_variables["csv_tmp_path"] = file_path
-            environment_variables["csv_capture_path"] = file_path
-            environment_variables["csv_list_path"] = file_path
+            environment_variables["csv_capture_path"] = path.join(file_path, "captures")
+            environment_variables["csv_list_path"] = path.join(file_path, "lists")
             environment_variables["dns_request_files"] = file_path
             environment_variables["configuration_folder"] = path.join(frontend_folder, "local")
 
