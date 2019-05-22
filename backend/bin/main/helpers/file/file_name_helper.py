@@ -11,11 +11,6 @@ def is_normal_csv_file(file) -> bool:
     return file.startswith("capture-") and file.endswith(".csv") and not file.endswith("-enriched.csv")
 
 
-def is_enriched_csv_file(file) -> bool:
-    file = str(file).lower()
-    return file.startswith("capture-") and file.endswith("-enriched.csv")
-
-
 def get_new_filename(filename, new_extension, prefix="", suffix="") -> str:
     new_filename = re.sub(
         "(" + prefix + r")?(.*)(" + suffix + r")?\.(.*)$",
