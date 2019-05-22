@@ -6,8 +6,8 @@ def get_filenames() -> Dict[str, List[str]]:
         "csv_filenames": ["prefix-test_lower.csv", "prefix-test_double_ending.py.csv",
                           "prefix-test_upper.CSV", "prefix-test_camel.Csv"],
 
-        "csv_enriched_filenames": ["prefix-test_lower-enriched.csv", "prefix-test_double_ending.py-enriched.csv",
-                                   "prefix-test_upper-enriched.CSV", "prefix-test_camel-enriched.Csv"],
+        "csv_enriched_filenames": ["prefix-test_lower-suffix.csv", "prefix-test_double_ending.py-suffix.csv",
+                                   "prefix-test_upper-suffix.CSV", "prefix-test_camel-suffix.Csv"],
 
         "pcap_filenames_without_prefix": ["test_lower.pcap", "test_double_ending.py.pcap",
                                           "test_upper.PCAP", "test_camel.Pcap"],
