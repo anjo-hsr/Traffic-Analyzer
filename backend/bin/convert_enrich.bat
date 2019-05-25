@@ -1,2 +1,5 @@
+@echo off
+
 set SOURCE_FOLDER=%~dp0
-python "%SOURCE_FOLDER%\main\traffic_analyzer.py" run
+call "%SOURCE_FOLDER%\get_python_path.bat"
+%PYTHON_PATH% -E "%SOURCE_FOLDER%\main\traffic_analyzer.py" run
