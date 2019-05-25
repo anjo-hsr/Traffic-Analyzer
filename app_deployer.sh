@@ -41,7 +41,7 @@ function create_tar() {
         -C ./ requirements.txt \
         -C backend/ bin \
         -C ../frontend/ appserver default local lookups metadata static \
-        --transform "s,requirements.txt,bin/requirements.txt,"
+        --transform "s,requirements.txt,bin/requirements.txt," \
         --transform "s,^,traffic-analyzer/,"
 
     echo -e "File traffic-analyzer.tar.gz file created under ${tarPath}"
