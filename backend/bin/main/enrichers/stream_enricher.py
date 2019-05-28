@@ -31,11 +31,11 @@ class StreamEnricher(Enricher):
     def get_combined_strings(packet) -> str:
         dst_ip = packet["ip.dst"]
         src_ip = packet["ip.src"]
+        protocol = packet["ip.proto"]
         tcp_dst_port = packet["tcp.dstport"]
         tcp_src_port = packet["tcp.srcport"]
         udp_dst_port = packet["udp.dstport"]
         udp_src_port = packet["udp.srcport"]
-        protocol = packet["_ws.col.Protocol"]
 
         are_ports_set = (tcp_dst_port != "" and tcp_src_port != "") or \
                         (udp_dst_port != "" and udp_src_port != "")
