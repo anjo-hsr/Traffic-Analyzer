@@ -8,7 +8,11 @@ function stop_splunk(){
 
 function delete_containers() {
     docker rm $(docker ps -aq -f "name=${containerName}")
-    echo -e "\nContainers deleted\n-----------\nStart deleting all ${imageName} images\n"
+    echo -e "\nContainers deleted\n-----------"
+}
+
+function delete_images() {
+    echo -e "\nStart deleting all ${imageName} images"
     docker rmi ${imageName}
     echo -e "\nImages deleted\n"
 }
@@ -116,20 +120,31 @@ function test_splunk_app() {
     fi
 }
 
-containerName="splunk_traffic-analyzer"
-imageName="${containerName}_image"
-appName="traffic-analyzer"
-
-case "$1" in
-    create)
-        stop_splunk
-        delete_containers
+function build_splunk() {
         building_splunk
         create_tar
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
         test_splunk_app 20
+}
+
+containerName="splunk_traffic-analyzer"
+imageName="${containerName}_image"
+appName="traffic-analyzer"
+
+case "$1" in
+    recreate)
+        stop_splunk
+        delete_containers
+        delete_images
+        build_splunk
+        ;;
+
+    create)
+        stop_splunk
+        delete_containers
+        build_splunk
         ;;
 
     update)
@@ -161,7 +176,8 @@ case "$1" in
 
     *)
         echo -e    $"Usage: $0 {create|update|force-update|generate-tar|copy-pcaps|test-app}\n"\
-                    "   - create:         Remove ${containerName} containers and ${imageName} images and generates new image and container with installed ${appName}\n"\
+                    "   - create:         Remove ${containerName} containers and run new container from image with installed ${appName}\n"\
+                    "   - recreate:       Remove ${containerName} containers and ${imageName} images and generates new image and container with installed ${appName}\n"\
                     "   - update:         Update ${appName} splunk app\n"\
                     "   - force-update:   Remove and reinstall ${appName} splunk app\n"\
                     "   - generate-tar:   Generates only tar.gz app file. Define path with.\n"\
