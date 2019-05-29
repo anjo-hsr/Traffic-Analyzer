@@ -21,6 +21,7 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
         cls.file_path = path.join("..", "files")
 
         cls.development_variables = {
+            "environment": "development",
             "csv_tmp_path": cls.file_path,
             "csv_list_path": cls.file_path,
             "csv_capture_path": cls.file_path,
@@ -28,6 +29,7 @@ class TestEnrivonmentHelperMethods(unittest.TestCase):
             "configuration_folder": path.join("..", "..", "..", "frontend", "local")
         }
         cls.production_variables = {
+            "environment": "production",
             "csv_tmp_path": path.join(cls.traffic_analyzer_base_path, "bin", "files"),
             "csv_list_path": path.join(cls.lookup_base_path, "lists"),
             "csv_capture_path": path.join(cls.lookup_base_path, "captures"),
