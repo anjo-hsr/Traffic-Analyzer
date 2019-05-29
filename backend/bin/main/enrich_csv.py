@@ -33,10 +33,12 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             line = CombineHelper.join_list_elements(default_header + helper_headers, False)
 
             # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
-            # for encrypted traffic. ssl.* could be deprecated in future releases
+            # for encrypted and bootp is the search key for dhcp traffic. ssl.* and bootp.* could be deprecated in
+            # future releases
             # https://tracker.debian.org/pkg/wireshark
             # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
             line = re.sub(r"ssl\.", r"tls.", line)
+            line = re.sub(r"bootp\.", r"dhcp.", line)
 
         else:
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
