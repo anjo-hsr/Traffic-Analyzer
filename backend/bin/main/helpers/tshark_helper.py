@@ -21,7 +21,7 @@ def get_arguments(filename) -> List[str]:
     file_argumnets = ["-r", filename]
     export_arguments = " -T fields" \
                        " -e _ws.col.Time -e _ws.col.Protocol" \
-                       " -e frame.cap_len" \
+                       " -e frame.len" \
                        " -e eth.dst -e eth.src" \
                        " -e ip.dst -e ip.src -e ip.proto" \
                        " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.len -e tcp.stream" \
