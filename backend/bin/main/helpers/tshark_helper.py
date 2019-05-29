@@ -20,7 +20,7 @@ def get_windows_defaults() -> Dict[str, str]:
 def get_arguments(filename) -> List[str]:
     file_argumnets = ["-r", filename]
     export_arguments = " -T fields" \
-                       " -e frame.time -e frame.cap_len" \
+                       " -e frame.time -e frame.len" \
                        " -e _ws.col.Protocol" \
                        " -e eth.dst -e eth.src" \
                        " -e ip.dst -e ip.src -e ip.proto" \

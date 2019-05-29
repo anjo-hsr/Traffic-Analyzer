@@ -7,7 +7,7 @@ class TestTsharkHelperMethods(unittest.TestCase):
     def test_tshark_get_arguments(self) -> None:
         filename = "test.pcap"
         args = ["-r", filename, "-T", "fields",
-                "-e", "frame.time", "-e", "frame.cap_len",
+                "-e", "frame.time", "-e", "frame.len",
                 "-e", "_ws.col.Protocol",
                 "-e", "eth.dst", "-e", "eth.src",
                 "-e", "ip.dst", "-e", "ip.src", "-e", "ip.proto",
