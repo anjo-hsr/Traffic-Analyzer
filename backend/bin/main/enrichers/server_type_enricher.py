@@ -26,10 +26,10 @@ class ServerTypeEnricher(Enricher):
         return str(is_type)
 
     def is_dns_response(self, packet) -> bool:
-        return packet["_ws.col.Protocol"] == "DNS" and packet["dns.flags.response"] == self.dns_response_type_key
+        return "DNS" in packet["_ws.col.Protocol"] and packet["dns.flags.response"] == self.dns_response_type_key
 
     def is_dhcp_response(self, packet) -> bool:
-        return packet["_ws.col.Protocol"] == "DHCP" and packet["dhcp.option.dhcp"] == self.dhcp_response_type_key
+        return "DHCP" in packet["_ws.col.Protocol"] and packet["dhcp.option.dhcp"] == self.dhcp_response_type_key
 
     def save_entry(self, dict_key, packet) -> None:
         server_address = packet["ip.src"]
