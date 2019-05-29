@@ -15,7 +15,7 @@ class ServerTypeEnricher(Enricher):
     def detect_server_type(self, packet) -> str:
         is_dhcp = self.detect_type(packet, self.is_dhcp_response, "dhcp")
         is_dns = self.detect_type(packet, self.is_dns_response, "dns")
-        return CombineHelper.join_list_elements(is_dhcp, is_dns)
+        return CombineHelper.join_list_elements([is_dhcp, is_dns])
 
     def detect_type(self, packet, response_check, dict_key) -> str:
         is_type = False
