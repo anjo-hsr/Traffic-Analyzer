@@ -18,6 +18,7 @@ class EnvironmentHelper:
             splunk_app_folder = path.join("/opt", "splunk", "etc", "apps", "traffic-analyzer")
             splunk_app_lookup_folder = path.join(splunk_app_folder, "lookups")
 
+            environment_variables["environment"] = "production"
             environment_variables["csv_tmp_path"] = path.join(splunk_app_folder, "bin", "files")
             environment_variables["csv_capture_path"] = path.join(splunk_app_lookup_folder, "captures")
             environment_variables["csv_list_path"] = path.join(splunk_app_lookup_folder, "lists")
@@ -28,6 +29,7 @@ class EnvironmentHelper:
             file_path = path.join("..", "files")
             frontend_folder = path.join("..", "..", "..", "frontend")
 
+            environment_variables["environment"] = "development"
             environment_variables["csv_tmp_path"] = file_path
             environment_variables["csv_capture_path"] = file_path
             environment_variables["csv_list_path"] = file_path
