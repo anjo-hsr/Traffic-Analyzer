@@ -123,6 +123,7 @@ function test_splunk_app() {
 function build_splunk() {
         building_splunk
         create_tar
+        copy_pcaps
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
