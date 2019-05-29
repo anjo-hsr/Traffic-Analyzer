@@ -50,12 +50,11 @@
   </fieldset>
   <row>
     <panel>
-      <title>Cluster Map</title>
+      <title>Server Types</title>
       <input type="dropdown" token="server_type_token" searchWhenChanged="true">
-        <label>Threat Category</label>
+        <label>Select the server type</label>
         <choice value="is_dhcp">DHCP</choice>
-        <choice value="is_dns">DNS</choice>
-
+        <choice value="is_dns">DNS / MDNS</choice>
         <change>
           <condition label="DHCP">
             <set token="server_type_name">DHCP</set>
@@ -74,7 +73,7 @@
         <search>
           <query>$source_token$
                 | where $server_type_token$ = "True"
-                | table ip_src, src_fqdn, src_query_name
+                | table ip_src
                 | dedup ip_src
                 | stats count
                 | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
@@ -96,7 +95,7 @@
         <search>
           <query>$source_token$
                 | where $server_type_token$ = "True"
-                | table ip_src, src_fqdn, src_query_name
+                | table ip_src
                 | stats count
                 | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
@@ -117,9 +116,10 @@
       <table>
         <search>
           <query>$source_token$
-                | where $server_type_token$ = "True"
-                | table ip_src, src_fqdn, src_query_name
+                | where $server_type_token$ = "True" AND ip_src != ""
+                | table ip_src, src_fqdn, ws_col_Protocol
                 | dedup ip_src
+                | sort ws_col_Protocol, ip_src
           </query>
           <earliest>0</earliest>
           <latest></latest>
