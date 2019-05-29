@@ -3,6 +3,7 @@ from typing import Dict, Union, List
 from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.ip_helper import IpHelper
+from main.helpers.response_helper import ResponseHelper
 
 
 class DnsLookupEnricher(Enricher):
@@ -12,12 +13,9 @@ class DnsLookupEnricher(Enricher):
         Enricher.__init__(self, enricher_type, header)
 
         self.dns_responses = {}
-        self.response_type_key = "1"
         self.a_record_key = "1"
         self.aaaa_record_key = "28"
 
-    def is_response(self, packet) -> bool:
-        return packet["_ws.col.Protocol"] == "DNS" and packet["dns.flags.response"] == self.response_type_key
 
     @staticmethod
     def get_empty_dict() -> Dict[str, Union[str, List[str]]]:
@@ -27,7 +25,7 @@ class DnsLookupEnricher(Enricher):
         }
 
     def detect_dns_request(self, packet) -> str:
-        if self.is_response(packet):
+        if ResponseHelper.is_dns_response(packet):
             self.save_dns_query(packet)
 
         src_ip = packet["ip.src"]
