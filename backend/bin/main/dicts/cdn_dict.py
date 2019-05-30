@@ -1,5 +1,7 @@
 from typing import Dict
 
+from main.helpers.string_helper import remove_quotations
+
 
 class CdnDict:
     def __init__(self):
@@ -165,16 +167,24 @@ class CdnDict:
 
         return cdn_domains
 
+    def check_domains(self, domains) -> bool:
+        return_bool = False
+        domains = remove_quotations(domains)
+        for domain in domains.split(","):
+            return_bool = return_bool or self.check_domain(domain)
+
+        return return_bool
+
     def check_domain(self, domain) -> bool:
         domain_keys = self.get_cdn_domains_to_names().keys()
         for domain_key in domain_keys:
             if domain_key in domain:
-                return self.test_wildcard(domain, domain_key)
+                return self.test_for_wildcard(domain, domain_key)
 
         return False
 
     @staticmethod
-    def test_wildcard(domain, domain_key):
+    def test_for_wildcard(domain, domain_key):
         if not domain_key.endswith("."):
             return CdnDict.test_domain_ending(domain, domain_key)
         return True
