@@ -17,6 +17,7 @@
               | dedup source
               | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
               | table shortSource
+              | sort shortSource
         </query>
       </search>
     </input>
@@ -65,11 +66,11 @@
                 | rename ip_src as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
                 | join type=left ip
                   [search $source_token$
-                  | stats sum(frame_cap_len) as "bytes out" by ip_src
+                  | stats sum(frame_len) as "bytes out" by ip_src
                   | rename ip_src as ip ]
                 | join type=left ip
                   [search $source_token$
-                  | stats sum(frame_cap_len) as "bytes in" by ip_dst
+                  | stats sum(frame_len) as "bytes in" by ip_dst
                   | rename ip_dst as ip ]
                 | join type=left ip
                   [search $source_token$

@@ -2,13 +2,17 @@
 
 function stop_splunk(){
     echo -e "\nStop all running $containerName containers\n"
-    docker stop $(docker ps -af "name=$containerName")
+    docker stop $(docker ps -aq -f "name=$containerName")
     echo -e "\nContainers stopped\n-----------\nStart deleting $containerName containers\n"
 }
 
 function delete_containers() {
-    docker rm $(docker ps -af "name=${containerName}")
-    echo -e "\nContainers deleted\n-----------\nStart deleting all ${imageName} images\n"
+    docker rm $(docker ps -aq -f "name=${containerName}")
+    echo -e "\nContainers deleted\n-----------"
+}
+
+function delete_images() {
+    echo -e "\nStart deleting all ${imageName} images"
     docker rmi ${imageName}
     echo -e "\nImages deleted\n"
 }
@@ -35,7 +39,7 @@ function create_tar() {
     fi
     
     echo -e "\nCreate traffic-analyzer.tar.gz"
-    tar --exclude="./docker" --exclude="bin/files" --exclude="*.gitignore" --exclude="bin/test" \
+    tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
         -zcvf "${tarPath}/traffic-analyzer.tar.gz" \
         -C backend/ bin \
@@ -90,6 +94,7 @@ function fix_tshark() {
     #Must be done till tshark is updated to version 3.0.0 for debian
     echo -e "\nReplace tls. with ssl for tshark versions 2.x"
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/tls\.handshake/ssl\.handshake/g' {} +'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/dhcp\.option\.dhcp/bootp\.option\.dhcp/g' {} +'
 }
 
 function copy_pcaps() {
@@ -116,20 +121,32 @@ function test_splunk_app() {
     fi
 }
 
+function build_splunk() {
+        building_splunk
+        create_tar
+        copy_pcaps
+        wait_till_container_is_running
+        install_requirements
+        update_traffic-analyzer
+        test_splunk_app 20
+}
+
 containerName="splunk_traffic-analyzer"
 imageName="${containerName}_image"
 appName="traffic-analyzer"
 
 case "$1" in
+    recreate)
+        stop_splunk
+        delete_containers
+        delete_images
+        build_splunk
+        ;;
+
     create)
         stop_splunk
         delete_containers
-        building_splunk
-        create_tar
-        wait_till_container_is_running
-        install_requirements
-        update_traffic-analyzer
-        test_splunk_app 20
+        build_splunk
         ;;
 
     update)
@@ -161,7 +178,8 @@ case "$1" in
 
     *)
         echo -e    $"Usage: $0 {create|update|force-update|generate-tar|copy-pcaps|test-app}\n"\
-                    "   - create:         Remove ${containerName} containers and ${imageName} images and generates new image and container with installed ${appName}\n"\
+                    "   - create:         Remove ${containerName} containers and run new container from image with installed ${appName}\n"\
+                    "   - recreate:       Remove ${containerName} containers and ${imageName} images and generates new image and container with installed ${appName}\n"\
                     "   - update:         Update ${appName} splunk app\n"\
                     "   - force-update:   Remove and reinstall ${appName} splunk app\n"\
                     "   - generate-tar:   Generates only tar.gz app file. Define path with.\n"\

@@ -20,12 +20,13 @@ def get_windows_defaults() -> Dict[str, str]:
 def get_arguments(filename) -> List[str]:
     file_argumnets = ["-r", filename]
     export_arguments = " -T fields" \
-                       " -e _ws.col.Time -e _ws.col.Protocol" \
-                       " -e frame.cap_len" \
+                       " -e frame.time -e frame.len" \
+                       " -e _ws.col.Protocol" \
                        " -e eth.dst -e eth.src" \
                        " -e ip.dst -e ip.src -e ip.proto" \
                        " -e tcp.srcport -e tcp.dstport -e tcp.flags -e tcp.len -e tcp.stream" \
                        " -e udp.srcport -e udp.dstport -e udp.length" \
+                       " -e dhcp.option.dhcp" \
                        " -e dns.flags.response -e dns.qry.name -e dns.a -e dns.aaaa -e dns.resp.name -e dns.resp.type" \
                        " -e http.request.method -e http.request.uri" \
                        " -e tls.handshake.version -e tls.handshake.extensions.supported_version" \

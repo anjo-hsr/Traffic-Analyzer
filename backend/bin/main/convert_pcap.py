@@ -41,19 +41,19 @@ def run(environment_variables) -> None:
     pcap_path = file_read_helper.get_config_value(config_name, key)
 
     csv_tmp_path = environment_variables["csv_tmp_path"]
-
     hash_path = path.join(csv_tmp_path, "hashes.txt")
+    file_hashes = file_read_helper.get_file_hashes(hash_path)
 
     for file_path in file_path_helper.get_file_paths(pcap_path, file_name_helper.is_pcap_file):
-        hash_path_exists = path.isfile(hash_path)
-        file_hashes = file_read_helper.get_file_hashes(hash_path, hash_path_exists)
-
         pcap_hash = file_read_helper.get_file_hashsum(path.join(file_path["path"], file_path["filename"]))
         if pcap_hash in file_hashes:
+            if environment_variables["environment"] == "development":
+                print("File with filename {} already converted".format(file_path["filename"]))
+
             continue
 
         run_tshark(file_path["filename"], file_path["path"], csv_tmp_path)
-        file_write_helper.write_hash_to_file(hash_path, hash_path_exists, pcap_hash)
+        file_write_helper.write_hash_to_file(hash_path, pcap_hash)
 
 
 if __name__ == "__main__":

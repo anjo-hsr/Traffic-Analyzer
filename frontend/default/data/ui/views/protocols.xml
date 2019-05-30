@@ -17,6 +17,7 @@
               | dedup source
               | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
               | table shortSource
+              | sort shortSource
         </query>
       </search>
     </input>
@@ -66,8 +67,8 @@
       <chart>
         <search>
           <query>$source_token$
-                | table frame_time, ws_col_Protocol, frame_cap_len
-                | stats sum(frame_cap_len) as "bytes" by ws_col_Protocol
+                | table frame_time, ws_col_Protocol, frame_len
+                | stats sum(frame_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
