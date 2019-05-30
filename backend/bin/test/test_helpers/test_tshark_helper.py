@@ -13,6 +13,7 @@ class TestTsharkHelperMethods(unittest.TestCase):
                 "-e", "ip.dst", "-e", "ip.src", "-e", "ip.proto",
                 "-e", "tcp.srcport", "-e", "tcp.dstport", "-e", "tcp.flags", "-e", "tcp.len", "-e", "tcp.stream",
                 "-e", "udp.srcport", "-e", "udp.dstport", "-e", "udp.length",
+                "-e", "dhcp.option.dhcp",
                 "-e", "dns.flags.response", "-e", "dns.qry.name",
                 "-e", "dns.a", "-e", "dns.aaaa", "-e", "dns.resp.name", "-e", "dns.resp.type",
                 "-e", "http.request.method", "-e", "http.request.uri",

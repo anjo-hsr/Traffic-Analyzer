@@ -38,10 +38,6 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
         expected_header = "dst_query_name,dst_hostnames,src_query_name,src_hostnames"
         self.assertEqual(self.dns_lookup_enricher.header, expected_header)
 
-    def test_is_response(self) -> None:
-        self.assertTrue(self.dns_lookup_enricher.is_response(self.dns_packet))
-        self.assertFalse(self.dns_lookup_enricher.is_response(self.normal_packet))
-
     def test_get_empty_dict(self) -> None:
         expected_dict = {
             "query_name": "",

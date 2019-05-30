@@ -15,6 +15,7 @@ class TestInformationDict(unittest.TestCase):
             "tls_ssl_version",
             "ip_type_information",
             "stream_id",
+            "server_types",
             "dns_lookup_information",
             "ad_value",
             "threat_information"

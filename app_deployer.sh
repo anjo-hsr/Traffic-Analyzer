@@ -94,6 +94,7 @@ function fix_tshark() {
     #Must be done till tshark is updated to version 3.0.0 for debian
     echo -e "\nReplace tls. with ssl for tshark versions 2.x"
     docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/tls\.handshake/ssl\.handshake/g' {} +'
+    docker exec ${containerName} bash -c 'sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -exec sed -i 's/dhcp\.option\.dhcp/bootp\.option\.dhcp/g' {} +'
 }
 
 function copy_pcaps() {
@@ -123,6 +124,7 @@ function test_splunk_app() {
 function build_splunk() {
         building_splunk
         create_tar
+        copy_pcaps
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
