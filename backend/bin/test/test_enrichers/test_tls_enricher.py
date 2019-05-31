@@ -1,12 +1,14 @@
 import unittest
 
 from main.enrichers.tls_enricher import TlsEnricher
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class TestTlsEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.tls_enricher = TlsEnricher()
+        cls.information_dict = {}
         cls.packets_tls1_2 = {
             "client_hello_tls1_2": {
                 "tls.version": "0x0301",
@@ -54,12 +56,12 @@ class TestTlsEnricherMethods(unittest.TestCase):
 
     def run_test_packet(self, expected_value, packet) -> None:
         if expected_value == "":
-            expected_tls_ssl_version = '"{}"'.format(expected_value)
+            expected_tls_ssl_version = enclose_with_quotes(expected_value)
         else:
             expected_tls_ssl_version = '{}'.format(expected_value)
 
-        tls_ssl_version = self.tls_enricher.get_tls_ssl_version(packet)
-        self.assertEqual(tls_ssl_version, expected_tls_ssl_version)
+        self.tls_enricher.get_information(packet, self.information_dict)
+        self.assertEqual(self.information_dict["tls_ssl_version_negotiated"], expected_tls_ssl_version)
 
     def test_get_tls_ssl_version_tls1_2(self) -> None:
         expected_value = ""

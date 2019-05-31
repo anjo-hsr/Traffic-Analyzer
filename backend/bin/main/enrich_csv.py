@@ -40,11 +40,24 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             line = re.sub(r"ssl\.", r"tls.", line)
             line = re.sub(r"bootp\.", r"dhcp.", line)
 
+            set_enricher_headers(enricher_jar, helper_headers)
+
         else:
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
-            line = CombineHelper.combine_packet_information(joined_default_cells, enricher_jar, packet)
+            information_dict = enricher_jar.get_information_dict(packet)
+            enriched_line = CombineHelper.delimiter.join(
+                str(information_dict.get(key, "")) for key in enricher_jar.enricher_headers)
+            line = CombineHelper.combine_packet_information(joined_default_cells, enriched_line)
 
         file_write_helper.write_line(output_file, line)
+
+
+def set_enricher_headers(enricher_jar, helper_headers) -> None:
+    enricher_headers = []
+    for header in helper_headers:
+        enricher_headers = enricher_headers + header.split(",")
+
+    enricher_jar.enricher_headers = enricher_headers
 
 
 def main() -> None:

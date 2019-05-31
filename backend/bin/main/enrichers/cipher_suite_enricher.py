@@ -14,17 +14,19 @@ class CipherSuiteEnricher(Enricher):
         print_text = "Print out for all {} streams to cipher suites entries"
         PrintHelper.print_dict(self.stream_to_suites, print_text)
 
-    def get_cipher_suite(self, packet) -> str:
+    def get_information(self, packet, information_dict) -> None:
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
-        cipher_suite_number = packet["tls.handshake.ciphersuite"]
+        handshake_cipher_suite = packet["tls.handshake.ciphersuite"]
         stream = packet["tcp.stream"]
 
-        if cipher_suite_number != "" and is_server_hello:
-            self.stream_to_suites[stream] = cipher_suite_number
-            return cipher_suite_number
+        cipher_suite_number = '""'
 
-        if stream in self.stream_to_suites:
-            return self.stream_to_suites[stream]
+        if handshake_cipher_suite != "" and is_server_hello:
+            self.stream_to_suites[stream] = handshake_cipher_suite
+            cipher_suite_number = handshake_cipher_suite
 
-        return '""'
+        elif stream in self.stream_to_suites:
+            cipher_suite_number = self.stream_to_suites[stream]
+
+        information_dict["cipher_suite_number"] = cipher_suite_number

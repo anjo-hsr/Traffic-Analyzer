@@ -1,0 +1,88 @@
+<form stylesheet="customStyle.css" script="tokenStorer.js">
+  <label>Stream Information</label>
+  <search id="source_stream_information">
+    <query>
+      $source_token$
+      | fields traffic_analyzer_tcp_stream, ip_src, ip_dst, frame_len, threat_category, ad_category, _*
+      | table traffic_analyzer_tcp_stream, ip_src, ip_dst, frame_len, threat_category, ad_category, _time
+    </query>
+  </search>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
+      <label>Choose capture file:</label>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
+      <suffix>)</suffix>
+      <valuePrefix>source="*/</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <choice value="*">ALL</choice>
+      <fieldForLabel>shortSource</fieldForLabel>
+      <fieldForValue>shortSource</fieldForValue>
+      <search>
+        <query>sourcetype=capture
+              | dedup source
+              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+              | table shortSource
+              | sort shortSource
+        </query>
+      </search>
+    </input>
+    <input type="text" searchWhenChanged="true" token="filteredMAC">
+      <label>Show for following  Device (MAC):</label>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="ip_range" searchWhenChanged="false">
+      <label>Define internal IP range</label>
+      <choice value="default">Default (RFC 1918)</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default (RFC 1918)">
+          <set token="use_default_ip_range">true</set>
+          <unset token="use_custom_ip_range"></unset>
+          <set token="custom_ip_range">1.2.3.4/32</set>
+          <set token="form.custom_ip_range">1.2.3.4/32</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ip_range"></unset>
+          <set token="use_custom_ip_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
+      <label>Internal IP range:</label>
+      <default></default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Endpoints</title>
+      <table>
+        <search base="source_stream_information">
+          <query>
+            | eventstats sum(frame_len) as "Bytes transfered" by traffic_analyzer_tcp_stream
+            | table "Bytes transfered", _time, traffic_analyzer_tcp_stream, ws_col_Protocol, ip_src, ip_dst,
+              threat_category, ad_category
+            | eventstats last(_time) as last_event, first(_time) as first_event by traffic_analyzer_tcp_stream
+            | eval timespan=round(first_event-last_event,3)
+            | dedup traffic_analyzer_tcp_stream
+            | table traffic_analyzer_tcp_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src, ip_dst,
+              threat_category, ad_category
+            | eval threat_category=if(threat_category="",0,split(threat_category,","))
+            | mvexpand threat_category
+            | join ad_category
+            [search sourcetype="list" source="*ad*"
+              | table id, category | rename id as ad_category, category AS adcategory]
+            | join threat_category
+            [search sourcetype="list" source="*threat*"
+              | table id, category | rename id as threat_category, category as threatcategory]
+            | table traffic_analyzer_tcp_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src, ip_dst,
+              adcategory, threatcategory
+            | mvcombine threatcategory
+          </query>
+        </search>
+      </table>
+    </panel>
+  </row>
+</form>

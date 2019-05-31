@@ -7,6 +7,7 @@
   </collection>
   <collection label="Traffic">
     <view name="trafficTypes"/>
+    <view name="streamInformation"/>
     <view name="adLocations"/>
     <view name="threatLocations"/>
   </collection>

@@ -5,7 +5,7 @@ from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 
 class TestThreatInfoEnricherMethods(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.threat_dict = {
             "": "",
             "domain-threatUnspecified": "THREAT_TYPE_UNSPECIFIED",
@@ -19,7 +19,7 @@ class TestThreatInfoEnricherMethods(unittest.TestCase):
         cls.threat_domains = ["domain-threatSocialEngineering", "domain-threatSoftware",
                               "domain-threatMalwareAndSoftware"]
 
-    def test_generate_request_data(self):
+    def test_generate_request_data(self) -> None:
         domain_entries = self.threat_info_enricher.get_domain_entries(self.normal_domains)
         expected_dict = {
             "threatInfo": {
@@ -33,21 +33,21 @@ class TestThreatInfoEnricherMethods(unittest.TestCase):
         actual_dict = self.threat_info_enricher.generate_request_data(self.normal_domains)
         self.assertDictEqual(actual_dict, expected_dict)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.threat_info_enricher = ThreatInfoEnricher()
 
-    def test_get_domain_entries(self):
+    def test_get_domain_entries(self) -> None:
         expected_list = [{"url": "www.hsr.ch"}, {"url": "www.google.ch"}]
         self.assertListEqual(self.threat_info_enricher.get_domain_entries(self.normal_domains), expected_list)
 
-    def test_update_threat_dict_empty(self):
+    def test_update_threat_dict_empty(self) -> None:
         expected_dict = {"": ""}
         self.assertEqual(self.threat_info_enricher.threat_dict, expected_dict)
         response_dict = {}
         self.threat_info_enricher.update_threat_dict(response_dict)
         self.assertEqual(self.threat_info_enricher.threat_dict, expected_dict)
 
-    def test_update_threat_dict_full(self):
+    def test_update_threat_dict_full(self) -> None:
         expected_dict = {"": ""}
         self.assertDictEqual(self.threat_info_enricher.threat_dict, expected_dict)
         response_dict = {
@@ -73,12 +73,12 @@ class TestThreatInfoEnricherMethods(unittest.TestCase):
         self.threat_info_enricher.update_threat_dict(response_dict)
         self.assertDictEqual(self.threat_info_enricher.threat_dict, self.threat_dict)
 
-    def test_reduce_threat_information(self):
+    def test_reduce_threat_information(self) -> None:
         self.threat_info_enricher.threat_dict = self.threat_dict
         expected_set = {"SOCIAL_ENGINEERING", "MALWARE", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION"}
         self.assertSetEqual(self.threat_info_enricher.reduce_threat_information(self.threat_domains), expected_set)
 
-    def test_get_threat_number(self):
+    def test_get_threat_number(self) -> None:
         threat_types = ["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE",
                         "POTENTIALLY_HARMFUL_APPLICATION"]
         threat_number = 1
