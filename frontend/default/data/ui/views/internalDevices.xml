@@ -8,7 +8,7 @@
     </query>
     <done>
        <condition>
-         <set token="subsearch_sid">$job.sid$</set>
+         <set token="subsearch_id_internal_endpoints">$job.sid$</set>
        </condition>
      </done>
   </search>
@@ -80,15 +80,15 @@
                 | dedup ip_src
                 | rename ip_src as ip
                 | join type=left ip
-                  [| loadjob $subsearch_sid$
+                  [| loadjob $subsearch_id_internal_endpoints$
                   | stats sum(frame_len) as "bytes out" by ip_src
                   | rename ip_src as ip ]
                 | join type=left ip
-                  [| loadjob $subsearch_sid$
+                  [| loadjob $subsearch_id_internal_endpoints$
                   | stats sum(frame_len) as "bytes in" by ip_dst
                   | rename ip_dst as ip ]
                 | join type=left ip
-                  [| loadjob $subsearch_sid$
+                  [| loadjob $subsearch_id_internal_endpoints$
                   | rename ip_src as ip
                   | where tls_handshake_type=1
                   | eval client_hello=1
