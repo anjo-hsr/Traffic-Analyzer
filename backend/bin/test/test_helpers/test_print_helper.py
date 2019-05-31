@@ -52,8 +52,8 @@ class TestPrintHelperMethods(unittest.TestCase):
                      "Nothing to print for ip type enricher.\n" \
                      "Print out for 1 tcp stream entries\n" \
                      " --> \n\n\n\n" \
-                     "Nothing to print for server type enricher.\n" \
                      "Nothing to print for dns lookup enricher.\n" \
+                     "Nothing to print for server type enricher.\n" \
                      "Nothing to print for ad enricher.\n" \
                      "Nothing to print for threat enricher.\n"
 

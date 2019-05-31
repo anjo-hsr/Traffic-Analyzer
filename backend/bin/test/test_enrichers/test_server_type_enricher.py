@@ -30,7 +30,7 @@ class TestServerTypeEnricher(unittest.TestCase):
         self.server_type_enricher.server_type_dict = {"dns": set(), "dhcp": set()}
 
     def test_header(self) -> None:
-        expected_header = "is_dhcp,is_dns"
+        expected_header = "src_is_dhcp,src_is_dns,src_is_cdn"
         self.assertEqual(self.server_type_enricher.header, expected_header)
 
     def test_detect_type_dhcp(self) -> None:

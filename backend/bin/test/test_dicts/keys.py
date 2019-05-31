@@ -5,8 +5,8 @@ id_keys = [
     "tls",
     "ip",
     "stream",
-    "server",
     "dns",
+    "server",
     "ad",
     "threat"
 ]
