@@ -1,16 +1,16 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Internal Endpoints</label>
   <search id="source_internal_endpoints">
-     <query>
-     $source_token$ eth_src=$filteredMAC$
+    <query>
+      $source_token$ eth_src=$filteredMAC$
       | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, _*
       | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type
     </query>
     <done>
-       <condition>
-         <set token="subsearch_id_internal_endpoints">$job.sid$</set>
-       </condition>
-     </done>
+      <condition>
+        <set token="subsearch_id_internal_endpoints">$job.sid$</set>
+      </condition>
+    </done>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">

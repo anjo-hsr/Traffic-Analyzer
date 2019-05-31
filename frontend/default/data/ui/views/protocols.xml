@@ -1,8 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Protocols</label>
   <search id="source_protocols">
-     <query>
-     $source_token$
+    <query>
+      $source_token$
       | fields frame_time, ip_proto, ws_col_Protocol, frame_len, _*
       | table frame_time, ip_proto, ws_col_Protocol, frame_len, _time
     </query>

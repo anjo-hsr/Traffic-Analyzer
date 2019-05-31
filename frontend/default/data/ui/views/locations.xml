@@ -1,10 +1,10 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Locations</label>
-   <search id="source_locations">
-     <query>
-      $source_token$
-      | fields dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_tcp_stream, -*
-      | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_tcp_stream
+  <search id="source_locations">
+    <query>
+     $source_token$
+     | fields dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_tcp_stream, -*
+     | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_tcp_stream
     </query>
   </search>
   <search base="source_locations" id="destinations_by_country">

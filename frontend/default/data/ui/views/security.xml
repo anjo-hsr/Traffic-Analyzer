@@ -1,7 +1,7 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Security</label>
   <search id="source_security">
-     <query>
+    <query>
       $source_token$
       | fields cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated, -*
       | table cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated
