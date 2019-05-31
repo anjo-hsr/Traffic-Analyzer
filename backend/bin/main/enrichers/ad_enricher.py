@@ -1,6 +1,7 @@
 from main.dicts.blacklist_dict import BlacklistDict
 from main.enrichers.enricher import Enricher
 from main.helpers import string_helper
+from main.helpers.combine_helper import CombineHelper
 from main.helpers.ip_helper import IpHelper
 
 
@@ -14,8 +15,8 @@ class AdEnricher(Enricher):
         self.blacklist_dict = BlacklistDict(blacklist_domains)
         self.domain_to_ad_dict = {}
 
-    def test_domains(self, domains) -> str:
-        domain_list = domains.split(",")
+    def get_information(self, packet, information_dict) -> None:
+        domain_list = information_dict["domains"].split(",")
         is_ad = False
         for domain in domain_list:
             if domain == "":
@@ -24,7 +25,7 @@ class AdEnricher(Enricher):
             domain = string_helper.remove_quotations(domain)
             is_ad = is_ad or self.is_ad_domain(domain)
 
-        return "1" if is_ad else "0"
+        information_dict["ad_category"] = "1" if is_ad else "0"
 
     def is_ad_domain(self, domain) -> bool:
         if domain in self.domain_to_ad_dict:

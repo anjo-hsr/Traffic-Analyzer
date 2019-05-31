@@ -34,12 +34,13 @@ class ThreatInfoEnricher(Enricher):
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
 
-    def test_domains_threats(self, domains) -> str:
-        domain_array = domains.split(",")
+    def get_information(self, packet, information_dict) -> None:
+        domain_array = information_dict["domains"].split(",")
         domain_array = list(map(string_helper.remove_quotations, domain_array))
 
         if all(domain == "" for domain in domain_array):
-            return '""'
+            information_dict["threat_category"] = '""'
+            return
 
         filtered_domains = list(filter(lambda domain: domain not in self.threat_dict, domain_array))
         for domain in filtered_domains:
@@ -48,7 +49,7 @@ class ThreatInfoEnricher(Enricher):
         self.get_domains_threat_infomation(filtered_domains)
         matched_threat_types = self.reduce_threat_information(domain_array)
         threat_numbers = list(map(self.get_threat_number, matched_threat_types))
-        return CombineHelper.join_with_quotes(threat_numbers)
+        information_dict["threat_category"] = CombineHelper.join_with_quotes(threat_numbers)
 
     def get_domains_threat_infomation(self, domains) -> None:
         if self.is_api_key_correct and domains and self.api_key != "":
