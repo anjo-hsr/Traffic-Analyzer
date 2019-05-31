@@ -9,8 +9,8 @@ def get_information_dict() -> OrderedDict:
         ("tls_ssl_version", None),
         ("ip_type_information", None),
         ("stream_id", None),
-        ("server_types", None),
         ("dns_lookup_information", None),
+        ("server_types", None),
         ("ad_value", None),
         ("threat_information", None)
     ])
