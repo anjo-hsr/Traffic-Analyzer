@@ -59,8 +59,8 @@
           <condition label="DHCP">
             <set token="server_type_name">DHCP</set>
           </condition>
-          <condition label="DNS">
-            <set token="server_type_name">DNS</set>
+          <condition label="DNS / MDNS">
+            <set token="server_type_name">DNS / MDNS</set>
           </condition>
         </change>
       </input>
