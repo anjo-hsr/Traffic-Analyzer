@@ -1,32 +1,32 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>External Endpoints</label>
-    <search id="source_external">
-      <query>
-        $source_token$ eth_dst=$filteredMAC$ src_is_private_ip="0"
-        | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
-        | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
-      </query>
-      <done>
-        <condition>
-          <set token="subsearch_id_external">$job.sid$</set>
-        </condition>
-      </done>
-    </search>
-    <search base="source_external" id="source_external_endpoints">
-      <query>
-      | search [| loadjob $subsearch_id_external$
-                  | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
-                  | dedup eth_src
-                  | table eth_src]
-                | where ip_src!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+  <search id="source_external">
+    <query>
+      $source_token$ eth_dst=$filteredMAC$ src_is_private_ip="0"
       | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
       | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
-      </query>
-      <done>
-        <condition>
-          <set token="subsearch_id_external_endpoints">$job.sid$</set>
-        </condition>
-      </done>
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_external">$job.sid$</set>
+      </condition>
+    </done>
+  </search>
+  <search base="source_external" id="source_external_endpoints">
+    <query>
+    | search [| loadjob $subsearch_id_external$
+                | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+                | dedup eth_src
+                | table eth_src]
+              | where ip_src!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+    | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
+    | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_external_endpoints">$job.sid$</set>
+      </condition>
+    </done>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
