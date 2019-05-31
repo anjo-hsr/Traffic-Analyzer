@@ -1,5 +1,5 @@
 from main.enrichers.enricher import Enricher
-from main.helpers.combine_helper import CombineHelper
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class NameResolverEnricher(Enricher):
@@ -8,9 +8,8 @@ class NameResolverEnricher(Enricher):
         header = "dst_fqdn,src_fqdn"
         Enricher.__init__(self, enricher_type, header)
 
-    @staticmethod
-    def extract_fqdn(dst_src_information) -> str:
-        dst_data = dst_src_information["dst"]
-        src_data = dst_src_information["src"]
-        fqdns = [dst_data["rdns"], src_data["rdns"]]
-        return CombineHelper.join_list_elements(fqdns, True)
+    def get_information(self, _, information_dict) -> None:
+        dst_data = information_dict["dst_src_information"]["dst"]
+        src_data = information_dict["dst_src_information"]["src"]
+        information_dict["dst_fqdn"] = enclose_with_quotes(dst_data["rdns"])
+        information_dict["src_fqdn"] = enclose_with_quotes(src_data["rdns"])

@@ -13,11 +13,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -33,8 +34,8 @@
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
           <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">1.2.3.4/32</set>
-          <set token="form.custom_ip_range">1.2.3.4/32</set>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
           <unset token="use_default_ip_range"></unset>
@@ -61,19 +62,20 @@
       </input>
       <map>
         <search>
-          <query>$source_token$
-                | dedup dst_fqdn
-                | eval threat_category=if(threat_category="","",split(threat_category,","))
-                | mvexpand threat_category
-                | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
-                | sort threat_category desc
-                | dedup dst_fqdn
-                | rename threat_category as threat_id
-                | join threat_id
-                  [search sourcetype=list source="*threat_types.csv"
-                  | rename id as threat_id, category as threat_category]
-                | table dst_latitude, dst_longitude, threat_category
-                | geostats count by threat_category latfield=dst_latitude longfield=dst_longitude
+          <query>
+            $source_token$
+            | dedup dst_fqdn
+            | eval threat_category=if(threat_category="","",split(threat_category,","))
+            | mvexpand threat_category
+            | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
+            | sort threat_category desc
+            | dedup dst_fqdn
+            | rename threat_category as threat_id
+            | join threat_id
+              [search sourcetype=list source="*threat_types.csv"
+              | rename id as threat_id, category as threat_category]
+            | table dst_latitude, dst_longitude, threat_category
+            | geostats count by threat_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
@@ -101,23 +103,23 @@
       <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
       <table>
         <search>
-          <query>$source_token$
-                | rename dst_latitude as latitude, dst_longitude as longitude
-                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | dedup dst_fqdn
-                | eval threat_category=if(threat_category="","",split(threat_category,","))
-                | mvexpand threat_category
-                | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
-                | sort threat_category desc
-                | dedup dst_fqdn
-                | rename threat_category as threat_id
-                | where threat_id != 0
-                | join threat_id
-                  [search sourcetype=list source="*threat_types.csv"
-                  | rename id as threat_id, category as threat_category]
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
-                  threat_category as "Threat Category"
-                | table DNS_Query, Reverse_Lookup, "Threat Category"
+          <query>
+            $source_token$
+            | rename dst_latitude as latitude, dst_longitude as longitude
+            | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
+            | dedup dst_fqdn
+            | eval threat_category=if(threat_category="","",split(threat_category,","))
+            | mvexpand threat_category
+            | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
+            | sort threat_category desc
+            | dedup dst_fqdn
+            | rename threat_category as threat_id
+            | where threat_id != 0
+            | join threat_id
+              [search sourcetype=list source="*threat_types.csv"
+              | rename id as threat_id, category as threat_category]
+            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", threat_category as "Threat Category"
+            | table DNS_Query, Reverse_Lookup, "Threat Category"
           </query>
           <earliest>0</earliest>
           <latest></latest>
