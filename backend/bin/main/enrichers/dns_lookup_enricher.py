@@ -31,11 +31,11 @@ class DnsLookupEnricher(Enricher):
         src_ip = packet["ip.src"]
         dst_ip = packet["ip.dst"]
 
-        information_dict["dst_query_name"] = self.get_hostnames(src_ip)
-        information_dict["dst_hostnames"] = self.get_dns_query(src_ip)
+        information_dict["dst_query_name"] = self.get_dns_query(src_ip)
+        information_dict["dst_hostnames"] = self.get_hostnames(src_ip)
 
-        information_dict["src_query_name"] = self.get_hostnames(dst_ip)
-        information_dict["src_hostnames"] = self.get_dns_query(dst_ip)
+        information_dict["src_query_name"] = self.get_dns_query(dst_ip)
+        information_dict["src_hostnames"] = self.get_hostnames(dst_ip)
 
         information_dict["domains"] = CombineHelper.join_list_elements([
             information_dict["dst_query_name"],
