@@ -33,12 +33,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
+          <unset token="use_custom_ip_range"/>
           <set token="custom_ip_range">203.0.113.0/24</set>
           <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -46,7 +46,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
@@ -64,7 +64,7 @@
             | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
-          <latest></latest>
+          <latest/>
         </search>
         <option name="mapping.fieldColors">
           {"no ad": #2BC3FF,
@@ -98,7 +98,7 @@
             | table "DNS Query", "Reverse Lookup", "AD Category"
           </query>
           <earliest>0</earliest>
-          <latest></latest>
+          <latest/>
         </search>
       </table>
     </panel>
