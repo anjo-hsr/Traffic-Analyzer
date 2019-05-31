@@ -28,7 +28,7 @@ class EnricherJar:
 
         return information_dict
 
-    def create_information_dict(self, packet):
+    def create_information_dict(self, packet) -> OrderedDict:
         ip_information_downloader = self.ip_information_downloader
         dst_src = CombineHelper.get_dst_src(packet)
         information_dict = OrderedDict([

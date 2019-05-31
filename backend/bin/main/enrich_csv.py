@@ -52,7 +52,7 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
         file_write_helper.write_line(output_file, line)
 
 
-def set_enricher_headers(enricher_jar, helper_headers):
+def set_enricher_headers(enricher_jar, helper_headers) -> None:
     enricher_headers = []
     for header in helper_headers:
         enricher_headers = enricher_headers + header.split(",")
