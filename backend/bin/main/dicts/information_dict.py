@@ -14,11 +14,3 @@ def get_information_dict() -> OrderedDict:
         ("ad_value", None),
         ("threat_information", None)
     ])
-
-
-def fill_dict(information_dict, fill_list) -> None:
-    key_index = 0
-    value_index = 1
-
-    for tuple_entry in fill_list:
-        information_dict[tuple_entry[key_index]] = tuple_entry[value_index]
