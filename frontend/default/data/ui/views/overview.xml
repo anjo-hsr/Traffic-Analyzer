@@ -58,8 +58,8 @@
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
           <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">1.2.3.4/32</set>
-          <set token="form.custom_ip_range">1.2.3.4/32</set>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
           <unset token="use_default_ip_range"></unset>
