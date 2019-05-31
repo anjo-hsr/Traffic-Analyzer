@@ -1,6 +1,7 @@
 import unittest
 
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class TestCipherSuiteEnricherMethods(unittest.TestCase):
@@ -29,7 +30,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
 
     def run_test_packet(self, expected_value, packet) -> None:
         if expected_value == "":
-            expected_cipher_suite = '"{}"'.format(expected_value)
+            expected_cipher_suite = enclose_with_quotes(expected_value)
         else:
             expected_cipher_suite = "{}".format(expected_value)
 

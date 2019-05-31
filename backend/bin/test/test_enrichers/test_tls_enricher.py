@@ -1,6 +1,7 @@
 import unittest
 
 from main.enrichers.tls_enricher import TlsEnricher
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class TestTlsEnricherMethods(unittest.TestCase):
@@ -55,7 +56,7 @@ class TestTlsEnricherMethods(unittest.TestCase):
 
     def run_test_packet(self, expected_value, packet) -> None:
         if expected_value == "":
-            expected_tls_ssl_version = '"{}"'.format(expected_value)
+            expected_tls_ssl_version = enclose_with_quotes(expected_value)
         else:
             expected_tls_ssl_version = '{}'.format(expected_value)
 
