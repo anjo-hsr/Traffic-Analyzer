@@ -1,12 +1,13 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Security</label>
-  <search id="source">
-    <query>
+  <search id="source_security">
+     <query>
       $source_token$
+      | fields cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated, -*
       | table cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated
     </query>
   </search>
-  <search base="source" id="recommended_cipher_suites">
+  <search base="source_security" id="recommended_cipher_suites">
     <query>
           | dedup cipher_suite_number
           | join cipher_suite_number
@@ -14,7 +15,7 @@
           | table cipher_suite_number, recommended
     </query>
   </search>
-  <search base="source" id="is_secure">
+  <search base="source_security" id="is_secure">
     <query>
           | eval issecure=if(cipher_suite_number=="","no","yes")
           | table issecure
@@ -73,7 +74,7 @@
     <panel>
       <title>Total number of tcp streams</title>
       <single>
-        <search base="source">
+        <search base="source_security">
           <query>
                 | where tcp_stream!=""
                 | dedup traffic_analyzer_tcp_stream
@@ -183,7 +184,7 @@
     <panel>
       <title>Commonly used cipher suites</title>
       <table>
-        <search base="source">
+        <search base="source_security">
           <query>
                 | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by cipher_suite_number
@@ -206,7 +207,7 @@
     <panel>
       <title>Commonly used SSL/TLS version</title>
       <table>
-        <search base="source">
+        <search base="source_security">
           <query>
                 | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by tls_ssl_version_negotiated
