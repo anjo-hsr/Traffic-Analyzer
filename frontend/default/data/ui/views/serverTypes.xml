@@ -13,11 +13,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -71,12 +72,13 @@
       <single>
         <title># of $server_type_name$ servers</title>
         <search>
-          <query>$source_token$
-                | where $server_type_token$ = "True"
-                | table ip_src
-                | dedup ip_src
-                | stats count
-                | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+          <query>
+            $source_token$
+            | where $server_type_token$ = "True"
+            | table ip_src
+            | dedup ip_src
+            | stats count
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -93,11 +95,12 @@
       <single>
         <title># of $server_type_name$ responses</title>
         <search>
-          <query>$source_token$
-                | where $server_type_token$ = "True"
-                | table ip_src
-                | stats count
-                | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+          <query>
+            $source_token$
+            | where $server_type_token$ = "True"
+            | table ip_src
+            | stats count
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -115,11 +118,12 @@
     <panel>
       <table>
         <search>
-          <query>$source_token$
-                | where $server_type_token$ = "True" AND ip_src != ""
-                | table ip_src, src_fqdn, ws_col_Protocol
-                | dedup ip_src
-                | sort ws_col_Protocol, ip_src
+          <query>
+            $source_token$
+            | where $server_type_token$ = "True" AND ip_src != ""
+            | table ip_src, src_fqdn, ws_col_Protocol
+            | dedup ip_src
+            | sort ws_col_Protocol, ip_src
           </query>
           <earliest>0</earliest>
           <latest></latest>

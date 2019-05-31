@@ -1,5 +1,12 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Ad Locations</label>
+  <label>Stream Information</label>
+  <search id="source_stream_information">
+    <query>
+      $source_token$
+      | fields traffic_analyzer_tcp_stream, ip_src, ip_dst, frame_len, threat_category, ad_category, _*
+      | table traffic_analyzer_tcp_stream, ip_src, ip_dst, frame_len, threat_category, ad_category, _time
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -51,54 +58,30 @@
   </fieldset>
   <row>
     <panel>
-      <title>Cluster Map</title>
-      <map>
-        <search>
-          <query>
-            $source_token$
-            | dedup dst_fqdn
-            | rename ad_category as ad_id
-            | join ad_id
-              [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-            | table dst_latitude, dst_longitude, ad_category
-            | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
-          </query>
-          <earliest>0</earliest>
-          <latest></latest>
-        </search>
-        <option name="mapping.fieldColors">
-          {"no ad": #2BC3FF,
-          "ad":#FFF029}
-        </option>
-        <option name="drilldown">all</option>
-        <option name="mapping.type">marker</option>
-        <option name="trellis.enabled">0</option>
-        <drilldown>
-          <set token="lat_min">$click.bounds.south$</set>
-          <set token="lat_max">$click.bounds.north$</set>
-          <set token="long_min">$click.bounds.west$</set>
-          <set token="long_max">$click.bounds.east$</set>
-        </drilldown>
-      </map>
-    </panel>
-    <panel depends="$lat_min$">
-      <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
+      <title>Endpoints</title>
       <table>
-        <search>
+        <search base="source_stream_information">
           <query>
-            $source_token$
-            | rename dst_latitude as latitude, dst_longitude as longitude
-            | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-            | dedup dst_fqdn
-            | rename ad_category as ad_id
-            | where ad_id != 0
-            | join ad_id
-              [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
-            | table "DNS Query", "Reverse Lookup", "AD Category"
+            | eventstats sum(frame_len) as "Bytes transfered" by traffic_analyzer_tcp_stream
+            | table "Bytes transfered", _time, traffic_analyzer_tcp_stream, ws_col_Protocol, ip_src, ip_dst,
+              threat_category, ad_category
+            | eventstats last(_time) as last_event, first(_time) as first_event by traffic_analyzer_tcp_stream
+            | eval timespan=round(first_event-last_event,3)
+            | dedup traffic_analyzer_tcp_stream
+            | table traffic_analyzer_tcp_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src, ip_dst,
+              threat_category, ad_category
+            | eval threat_category=if(threat_category="",0,split(threat_category,","))
+            | mvexpand threat_category
+            | join ad_category
+              [search sourcetype="list" source="*ad*"
+              | table id, category | rename id as ad_category, category AS adcategory]
+            | join threat_category
+              [search sourcetype="list" source="*threat*"
+              | table id, category | rename id as threat_category, category as threatcategory]
+            | table traffic_analyzer_tcp_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src, ip_dst,
+              adcategory, threatcategory
+            | mvcombine threatcategory
           </query>
-          <earliest>0</earliest>
-          <latest></latest>
         </search>
       </table>
     </panel>

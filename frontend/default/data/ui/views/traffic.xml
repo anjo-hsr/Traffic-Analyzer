@@ -1,8 +1,5 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Traffic</label>
-  <search id="base_search">
-    <query>source="capture-2019-04-03_09-59-38-UTC-enriched.csv" </query>
-  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -16,11 +13,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -56,9 +54,10 @@
       <title>Top $limit$ $directionHeader$</title>
       <table>
         <search>
-          <query>$source_token$ $src_dst_selector$=$ip$
-                | stats sum(linecount) as "# of packages" by src_fqdn
-                | sort $limit$ -num("# of packages")
+          <query>
+            $source_token$ $src_dst_selector$=$ip$
+            | stats sum(linecount) as "# of packages" by src_fqdn
+            | sort $limit$ -num("# of packages")
           </query>
         </search>
       </table>

@@ -1,5 +1,17 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Internal Endpoints</label>
+  <search id="source_internal_endpoints">
+    <query>
+      $source_token$ eth_src=$filteredMAC$
+      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, _*
+      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_internal_endpoints">$job.sid$</set>
+      </condition>
+    </done>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -13,11 +25,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -52,8 +65,8 @@
     <panel>
       <title>Endpoints</title>
       <table>
-        <search>
-          <query>$source_token$ eth_src=$filteredMAC$
+        <search base="source_internal_endpoints">
+          <query>
                 | dedup ip_src
                 | eval src_is_private_extended=if(
                   cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
@@ -68,15 +81,15 @@
                 | dedup ip_src
                 | rename ip_src as ip
                 | join type=left ip
-                  [search $source_token$
+                  [| loadjob $subsearch_id_internal_endpoints$
                   | stats sum(frame_len) as "bytes out" by ip_src
                   | rename ip_src as ip ]
                 | join type=left ip
-                  [search $source_token$
+                  [| loadjob $subsearch_id_internal_endpoints$
                   | stats sum(frame_len) as "bytes in" by ip_dst
                   | rename ip_dst as ip ]
                 | join type=left ip
-                  [search $source_token$
+                  [| loadjob $subsearch_id_internal_endpoints$
                   | rename ip_src as ip
                   | where tls_handshake_type=1
                   | eval client_hello=1
