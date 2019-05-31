@@ -168,12 +168,9 @@ class CdnDict:
         return cdn_domains
 
     def check_domains(self, domains) -> bool:
-        return_bool = False
-        domains = remove_quotations(domains)
-        for domain in domains.split(","):
-            return_bool = return_bool or self.check_domain(domain)
-
-        return return_bool
+        domain_list = domains.split(",")
+        domain_list = list(map(lambda domain: remove_quotations(domain), domain_list))
+        return any(self.check_domain(domain) for domain in domain_list)
 
     def check_domain(self, domain) -> bool:
         domain_keys = self.get_cdn_domains_to_names().keys()
