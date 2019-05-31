@@ -4,6 +4,7 @@ from main.enrichers.enricher import Enricher
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.ip_helper import IpHelper
 from main.helpers.response_helper import ResponseHelper
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class DnsLookupEnricher(Enricher):
@@ -16,7 +17,6 @@ class DnsLookupEnricher(Enricher):
         self.a_record_key = "1"
         self.aaaa_record_key = "28"
 
-
     @staticmethod
     def get_empty_dict() -> Dict[str, Union[str, List[str]]]:
         return {
@@ -24,22 +24,33 @@ class DnsLookupEnricher(Enricher):
             "hostnames": {""}
         }
 
-    def detect_dns_request(self, packet) -> str:
+    def get_information(self, packet, information_dict) -> None:
         if ResponseHelper.is_dns_response(packet):
             self.save_dns_query(packet)
 
         src_ip = packet["ip.src"]
         dst_ip = packet["ip.dst"]
-        src_ip_information = self.generate_dns_information(src_ip)
-        dst_ip_information = self.generate_dns_information(dst_ip)
 
-        return CombineHelper.delimiter.join([dst_ip_information, src_ip_information])
+        information_dict["dst_query_name"] = self.get_dns_query(src_ip)
+        information_dict["dst_hostnames"] = self.get_hostnames(src_ip)
 
-    def generate_dns_information(self, ip) -> str:
+        information_dict["src_query_name"] = self.get_dns_query(dst_ip)
+        information_dict["src_hostnames"] = self.get_hostnames(dst_ip)
+
+        information_dict["domains"] = CombineHelper.join_list_elements([
+            information_dict["dst_query_name"],
+            information_dict["dst_hostnames"],
+            information_dict["src_query_name"],
+            information_dict["src_hostnames"]
+        ], True)
+
+    def get_dns_query(self, ip) -> str:
         ip_information = self.dns_responses.get(ip, self.get_empty_dict())
-        hostnames = CombineHelper.delimiter.join(ip_information["hostnames"])
-        ip_information = CombineHelper.join_list_elements([ip_information["query_name"], hostnames], True)
-        return ip_information
+        return enclose_with_quotes(ip_information["query_name"])
+
+    def get_hostnames(self, ip) -> str:
+        ip_information = self.dns_responses.get(ip, self.get_empty_dict())
+        return CombineHelper.join_with_quotes(ip_information["hostnames"])
 
     def save_dns_query(self, packet) -> None:
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")

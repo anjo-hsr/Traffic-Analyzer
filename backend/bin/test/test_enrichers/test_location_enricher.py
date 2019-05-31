@@ -7,36 +7,41 @@ class TestLocationEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.location_enricher = LocationEnricher()
-        cls.dst_src_information_local = {
-            "dst": {
-                "rdns": "10.0.0.1",
-                "asn": "",
-                "isp": "",
-                "latitude": "",
-                "longitude": ""
-            },
-            "src": {
-                "rdns": "10.0.0.2",
-                "asn": "",
-                "isp": "",
-                "latitude": "",
-                "longitude": ""
+        cls.packet = {}
+        cls.information_dict_local = {
+            "dst_src_information": {
+                "dst": {
+                    "rdns": "10.0.0.1",
+                    "asn": "",
+                    "isp": "",
+                    "latitude": "",
+                    "longitude": ""
+                },
+                "src": {
+                    "rdns": "10.0.0.2",
+                    "asn": "",
+                    "isp": "",
+                    "latitude": "",
+                    "longitude": ""
+                }
             }
         }
-        cls.dst_src_information_public = {
-            "dst": {
-                "rdns": "8.8.8.8",
-                "asn": "15169",
-                "isp": "Google LLC",
-                "latitude": "37.751",
-                "longitude": "-97.822"
-            },
-            "src": {
-                "rdns": "10.0.0.1",
-                "asn": "",
-                "isp": "",
-                "latitude": "",
-                "longitude": ""
+        cls.information_dict_public = {
+            "dst_src_information": {
+                "dst": {
+                    "rdns": "8.8.8.8",
+                    "asn": "15169",
+                    "isp": "Google LLC",
+                    "latitude": "37.751",
+                    "longitude": "-97.822"
+                },
+                "src": {
+                    "rdns": "10.0.0.1",
+                    "asn": "",
+                    "isp": "",
+                    "latitude": "",
+                    "longitude": ""
+                }
             }
         }
 
@@ -45,14 +50,25 @@ class TestLocationEnricherMethods(unittest.TestCase):
         self.assertEqual(self.location_enricher.header, expected_header)
 
     def test_extract_location_local_connection(self) -> None:
-        locations = self.location_enricher.extract_location(self.dst_src_information_local)
-        empty_location = '"","","",""'
-        self.assertEqual(locations, empty_location)
+        self.location_enricher.get_information(self.packet, self.information_dict_local)
+        empty_location = '""'
+
+        self.assertEqual(self.information_dict_local["dst_latitude"], empty_location)
+        self.assertEqual(self.information_dict_local["dst_longitude"], empty_location)
+        self.assertEqual(self.information_dict_local["src_latitude"], empty_location)
+        self.assertEqual(self.information_dict_local["src_longitude"], empty_location)
 
     def test_extract_location_public_connection(self) -> None:
-        locations = self.location_enricher.extract_location(self.dst_src_information_public)
-        expected_fqnds = '"37.751","-97.822","",""'
-        self.assertEqual(locations, expected_fqnds)
+        self.location_enricher.get_information(self.packet, self.information_dict_public)
+        expected_dst_latitude = '"37.751"'
+        expected_dst_longitude = '"-97.822"'
+        expected_src_latitude = '""'
+        expected_src_longitude = '""'
+
+        self.assertEqual(self.information_dict_public["dst_latitude"], expected_dst_latitude)
+        self.assertEqual(self.information_dict_public["dst_longitude"], expected_dst_longitude)
+        self.assertEqual(self.information_dict_public["src_latitude"], expected_src_latitude)
+        self.assertEqual(self.information_dict_public["src_longitude"], expected_src_longitude)
 
 
 if __name__ == "__main__":
