@@ -1,5 +1,4 @@
 from main.enrichers.enricher import Enricher
-from main.helpers.combine_helper import CombineHelper
 from main.helpers.response_helper import ResponseHelper
 
 
@@ -11,10 +10,9 @@ class ServerTypeEnricher(Enricher):
 
         self.server_type_dict = {"dns": set(), "dhcp": set()}
 
-    def detect_server_type(self, packet) -> str:
-        is_dhcp = self.detect_type(packet, ResponseHelper.is_dhcp_response, "dhcp")
-        is_dns = self.detect_type(packet, ResponseHelper.is_dns_response, "dns")
-        return CombineHelper.join_list_elements([is_dhcp, is_dns])
+    def get_information(self, packet, information_dict) -> None:
+        information_dict["is_dhcp"] = self.detect_type(packet, ResponseHelper.is_dhcp_response, "dhcp")
+        information_dict["is_dns"] = self.detect_type(packet, ResponseHelper.is_dns_response, "dns")
 
     def detect_type(self, packet, response_check, dict_key) -> str:
         is_type = False

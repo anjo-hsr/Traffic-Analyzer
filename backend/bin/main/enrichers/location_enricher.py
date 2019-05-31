@@ -1,5 +1,5 @@
 from main.enrichers.enricher import Enricher
-from main.helpers.combine_helper import CombineHelper
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class LocationEnricher(Enricher):
@@ -8,14 +8,12 @@ class LocationEnricher(Enricher):
         header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
         Enricher.__init__(self, enricher_type, header)
 
-    @staticmethod
-    def extract_location(dst_src_information) -> str:
-        dst_data = dst_src_information["dst"]
-        src_data = dst_src_information["src"]
-        dst_lat_long = [dst_data["latitude"], dst_data["longitude"]]
-        src_lat_long = [src_data["latitude"], src_data["longitude"]]
+    def get_information(self, _, information_dict) -> None:
+        dst_data = information_dict["dst_src_information"]["dst"]
+        src_data = information_dict["dst_src_information"]["src"]
 
-        pos_dest = CombineHelper.join_list_elements(dst_lat_long, True)
-        pos_src = CombineHelper.join_list_elements(src_lat_long, True)
+        information_dict["dst_latitude"] = enclose_with_quotes(dst_data["latitude"])
+        information_dict["dst_longitude"] = enclose_with_quotes(dst_data["longitude"])
 
-        return CombineHelper.delimiter.join([pos_dest, pos_src])
+        information_dict["src_latitude"] = enclose_with_quotes(src_data["latitude"])
+        information_dict["src_longitude"] = enclose_with_quotes(src_data["longitude"])

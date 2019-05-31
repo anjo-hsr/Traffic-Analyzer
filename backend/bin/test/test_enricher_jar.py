@@ -1,6 +1,6 @@
 import unittest
+from collections import OrderedDict
 
-from main.dicts.information_dict import fill_dict
 from main.enricher_jar import EnricherJar
 
 
@@ -9,14 +9,36 @@ class TestEnricherJarMethods(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.enricher_jar = EnricherJar()
 
-    def test_reset_variables(self) -> None:
-        fqdn_key = "fqdn_information"
-        fqdn_value = "www.hsr.ch"
-        self.assertEqual(self.enricher_jar.information_dict[fqdn_key], None)
-        fill_dict(self.enricher_jar.information_dict, [(fqdn_key, fqdn_value)])
-        self.assertEqual(self.enricher_jar.information_dict[fqdn_key], fqdn_value)
-        self.enricher_jar.reset_variables()
-        self.assertEqual(self.enricher_jar.information_dict[fqdn_key], None)
+    def test_create_information_dict(self) -> None:
+        packet = {
+            "ip.dst": "10.0.0.2",
+            "ip.src": "10.0.0.1"
+        }
+        expected_ordered_dict = OrderedDict([
+            ('dst_src_information',
+             {
+                 'dst': {
+                     'asn': '',
+                     'ip_address': '10.0.0.2',
+                     'isp': '',
+                     'latitude': '',
+                     'longitude': '',
+                     'rdns': '10.0.0.2'
+                 },
+                 'src': {
+                     'asn': '',
+                     'ip_address': '10.0.0.1',
+                     'isp': '',
+                     'latitude': '',
+                     'longitude': '',
+                     'rdns': '10.0.0.1'
+                 }
+             }
+             )
+        ])
+
+        information_dict = self.enricher_jar.create_information_dict(packet)
+        self.assertEqual(information_dict, expected_ordered_dict)
 
 
 if __name__ == "__main__":

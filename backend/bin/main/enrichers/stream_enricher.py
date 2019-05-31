@@ -17,15 +17,16 @@ class StreamEnricher(Enricher):
         print_text = "Print out for {} tcp stream entries"
         PrintHelper.print_dict(self.stream_ids, print_text)
 
-    def get_stream_id(self, packet) -> str:
+    def get_information(self, packet, information_dict) -> None:
         inbound_outbound_string = self.get_combined_strings(packet)
         if inbound_outbound_string in self.stream_ids:
-            return self.stream_ids[inbound_outbound_string]
+            information_dict["traffic_analyzer_tcp_stream"] = self.stream_ids[inbound_outbound_string]
+            return
 
         stream_entry = self.generate_stream_id(inbound_outbound_string)
 
         self.stream_ids[stream_entry["combined_string"]] = stream_entry["stream_id"]
-        return stream_entry["stream_id"]
+        information_dict["traffic_analyzer_tcp_stream"] = stream_entry["stream_id"]
 
     @staticmethod
     def get_combined_strings(packet) -> str:

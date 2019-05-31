@@ -9,6 +9,7 @@ class TestStreamEnricherMethods(unittest.TestCase):
         cls.stream_enricher = StreamEnricher()
         cls.source_ip_address = "10.0.0.1"
         cls.destination_ip_address = "8.8.8.8"
+        cls.information_dict = {}
 
         cls.public_packet = {
             "ip.dst": "152.96.36.100",
@@ -50,14 +51,14 @@ class TestStreamEnricherMethods(unittest.TestCase):
     def test_get_stream_id_public_packet(self) -> None:
         expected_size = 1
         self.assertEqual(len(self.stream_enricher.stream_ids), expected_size)
-        self.stream_enricher.get_stream_id(self.public_packet)
+        self.stream_enricher.get_information(self.public_packet, self.information_dict)
         expected_size += 1
         self.assertEqual(len(self.stream_enricher.stream_ids), expected_size)
 
     def test_get_stream_id_private_packet(self) -> None:
         expected_size = 1
         self.assertEqual(len(self.stream_enricher.stream_ids), expected_size)
-        self.stream_enricher.get_stream_id(self.private_packet)
+        self.stream_enricher.get_information(self.private_packet, self.information_dict)
         self.assertEqual(len(self.stream_enricher.stream_ids), expected_size)
 
 
