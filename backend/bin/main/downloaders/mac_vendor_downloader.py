@@ -5,6 +5,7 @@ from main.helpers.combine_helper import CombineHelper
 from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_write_helper
+from main.helpers.string_helper import enclose_with_quotes
 
 
 def convert_mac_address(row) -> str:
@@ -15,7 +16,7 @@ def convert_mac_address(row) -> str:
 
 def write_row(output_file, row) -> None:
     mac_address = convert_mac_address(row)
-    line = mac_address + CombineHelper.delimiter + '"{}"'.format(row["Organization Name"])
+    line = mac_address + CombineHelper.delimiter + enclose_with_quotes(row["Organization Name"])
     file_write_helper.write_line(output_file, line)
 
 
