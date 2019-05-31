@@ -74,7 +74,7 @@
         <search>
           <query>
             $source_token$
-            | where $server_type_token$ = "True"
+            | where $server_type_token$="1"
             | table ip_src
             | dedup ip_src
             | stats count
@@ -97,7 +97,7 @@
         <search>
           <query>
             $source_token$
-            | where $server_type_token$ = "True"
+            | where $server_type_token$="1"
             | table ip_src
             | stats count
             | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
@@ -120,7 +120,7 @@
         <search>
           <query>
             $source_token$
-            | where $server_type_token$ = "True" AND ip_src != ""
+            | where $server_type_token$="1" AND ip_src != ""
             | table ip_src, src_fqdn, ws_col_Protocol
             | dedup ip_src
             | sort ws_col_Protocol, ip_src

@@ -70,7 +70,7 @@
                 | dedup ip_src
                 | eval src_is_private_extended=if(
                   cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
-                  src_is_private_ip == "True","True", "False")
+                  src_is_private_ip == "1", "True", "False")
                 | where src_is_private_extended == "True"
                 | where ip_src!="" AND ip_src!="0.0.0.0"
                 | eval eth_short=substr(eth_src,1,8)
