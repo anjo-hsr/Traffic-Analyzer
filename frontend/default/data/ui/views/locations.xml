@@ -1,5 +1,20 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Locations</label>
+   <search id="source_locations">
+     <query>
+      $source_token$
+      | fields dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_tcp_stream, -*
+      | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_tcp_stream
+    </query>
+  </search>
+  <search base="source_locations" id="destinations_by_country">
+    <query>
+          | dedup traffic_analyzer_tcp_stream
+          | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
+            dst_latitude as latitude, dst_longitude as longitude
+          | lookup geo_countries longitude, latitude
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -52,8 +67,8 @@
     <panel>
       <title>Choropleth Map</title>
       <map>
-        <search>
-          <query>$source_token$
+        <search base="source_locations">
+          <query>
                 | dedup dst_fqdn
                 | table dst_fqdn, dst_latitude, dst_longitude
                 | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
@@ -62,8 +77,6 @@
                 | rename count as Destinations, featureId as Country
                 | geom geo_countries featureIdField="Country"
           </query>
-          <earliest>0</earliest>
-          <latest></latest>
         </search>
         <option name="drilldown">all</option>
         <option name="mapping.type">choropleth</option>
@@ -77,21 +90,14 @@
     <panel>
       <title>Destinations in $selectedCountry$</title>
       <table>
-        <search>
-          <query>$source_token$
-                | table dst_query_name, dst_fqdn, dst_latitude, dst_longitude, traffic_analyzer_tcp_stream
-                | dedup traffic_analyzer_tcp_stream
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
-                  dst_latitude as latitude, dst_longitude as longitude
-                | lookup geo_countries longitude, latitude
+        <search base="destinations_by_country">
+          <query>
                 | $selectedCountryFilter$
                 | stats count(traffic_analyzer_tcp_stream) by "Reverse Lookup", "DNS Query"
                 | table "DNS Query", "Reverse Lookup", count(traffic_analyzer_tcp_stream)
                 | rename count(traffic_analyzer_tcp_stream) as "# of connections"
                 | sort - "# of connections"
           </query>
-          <earliest>0</earliest>
-          <latest></latest>
         </search>
       </table>
     </panel>
