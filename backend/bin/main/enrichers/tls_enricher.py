@@ -25,8 +25,10 @@ class TlsEnricher(Enricher):
 
         if handshake_version != "" and is_server_hello:
             self.stream_to_handshake_version[stream] = handshake_version
+            information_dict["tls_ssl_version_negotiated"] = handshake_version
 
         elif stream in self.stream_to_handshake_version:
-            handshake_version = self.stream_to_handshake_version[stream]
+            information_dict["tls_ssl_version_negotiated"] = self.stream_to_handshake_version[stream]
 
-        information_dict["tls_ssl_version_negotiated"] = handshake_version
+        else:
+            information_dict["tls_ssl_version_negotiated"] = '""'
