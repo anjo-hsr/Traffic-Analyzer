@@ -1,5 +1,26 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Security</label>
+  <search id="source">
+    <query>
+      $source_token$
+      | table cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated
+    </query>
+  </search>
+  <search base="source" id="recommended_cipher_suites">
+    <query>
+          | dedup cipher_suite_number
+          | join cipher_suite_number
+            [ search sourcetype=list source="*cipher_suites.csv" ]
+          | table cipher_suite_number, recommended
+    </query>
+  </search>
+  <search base="source" id="is_secure">
+    <query>
+          | eval issecure=if(cipher_suite_number=="","no","yes")
+          | table issecure
+          | top issecure
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -52,8 +73,8 @@
     <panel>
       <title>Total number of tcp streams</title>
       <single>
-        <search>
-          <query>$source_token$
+        <search base="source">
+          <query>
                 | where tcp_stream!=""
                 | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams"
@@ -73,12 +94,8 @@
       <title>Number of inadvisable cipher suites used</title>
       <single>
         <title>Absolute</title>
-        <search>
-          <query>$source_token$
-                | dedup cipher_suite_number
-                | join cipher_suite_number
-                   [ search sourcetype=list source="*cipher_suites.csv" ]
-                | table cipher_suite_number, recommended
+        <search base="recommended_cipher_suites">
+          <query>
                 | stats count as amount by recommended
                 | where recommended="N"
                 | table amount
@@ -96,12 +113,8 @@
       </single>
       <single>
         <title>Percent</title>
-        <search>
-          <query>$source_token$
-                | dedup cipher_suite_number
-                | join cipher_suite_number
-                   [ search sourcetype=list source="*cipher_suites.csv" ]
-                | table cipher_suite_number, recommended
+        <search base="recommended_cipher_suites">
+          <query>
                 | eventstats count as amount by recommended
                 | eventstats count as totalAmount
                 | where recommended="N" | dedup recommended
@@ -127,11 +140,8 @@
       <title>Amount of unsecured traffic (by # of packets)</title>
       <single>
         <title>Absolute</title>
-        <search>
-          <query>$source_token$
-                | eval issecure=if(cipher_suite_number=="","no","yes")
-                | table issecure
-                | top issecure
+        <search base="is_secure">
+          <query>
                 | where issecure="no"
                 | table count
                 | appendpipe [stats count | where count=0 | eval count=0 | table count]
@@ -149,11 +159,8 @@
       </single>
       <single>
         <title>Percent</title>
-        <search>
-          <query>$source_token$
-                | eval issecure=if(cipher_suite_number=="","no","yes")
-                | table issecure
-                | top issecure
+        <search base="is_secure">
+          <query>
                 | where issecure="no"
                 | table percent
                 | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
@@ -176,8 +183,8 @@
     <panel>
       <title>Commonly used cipher suites</title>
       <table>
-        <search>
-          <query>$source_token$
+        <search base="source">
+          <query>
                 | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by cipher_suite_number
                 | join cipher_suite_number
@@ -187,16 +194,20 @@
                 | sort "# of streams" desc
           </query>
         </search>
+        <option name="count">10</option>
         <format type="color" field="Recommended">
           <colorPalette type="map">{"N":#FC4737}</colorPalette>
         </format>
+        <drilldown>
+          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_tcp_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%22True%22%20OR%20cidrmatch(%22$custom_ip_range$%22,%20ip_src)%7C%20dedup%20ip_dst%20cipher_suite_number%20ip_src%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src%20%7C%20sort%20ip_dst%20%7C%20mvcombine%20ip_src&amp;earliest=$earliest$&amp;latest=$latest$</link>
+        </drilldown>
       </table>
     </panel>
     <panel>
       <title>Commonly used SSL/TLS version</title>
       <table>
-        <search>
-          <query>$source_token$
+        <search base="source">
+          <query>
                 | dedup traffic_analyzer_tcp_stream
                 | stats count as "# of streams" by tls_ssl_version_negotiated
                 | join tls_ssl_version_negotiated
