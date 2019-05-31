@@ -1,7 +1,6 @@
 from main.dicts.blacklist_dict import BlacklistDict
 from main.enrichers.enricher import Enricher
 from main.helpers import string_helper
-from main.helpers.combine_helper import CombineHelper
 from main.helpers.ip_helper import IpHelper
 
 

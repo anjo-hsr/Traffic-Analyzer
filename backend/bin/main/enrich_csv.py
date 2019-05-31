@@ -40,13 +40,9 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             line = re.sub(r"ssl\.", r"tls.", line)
             line = re.sub(r"bootp\.", r"dhcp.", line)
 
-            header_line = line
             set_enricher_headers(enricher_jar, helper_headers)
 
         else:
-            if index == 100:
-                print("Stop")
-
             joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
             information_dict = enricher_jar.get_information_dict(packet)
             enriched_line = CombineHelper.delimiter.join(
