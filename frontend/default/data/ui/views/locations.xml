@@ -9,10 +9,10 @@
   </search>
   <search base="source_locations" id="destinations_by_country">
     <query>
-          | dedup traffic_analyzer_tcp_stream
-          | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
-            dst_latitude as latitude, dst_longitude as longitude
-          | lookup geo_countries longitude, latitude
+      | dedup traffic_analyzer_tcp_stream
+      | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
+        dst_latitude as latitude, dst_longitude as longitude
+      | lookup geo_countries longitude, latitude
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -28,11 +28,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -69,13 +70,13 @@
       <map>
         <search base="source_locations">
           <query>
-                | dedup dst_fqdn
-                | table dst_fqdn, dst_latitude, dst_longitude
-                | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
-                | lookup geo_countries longitude, latitude
-                | stats count by featureId
-                | rename count as Destinations, featureId as Country
-                | geom geo_countries featureIdField="Country"
+            | dedup dst_fqdn
+            | table dst_fqdn, dst_latitude, dst_longitude
+            | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
+            | lookup geo_countries longitude, latitude
+            | stats count by featureId
+            | rename count as Destinations, featureId as Country
+            | geom geo_countries featureIdField="Country"
           </query>
         </search>
         <option name="drilldown">all</option>
@@ -92,11 +93,11 @@
       <table>
         <search base="destinations_by_country">
           <query>
-                | $selectedCountryFilter$
-                | stats count(traffic_analyzer_tcp_stream) by "Reverse Lookup", "DNS Query"
-                | table "DNS Query", "Reverse Lookup", count(traffic_analyzer_tcp_stream)
-                | rename count(traffic_analyzer_tcp_stream) as "# of connections"
-                | sort - "# of connections"
+            | $selectedCountryFilter$
+            | stats count(traffic_analyzer_tcp_stream) by "Reverse Lookup", "DNS Query"
+            | table "DNS Query", "Reverse Lookup", count(traffic_analyzer_tcp_stream)
+            | rename count(traffic_analyzer_tcp_stream) as "# of connections"
+            | sort - "# of connections"
           </query>
         </search>
       </table>

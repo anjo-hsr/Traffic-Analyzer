@@ -6,22 +6,22 @@
       | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number,
         tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated, _*
       | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number,
-       tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated, _time
+        tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated, _time
     </query>
   </search>
   <search base="source_overview" id="recommended_cipher_suites">
     <query>
-          | dedup cipher_suite_number
-          | join cipher_suite_number
-            [ search sourcetype=list source="*cipher_suites.csv" ]
-          | table cipher_suite_number, recommended
+      | dedup cipher_suite_number
+      | join cipher_suite_number
+        [search sourcetype=list source="*cipher_suites.csv"]
+      | table cipher_suite_number, recommended
     </query>
   </search>
   <search base="source_overview" id="is_secure">
     <query>
-          | eval issecure=if(cipher_suite_number=="","no","yes")
-          | table issecure
-          | top issecure
+      | eval issecure=if(cipher_suite_number=="","no","yes")
+      | table issecure
+      | top issecure
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -37,11 +37,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -78,9 +79,9 @@
       <chart>
         <search base="source_overview">
           <query>
-                | table frame_time, ip_proto, ws_col_Protocol
-                | stats count by ws_col_Protocol
-                | rename count as packets
+            | table frame_time, ip_proto, ws_col_Protocol
+            | stats count by ws_col_Protocol
+            | rename count as packets
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -94,8 +95,8 @@
       <chart>
         <search base="source_overview">
           <query>
-                | table frame_time, ws_col_Protocol, frame_len
-                | stats sum(frame_len) as "bytes" by ws_col_Protocol
+            | table frame_time, ws_col_Protocol, frame_len
+            | stats sum(frame_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -108,9 +109,9 @@
       <single>
         <search base="source_overview">
           <query>
-                | where tcp_stream!=""
-                | dedup traffic_analyzer_tcp_stream
-                | stats count as "# of streams"
+            | where tcp_stream!=""
+            | dedup traffic_analyzer_tcp_stream
+            | stats count as "# of streams"
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -129,10 +130,10 @@
         <title>Absolute</title>
         <search base="recommended_cipher_suites">
           <query>
-                | stats count as amount by recommended
-                | where recommended="N"
-                | table amount
-                | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+            | stats count as amount by recommended
+            | where recommended="N"
+            | table amount
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -148,12 +149,12 @@
         <title>Percent</title>
         <search base="recommended_cipher_suites">
           <query>
-                | eventstats count as amount by recommended
-                | eventstats count as totalAmount
-                | where recommended="N" | dedup recommended
-                | eval percOfTotal= 100 / totalAmount * amount
-                | table percOfTotal
-                | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
+            | eventstats count as amount by recommended
+            | eventstats count as totalAmount
+            | where recommended="N" | dedup recommended
+            | eval percOfTotal= 100 / totalAmount * amount
+            | table percOfTotal
+            | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -175,9 +176,9 @@
         <title>Absolute</title>
         <search base="is_secure">
           <query>
-                | where issecure="no"
-                | table count
-                | appendpipe [stats count | where count=0 | eval count=0 | table count]
+            | where issecure="no"
+            | table count
+            | appendpipe [stats count | where count=0 | eval count=0 | table count]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -194,9 +195,9 @@
         <title>Percent</title>
         <search base="is_secure">
           <query>
-                | where issecure="no"
-                | table percent
-                | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
+            | where issecure="no"
+            | table percent
+            | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
           </query>
         </search>
         <option name="colorBy">value</option>

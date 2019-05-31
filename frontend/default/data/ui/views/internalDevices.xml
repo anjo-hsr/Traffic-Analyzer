@@ -25,11 +25,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>

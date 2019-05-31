@@ -9,17 +9,17 @@
   </search>
   <search base="source_security" id="recommended_cipher_suites">
     <query>
-          | dedup cipher_suite_number
-          | join cipher_suite_number
-            [ search sourcetype=list source="*cipher_suites.csv" ]
-          | table cipher_suite_number, recommended
+      | dedup cipher_suite_number
+      | join cipher_suite_number
+        [search sourcetype=list source="*cipher_suites.csv"]
+      | table cipher_suite_number, recommended
     </query>
   </search>
   <search base="source_security" id="is_secure">
     <query>
-          | eval issecure=if(cipher_suite_number=="","no","yes")
-          | table issecure
-          | top issecure
+      | eval issecure=if(cipher_suite_number=="","no","yes")
+      | table issecure
+      | top issecure
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -35,11 +35,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -76,9 +77,9 @@
       <single>
         <search base="source_security">
           <query>
-                | where tcp_stream!=""
-                | dedup traffic_analyzer_tcp_stream
-                | stats count as "# of streams"
+            | where tcp_stream!=""
+            | dedup traffic_analyzer_tcp_stream
+            | stats count as "# of streams"
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -97,10 +98,10 @@
         <title>Absolute</title>
         <search base="recommended_cipher_suites">
           <query>
-                | stats count as amount by recommended
-                | where recommended="N"
-                | table amount
-                | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+            | stats count as amount by recommended
+            | where recommended="N"
+            | table amount
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -116,12 +117,12 @@
         <title>Percent</title>
         <search base="recommended_cipher_suites">
           <query>
-                | eventstats count as amount by recommended
-                | eventstats count as totalAmount
-                | where recommended="N" | dedup recommended
-                | eval percOfTotal= 100 / totalAmount * amount
-                | table percOfTotal
-                | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
+            | eventstats count as amount by recommended
+            | eventstats count as totalAmount
+            | where recommended="N" | dedup recommended
+            | eval percOfTotal= 100 / totalAmount * amount
+            | table percOfTotal
+            | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -143,9 +144,9 @@
         <title>Absolute</title>
         <search base="is_secure">
           <query>
-                | where issecure="no"
-                | table count
-                | appendpipe [stats count | where count=0 | eval count=0 | table count]
+            | where issecure="no"
+            | table count
+            | appendpipe [stats count | where count=0 | eval count=0 | table count]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -162,9 +163,9 @@
         <title>Percent</title>
         <search base="is_secure">
           <query>
-                | where issecure="no"
-                | table percent
-                | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
+            | where issecure="no"
+            | table percent
+            | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -186,13 +187,13 @@
       <table>
         <search base="source_security">
           <query>
-                | dedup traffic_analyzer_tcp_stream
-                | stats count as "# of streams" by cipher_suite_number
-                | join cipher_suite_number
-                   [ search sourcetype=list source="*cipher_suites.csv" ]
-                | table cipher_suite_number, description, recommended, "# of streams"
-                | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended
-                | sort "# of streams" desc
+            | dedup traffic_analyzer_tcp_stream
+            | stats count as "# of streams" by cipher_suite_number
+            | join cipher_suite_number
+              [search sourcetype=list source="*cipher_suites.csv"]
+            | table cipher_suite_number, description, recommended, "# of streams"
+            | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended
+            | sort "# of streams" desc
           </query>
         </search>
         <option name="count">10</option>
@@ -209,14 +210,14 @@
       <table>
         <search base="source_security">
           <query>
-                | dedup traffic_analyzer_tcp_stream
-                | stats count as "# of streams" by tls_ssl_version_negotiated
-                | join tls_ssl_version_negotiated
-                   [search sourcetype=list source="*tls-versions.csv"
-                      | rename tls_record_version as tls_ssl_version_negotiated]
-                | table tls_ssl_version_negotiated, description, "# of streams"
-                | rename tls_ssl_version_negotiated as "Version", description as Description
-                | sort "# of streams" desc
+            | dedup traffic_analyzer_tcp_stream
+            | stats count as "# of streams" by tls_ssl_version_negotiated
+            | join tls_ssl_version_negotiated
+              [search sourcetype=list source="*tls-versions.csv"
+              | rename tls_record_version as tls_ssl_version_negotiated]
+            | table tls_ssl_version_negotiated, description, "# of streams"
+            | rename tls_ssl_version_negotiated as "Version", description as Description
+            | sort "# of streams" desc
           </query>
         </search>
       </table>

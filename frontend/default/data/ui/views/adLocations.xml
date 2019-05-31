@@ -13,11 +13,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -53,13 +54,14 @@
       <title>Cluster Map</title>
       <map>
         <search>
-          <query>$source_token$
-                | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | table dst_latitude, dst_longitude, ad_category
-                | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
+          <query>
+            $source_token$
+            | dedup dst_fqdn
+            | rename ad_category as ad_id
+            | join ad_id
+              [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
+            | table dst_latitude, dst_longitude, ad_category
+            | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
           <latest></latest>
@@ -83,16 +85,17 @@
       <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
       <table>
         <search>
-          <query>$source_token$
-                | rename dst_latitude as latitude, dst_longitude as longitude
-                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | where ad_id != 0
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
-                | table "DNS Query", "Reverse Lookup", "AD Category"
+          <query>
+            $source_token$
+            | rename dst_latitude as latitude, dst_longitude as longitude
+            | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
+            | dedup dst_fqdn
+            | rename ad_category as ad_id
+            | where ad_id != 0
+            | join ad_id
+              [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
+            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
+            | table "DNS Query", "Reverse Lookup", "AD Category"
           </query>
           <earliest>0</earliest>
           <latest></latest>

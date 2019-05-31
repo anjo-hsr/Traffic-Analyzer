@@ -20,11 +20,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -61,9 +62,9 @@
       <chart>
         <search base="source_protocols">
           <query>
-                | table frame_time, ip_proto, ws_col_Protocol
-                | stats count by ws_col_Protocol
-                | rename count as packets
+            | table frame_time, ip_proto, ws_col_Protocol
+            | stats count by ws_col_Protocol
+            | rename count as packets
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -77,8 +78,8 @@
       <chart>
         <search base="source_protocols">
           <query>
-                | table frame_time, ws_col_Protocol, frame_len
-                | stats sum(frame_len) as "bytes" by ws_col_Protocol
+            | table frame_time, ws_col_Protocol, frame_len
+            | stats sum(frame_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -91,9 +92,9 @@
       <chart>
         <search base="source_protocols">
           <query>
-                | table frame_time, ws_col_Protocol, _time
-                | timechart span=1m count by ws_col_Protocol usenull=f
-                | rename VALUE as Other
+            | table frame_time, ws_col_Protocol, _time
+            | timechart span=1m count by ws_col_Protocol usenull=f
+            | rename VALUE as Other
           </query>
         </search>
         <option name="charting.chart">area</option>
