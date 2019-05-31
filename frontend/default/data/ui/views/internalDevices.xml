@@ -67,34 +67,34 @@
       <table>
         <search base="source_internal_endpoints">
           <query>
-                | dedup ip_src
-                | eval src_is_private_extended=if(
-                  cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
-                  src_is_private_ip == "1", "True", "False")
-                | where src_is_private_extended == "True"
-                | where ip_src!="" AND ip_src!="0.0.0.0"
-                | eval eth_short=substr(eth_src,1,8)
-                | join type=left eth_short
-                  [search sourcetype="list" source="*mac_vendor.csv"]
-                | fillnull value="no vendor found"
-                | table eth_src, vendor, ip_src
-                | dedup ip_src
+            | dedup ip_src
+            | eval src_is_private_extended=if(
+              cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
+              src_is_private_ip == "1", "True", "False")
+            | where src_is_private_extended == "True"
+            | where ip_src!="" AND ip_src!="0.0.0.0"
+            | eval eth_short=substr(eth_src,1,8)
+            | join type=left eth_short
+              [ search sourcetype="list" source="*mac_vendor.csv" ]
+            | fillnull value="no vendor found"
+            | table eth_src, vendor, ip_src
+            | dedup ip_src
+            | rename ip_src as ip
+            | join type=left ip
+              [ | loadjob $subsearch_id_internal_endpoints$
+                | stats sum(frame_len) as "bytes out" by ip_src
+                | rename ip_src as ip ]
+            | join type=left ip
+              [ | loadjob $subsearch_id_internal_endpoints$
+                | stats sum(frame_len) as "bytes in" by ip_dst
+                | rename ip_dst as ip ]
+            | join type=left ip
+              [ | loadjob $subsearch_id_internal_endpoints$
                 | rename ip_src as ip
-                | join type=left ip
-                  [| loadjob $subsearch_id_internal_endpoints$
-                  | stats sum(frame_len) as "bytes out" by ip_src
-                  | rename ip_src as ip ]
-                | join type=left ip
-                  [| loadjob $subsearch_id_internal_endpoints$
-                  | stats sum(frame_len) as "bytes in" by ip_dst
-                  | rename ip_dst as ip ]
-                | join type=left ip
-                  [| loadjob $subsearch_id_internal_endpoints$
-                  | rename ip_src as ip
-                  | where tls_handshake_type=1
-                  | eval client_hello=1
-                  | table client_hello, ip ]
-                | fillnull value=0
+                | where tls_handshake_type=1
+                | eval client_hello=1
+                | table client_hello, ip ]
+            | fillnull value=0
           </query>
         </search>
       </table>

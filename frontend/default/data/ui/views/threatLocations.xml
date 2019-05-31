@@ -72,8 +72,8 @@
             | dedup dst_fqdn
             | rename threat_category as threat_id
             | join threat_id
-              [search sourcetype=list source="*threat_types.csv"
-              | rename id as threat_id, category as threat_category]
+              [ search sourcetype=list source="*threat_types.csv"
+                | rename id as threat_id, category as threat_category ]
             | table dst_latitude, dst_longitude, threat_category
             | geostats count by threat_category latfield=dst_latitude longfield=dst_longitude
           </query>
@@ -116,8 +116,8 @@
             | rename threat_category as threat_id
             | where threat_id != 0
             | join threat_id
-              [search sourcetype=list source="*threat_types.csv"
-              | rename id as threat_id, category as threat_category]
+              [ search sourcetype=list source="*threat_types.csv"
+                | rename id as threat_id, category as threat_category ]
             | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", threat_category as "Threat Category"
             | table DNS_Query, Reverse_Lookup, "Threat Category"
           </query>
