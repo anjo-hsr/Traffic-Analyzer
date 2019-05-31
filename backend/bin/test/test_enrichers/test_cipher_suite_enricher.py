@@ -7,6 +7,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.cipher_suite_enricher = CipherSuiteEnricher()
+        cls.information_dict = {}
         cls.packets = {
             "client_hello": {
                 "tls.handshake.type": "1",
@@ -32,8 +33,8 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         else:
             expected_cipher_suite = "{}".format(expected_value)
 
-        cipher_suite_number = self.cipher_suite_enricher.get_cipher_suite(packet)
-        self.assertEqual(cipher_suite_number, expected_cipher_suite)
+        self.cipher_suite_enricher.get_information(packet, self.information_dict)
+        self.assertEqual(self.information_dict["cipher_suite_number"], expected_cipher_suite)
 
     def test_get_cipher_suites_client_hello(self) -> None:
         expected_value = ""

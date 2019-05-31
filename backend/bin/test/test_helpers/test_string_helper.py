@@ -10,6 +10,11 @@ class TestStringHelperMethods(unittest.TestCase):
         expected_string = "hsr,rapperswil,st. gallen,switzerland"
         self.assertEqual(string_helper.remove_quotations(string_with_quotations), expected_string)
 
+    def test_enclude_with_quotes(self):
+        string_value = "hsr"
+        expected_string = '"hsr"'
+        self.assertEqual(string_helper.enclose_with_quotes(string_value), expected_string)
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestStringHelperMethods)
