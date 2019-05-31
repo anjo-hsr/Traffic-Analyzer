@@ -1,5 +1,12 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Protocols</label>
+  <search id="source_protocols">
+     <query>
+     $source_token$
+      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, _*
+      | table frame_time, ip_proto, ws_col_Protocol, frame_len, _time
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -52,21 +59,24 @@
     <panel>
       <title>Protocols by # of packets</title>
       <chart>
-        <search>
-          <query>$source_token$
-                | table frame_time, ip_proto
+        <search base="source_protocols">
+          <query>
+                | table frame_time, ip_proto, ws_col_Protocol
                 | stats count by ws_col_Protocol
                 | rename count as packets
           </query>
         </search>
         <option name="charting.chart">pie</option>
+        <drilldown>
+          <link target="_blank">https://en.wikipedia.org/wiki/$click.value$</link>
+        </drilldown>
       </chart>
     </panel>
     <panel>
       <title>Protocols by volume</title>
       <chart>
-        <search>
-          <query>$source_token$
+        <search base="source_protocols">
+          <query>
                 | table frame_time, ws_col_Protocol, frame_len
                 | stats sum(frame_len) as "bytes" by ws_col_Protocol
           </query>
@@ -79,8 +89,9 @@
     <panel>
       <title>Protokolle über Zeit</title>
       <chart>
-        <search>
-          <query>$source_token$
+        <search base="source_protocols">
+          <query>
+                | table frame_time, ws_col_Protocol, _time
                 | timechart span=1m count by ws_col_Protocol usenull=f
                 | rename VALUE as Other
           </query>
