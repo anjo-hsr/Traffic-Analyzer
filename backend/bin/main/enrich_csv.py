@@ -76,7 +76,8 @@ def run(environment_variables, print_enrichers=False) -> None:
         enrich_file(file_path["path"], file_path["filename"], temp_filename, enricher_jar)
         remove(path.join(file_path["path"], file_path["filename"]))
 
-        new_file_name = original_filename if environment_variables["environment"] == "production" else temp_filename
+        is_production_environment = environment_variables["environment"] == "production"
+        new_file_name = original_filename if is_production_environment else temp_filename
         file_move_helper.move_file(
             path.join(file_path["path"], temp_filename),
             path.join(csv_capture_path, new_file_name)

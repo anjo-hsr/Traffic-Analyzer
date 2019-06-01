@@ -81,7 +81,7 @@ class ThreatInfoEnricher(Enricher):
         return list(map(lambda domain: {"url": domain}, filtered_domains))
 
     def update_threat_dict(self, response_dict) -> None:
-        if response_dict == {}:
+        if not response_dict:
             return
 
         for match in response_dict["matches"]:

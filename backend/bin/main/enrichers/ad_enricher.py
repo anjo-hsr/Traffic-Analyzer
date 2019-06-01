@@ -33,7 +33,7 @@ class AdEnricher(Enricher):
         dict_to_test = self.blacklist_dict.blacklist_dict
         is_ad = self.is_domain_in_dict(domain, dict_to_test)
 
-        is_ad = is_ad or dict_to_test == {}
+        is_ad = is_ad or not dict_to_test
         self.domain_to_ad_dict[domain] = is_ad
         return is_ad
 
@@ -46,7 +46,7 @@ class AdEnricher(Enricher):
         for domain_part in reversed(domain.split(".")):
             dict_value = dict_to_test.get(domain_part, {})
             if isinstance(dict_value, dict):
-                if dict_value == {}:
+                if not dict_value:
                     break
 
                 dict_to_test = dict_value
