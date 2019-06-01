@@ -1,32 +1,33 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>External Endpoints</label>
-    <search id="source_external">
-      <query>
-        $source_token$ eth_dst=$filteredMAC$ src_is_private_ip="false"
-        | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
-        | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
-      </query>
-      <done>
-        <condition>
-          <set token="subsearch_id_external">$job.sid$</set>
-        </condition>
-      </done>
-    </search>
-    <search base="source_external" id="source_external_endpoints">
-      <query>
-      | search [| loadjob $subsearch_id_external$
-                  | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
-                  | dedup eth_src
-                  | table eth_src]
-                | where ip_src!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+  <search id="source_external">
+    <query>
+      $source_token$ eth_dst=$filteredMAC$ src_is_private_ip="0"
       | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
       | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
-      </query>
-      <done>
-        <condition>
-          <set token="subsearch_id_external_endpoints">$job.sid$</set>
-        </condition>
-      </done>
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_external">$job.sid$</set>
+      </condition>
+    </done>
+  </search>
+  <search base="source_external" id="source_external_endpoints">
+    <query>
+    | search
+      [ | loadjob $subsearch_id_external$
+        | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+        | dedup eth_src
+        | table eth_src]
+    | where ip_src!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+    | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
+    | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_external_endpoints">$job.sid$</set>
+      </condition>
+    </done>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
@@ -41,11 +42,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
-              | sort shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -60,12 +62,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
+          <unset token="use_custom_ip_range"/>
           <set token="custom_ip_range">203.0.113.0/24</set>
           <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -73,7 +75,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
@@ -82,25 +84,25 @@
       <table>
         <search base="source_external_endpoints">
           <query>
-                | fillnull value=""
-                | dedup ip_src
-                | rename ip_src as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
-                | join type=left ip
-                  [| loadjob $subsearch_id_external_endpoints$
-                  | stats sum(frame_len) as "bytes out" by ip_src
-                  | rename ip_src as ip ]
-                | join type=left ip
-                  [| loadjob $subsearch_id_external_endpoints$
-                  | stats sum(frame_len) as "bytes in" by ip_dst
-                  | rename ip_dst as ip ]
-                | join type=left ip
-                  [| loadjob $subsearch_id_external_endpoints$
-                  | rename ip_src as ip
-                  | where tls_handshake_type=1
-                  | eval client_hello=1
-                  | table client_hello, ip ]
-                | table ip,  "DNS Query", "Reverse Lookup", "bytes out", "bytes in"
-                | fillnull value=0
+            | fillnull value=""
+            | dedup ip_src
+            | rename ip_src as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
+            | join type=left ip
+              [ | loadjob $subsearch_id_external_endpoints$
+                | stats sum(frame_len) as "bytes out" by ip_src
+                | rename ip_src as ip ]
+            | join type=left ip
+              [ | loadjob $subsearch_id_external_endpoints$
+                | stats sum(frame_len) as "bytes in" by ip_dst
+                | rename ip_dst as ip ]
+            | join type=left ip
+              [ | loadjob $subsearch_id_external_endpoints$
+                | rename ip_src as ip
+                | where tls_handshake_type=1
+                | eval client_hello=1
+                | table client_hello, ip ]
+            | table ip,  "DNS Query", "Reverse Lookup", "bytes out", "bytes in"
+            | fillnull value=0
           </query>
         </search>
       </table>

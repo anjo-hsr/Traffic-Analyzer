@@ -23,4 +23,4 @@ class IpTypeEnricher(Enricher):
         if ip_address != "":
             is_private = IpHelper.is_private_ip(ip_address)
 
-        return str(is_private)
+        return "1" if is_private else "0"

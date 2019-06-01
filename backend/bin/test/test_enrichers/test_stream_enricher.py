@@ -31,7 +31,7 @@ class TestStreamEnricherMethods(unittest.TestCase):
         }
 
     def test_header(self) -> None:
-        expected_header = "traffic_analyzer_tcp_stream"
+        expected_header = "traffic_analyzer_stream"
         self.assertEqual(self.stream_enricher.header, expected_header)
 
     def test_generate_stream_id_public(self) -> None:

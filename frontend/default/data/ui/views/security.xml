@@ -3,15 +3,15 @@
   <search id="source_security">
     <query>
       $source_token$
-      | fields cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated, -*
-      | table cipher_suite_number, tcp_stream,traffic_analyzer_tcp_stream, tls_ssl_version_negotiated
+      | fields cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, -*
+      | table cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated
     </query>
   </search>
   <search base="source_security" id="recommended_cipher_suites">
     <query>
       | dedup cipher_suite_number
       | join cipher_suite_number
-        [search sourcetype=list source="*cipher_suites.csv"]
+        [ search sourcetype=list source="*cipher_suites.csv" ]
       | table cipher_suite_number, recommended
     </query>
   </search>
@@ -55,12 +55,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
+          <unset token="use_custom_ip_range"/>
           <set token="custom_ip_range">203.0.113.0/24</set>
           <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -68,7 +68,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
@@ -78,7 +78,7 @@
         <search base="source_security">
           <query>
             | where tcp_stream!=""
-            | dedup traffic_analyzer_tcp_stream
+            | dedup traffic_analyzer_stream
             | stats count as "# of streams"
           </query>
         </search>
@@ -187,10 +187,10 @@
       <table>
         <search base="source_security">
           <query>
-            | dedup traffic_analyzer_tcp_stream
+            | dedup traffic_analyzer_stream
             | stats count as "# of streams" by cipher_suite_number
             | join cipher_suite_number
-              [search sourcetype=list source="*cipher_suites.csv"]
+              [ search sourcetype=list source="*cipher_suites.csv" ]
             | table cipher_suite_number, description, recommended, "# of streams"
             | rename cipher_suite_number as "Nr.", description as Description, recommended as Recommended
             | sort "# of streams" desc
@@ -201,7 +201,7 @@
           <colorPalette type="map">{"N":#FC4737}</colorPalette>
         </format>
         <drilldown>
-          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_tcp_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%22True%22%20OR%20cidrmatch(%22$custom_ip_range$%22,%20ip_src)%7C%20dedup%20ip_dst%20cipher_suite_number%20ip_src%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src%20%7C%20sort%20ip_dst%20%7C%20mvcombine%20ip_src&amp;earliest=$earliest$&amp;latest=$latest$</link>
+          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ip_range$%22,%20ip_src)%7C%20dedup%20ip_dst%20cipher_suite_number%20ip_src%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src%20%7C%20sort%20ip_dst%20%7C%20mvcombine%20ip_src&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>
       </table>
     </panel>
@@ -210,11 +210,11 @@
       <table>
         <search base="source_security">
           <query>
-            | dedup traffic_analyzer_tcp_stream
+            | dedup traffic_analyzer_stream
             | stats count as "# of streams" by tls_ssl_version_negotiated
             | join tls_ssl_version_negotiated
-              [search sourcetype=list source="*tls-versions.csv"
-              | rename tls_record_version as tls_ssl_version_negotiated]
+              [ search sourcetype=list source="*tls-versions.csv"
+                | rename tls_record_version as tls_ssl_version_negotiated ]
             | table tls_ssl_version_negotiated, description, "# of streams"
             | rename tls_ssl_version_negotiated as "Version", description as Description
             | sort "# of streams" desc

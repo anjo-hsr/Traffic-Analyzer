@@ -34,14 +34,14 @@ class TestServerTypeEnricher(unittest.TestCase):
         self.assertEqual(self.server_type_enricher.header, expected_header)
 
     def test_detect_type_dhcp(self) -> None:
-        expected_value = "True"
+        expected_value = "1"
         actual_value = self.server_type_enricher.detect_type(self.dhcp_packet, ResponseHelper.is_dhcp_response, "dhcp")
         self.assertEqual(actual_value, expected_value)
         actual_value = self.server_type_enricher.detect_type(self.dns_packet, ResponseHelper.is_dhcp_response, "dhcp")
         self.assertNotEqual(actual_value, expected_value)
 
-    def test_detect_type_dnd(self) -> None:
-        expected_value = "True"
+    def test_detect_type_dns(self) -> None:
+        expected_value = "1"
         actual_value = self.server_type_enricher.detect_type(self.dhcp_packet, ResponseHelper.is_dhcp_response, "dns")
         self.assertEqual(actual_value, expected_value)
         actual_value = self.server_type_enricher.detect_type(self.dns_packet, ResponseHelper.is_dhcp_response, "dns")

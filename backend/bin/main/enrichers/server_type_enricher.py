@@ -20,7 +20,7 @@ class ServerTypeEnricher(Enricher):
             self.save_entry(dict_key, packet)
             is_type = True
 
-        return str(is_type)
+        return "1" if is_type else "0"
 
     def save_entry(self, dict_key, packet) -> None:
         server_address = packet["ip.src"]
