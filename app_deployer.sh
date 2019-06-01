@@ -40,14 +40,14 @@ function create_tar() {
     
     echo -e "\nCreate traffic-analyzer.tar.gz"
     if ! [[ -z "$1" ]] && [[ "$1" == "update" ]] ; then
-        create_update_tar $tarPath
+        create_update_tar ${tarPath}
         tarType="Update"
     else
-        create_normal_tar $tarPath
+        create_normal_tar ${tarPath}
         tarType="Normal"
     fi
 
-    echo -e "${tarType} traffic-analyzer.tar.gz file created under ${tarPath}"
+    echo -e "${tarType} file traffic-analyzer.tar.gz created under ${tarPath}"
 }
 
 function create_normal_tar() {
