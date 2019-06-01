@@ -32,21 +32,42 @@ function wait_till_container_is_running() {
 }
 
 function create_tar() {
-    if [[ -z "$1" ]]; then
+    if [[ -z "$2" ]]; then
         tarPath="./docker/init_files/traffic-analyzer"
     else
-        tarPath=$1
+        tarPath=$2
     fi
     
     echo -e "\nCreate traffic-analyzer.tar.gz"
+    if ! [[ -z "$1" ]] && [[ "$1" == "update" ]] ; then
+        create_update_tar $tarPath
+        tarType="Update"
+    else
+        create_normal_tar $tarPath
+        tarType="Normal"
+    fi
+
+    echo -e "${tarType} traffic-analyzer.tar.gz file created under ${tarPath}"
+}
+
+function create_normal_tar() {
+    tarPath=$1
     tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
         -zcvf "${tarPath}/traffic-analyzer.tar.gz" \
         -C backend/ bin \
         -C ../frontend/ appserver default local lookups metadata static \
         --transform "s,^,traffic-analyzer/,"
+}
 
-    echo -e "File traffic-analyzer.tar.gz file created under ${tarPath}"
+function create_update_tar() {
+    tarPath=$1
+    tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" --exclude="bin/test" \
+        --exclude="*/.*" --exclude="*/__pycache__" --exclude="local/*.conf"\
+        -zcvf "${tarPath}/traffic-analyzer.tar.gz" \
+        -C backend/ bin \
+        -C ../frontend/ appserver default lookups metadata static \
+        --transform "s,^,traffic-analyzer/,"
 }
 
 function remove_traffic-analyzer() {
@@ -151,21 +172,21 @@ case "$1" in
 
     update)
         install_requirements
-        create_tar
+        create_tar "update"
         update_traffic-analyzer
         test_splunk_app 5
         ;;
 
     force-update)
         install_requirements
-        create_tar
+        create_tar "normal"
         remove_traffic-analyzer
         update_traffic-analyzer
         test_splunk_app 5
         ;;
 
     generate-tar)
-        create_tar $2
+        create_tar "normal" $2
         ;;
 
     copy-pcaps)
