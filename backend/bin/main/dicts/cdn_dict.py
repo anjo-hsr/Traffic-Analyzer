@@ -188,7 +188,4 @@ class CdnDict:
 
     @staticmethod
     def test_domain_ending(domain, domain_key):
-        if domain.endswith(domain_key):
-            return True
-        else:
-            return False
+        return domain.endswith(domain_key)
