@@ -1,5 +1,13 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Server Types</label>
+  <search id="source_server_types">
+    <query>
+      $source_token$
+      | fields table ip_src, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn, ws_col_Protocol, -*
+      | table table ip_src, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn, ws_col_Protocol
+      | where $server_type_token$="1"
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -54,14 +62,18 @@
       <title>Server Types</title>
       <input type="dropdown" token="server_type_token" searchWhenChanged="true">
         <label>Select the server type</label>
-        <choice value="is_dhcp">DHCP</choice>
-        <choice value="is_dns">DNS / MDNS</choice>
+        <choice value="src_is_dhcp">DHCP</choice>
+        <choice value="src_is_dns">DNS / MDNS</choice>
+        <choice value="src_is_cdn">CDN</choice>
         <change>
           <condition label="DHCP">
             <set token="server_type_name">DHCP</set>
           </condition>
           <condition label="DNS / MDNS">
             <set token="server_type_name">DNS / MDNS</set>
+          </condition>
+          <condition label="CDN">
+            <set token="server_type_name">CDN</set>
           </condition>
         </change>
       </input>
@@ -71,10 +83,8 @@
     <panel>
       <single>
         <title># of $server_type_name$ servers</title>
-        <search>
+        <search base="source_server_types">
           <query>
-            $source_token$
-            | where $server_type_token$="1"
             | table ip_src
             | dedup ip_src
             | stats count
@@ -94,10 +104,8 @@
     <panel>
       <single>
         <title># of $server_type_name$ responses</title>
-        <search>
+        <search base="source_server_types">
           <query>
-            $source_token$
-            | where $server_type_token$="1"
             | table ip_src
             | stats count
             | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
@@ -117,16 +125,13 @@
   <row>
     <panel>
       <table>
-        <search>
+        <search base="source_server_types">
           <query>
-            $source_token$
-            | where $server_type_token$="1" AND ip_src != ""
-            | table ip_src, src_fqdn, ws_col_Protocol
+            | where ip_src != ""
+            | table ip_src, src_query_name, src_fqdn, ws_col_Protocol
             | dedup ip_src
             | sort ws_col_Protocol, ip_src
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
       </table>
     </panel>

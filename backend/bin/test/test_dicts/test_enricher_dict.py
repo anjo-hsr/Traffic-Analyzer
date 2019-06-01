@@ -25,8 +25,8 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "tls_ssl_version_enricher",
             "ip_type_enricher",
             "stream_enricher",
-            "server_type_enricher",
             "dns_lookup_enricher",
+            "server_type_enricher",
             "ad_enricher",
             "threat_info_enricher"
         ]
@@ -54,11 +54,11 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             elif key == "stream_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], StreamEnricher))
 
-            elif key == "server_type_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], ServerTypeEnricher))
-
             elif key == "dns_lookup_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], DnsLookupEnricher))
+
+            elif key == "server_type_enricher":
+                self.assertTrue(isinstance(self.enricher_dict[key], ServerTypeEnricher))
 
             elif key == "ad_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], AdEnricher))
@@ -77,7 +77,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
     def test_enricher_dict_keys(self) -> None:
         id_index = 0
         enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict.keys()]
-        self.assertEqual(enricher_classes_key_ids, id_keys)
+        self.assertListEqual(enricher_classes_key_ids, id_keys)
 
 
 if __name__ == "__main__":

@@ -44,6 +44,11 @@ class DnsLookupEnricher(Enricher):
             information_dict["src_hostnames"]
         ], True)
 
+        information_dict["src_domains"] = CombineHelper.join_list_elements([
+            information_dict["src_query_name"],
+            information_dict["src_hostnames"]
+        ], True)
+
     def get_dns_query(self, ip) -> str:
         ip_information = self.dns_responses.get(ip, self.get_empty_dict())
         return enclose_with_quotes(ip_information["query_name"])
