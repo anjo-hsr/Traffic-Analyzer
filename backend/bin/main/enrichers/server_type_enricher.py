@@ -22,7 +22,7 @@ class ServerTypeEnricher(Enricher):
             self.save_entry(dict_key, packet)
             is_type = True
 
-        return str(is_type)
+        return "1" if is_type else "0"
 
     def check_cdn(self, packet, information_dict) -> str:
         domains = information_dict["src_domains"]
