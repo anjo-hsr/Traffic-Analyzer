@@ -56,8 +56,8 @@
         <search>
           <query>
             $source_token$ $src_dst_selector$=$ip$
-            | stats sum(linecount) as "# of packages" by src_fqdn
-            | sort $limit$ -num("# of packages")
+            | stats sum(linecount) as "# of packets" by src_fqdn
+            | sort $limit$ -num("# of packets")
           </query>
         </search>
       </table>

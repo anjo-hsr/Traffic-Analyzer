@@ -3,10 +3,10 @@
   <search id="source_overview">
     <query>
       $source_token$
-      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number,
-        tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, _*
-      | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number,
-        tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, _time
+      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
+      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _*
+      | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
+      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _time
     </query>
   </search>
   <search base="source_overview" id="recommended_cipher_suites">
@@ -23,6 +23,23 @@
       | table issecure
       | top issecure
     </query>
+  </search>
+  <search base="source_overview" id="bytes_transfered">
+    <query>
+      | dedup ip_src
+      | eval src_is_private_extended=if(
+        cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
+        src_is_private_ip == "1", "True", "False")
+      | where src_is_private_extended == "True"
+      | where ip_src!="" AND ip_src!="0.0.0.0"
+      | table ip_src
+      | rename ip_src as ip
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_bytes_transfered">$job.sid$</set>
+      </condition>
+    </done>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
@@ -207,6 +224,110 @@
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
         <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Traffic incomming</title>
+      <single>
+        <title>Bytes incomming</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(frame_len) as bytes_in_per_ip by ip_dst
+                | rename ip_dst as ip ]
+            | stats sum(bytes_in_per_ip) as sum_bytes
+            | table sum_bytes
+            | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Bytes</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title># of packets</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(linecount) as "# of packets" by ip_dst
+                | rename ip_dst as ip ]
+            | stats sum("# of packets") as sum_packets
+            | table sum_packets
+            | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Packets</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Traffic outgoing</title>
+      <single>
+        <title>Bytes outgoing</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(frame_len) as bytes_out_per_ip by ip_src
+                | rename ip_src as ip ]
+            | stats sum(bytes_out_per_ip) as sum_bytes
+            | table sum_bytes
+            | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Bytes</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title># of packets</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(linecount) as "# of packets" by ip_src
+                | rename ip_src as ip ]
+            | stats sum("# of packets") as sum_packets
+            | table sum_packets
+            | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Packets</option>
         <option name="unitPosition">after</option>
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
