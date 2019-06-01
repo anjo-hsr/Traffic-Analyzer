@@ -156,9 +156,6 @@ class CdnDict:
             'Zenedge': ['.zenedge.net']
         }
 
-    def get_cdn_name_to_domains(self) -> Dict[str, str]:
-        return self.cdn_names
-
     def get_cdn_domains_to_names(self) -> Dict[str, str]:
         cdn_domains = {}
         for key in self.cdn_names.keys():
@@ -182,9 +179,10 @@ class CdnDict:
 
     @staticmethod
     def test_for_wildcard(domain, domain_key):
-        if not domain_key.endswith("."):
-            return CdnDict.test_domain_ending(domain, domain_key)
-        return True
+        if domain_key.endswith("."):
+            return True
+
+        return CdnDict.test_domain_ending(domain, domain_key)
 
     @staticmethod
     def test_domain_ending(domain, domain_key):
