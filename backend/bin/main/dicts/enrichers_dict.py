@@ -20,8 +20,8 @@ def get_enricher_dict() -> OrderedDict:
         ("tls_ssl_version_enricher", TlsEnricher()),
         ("ip_type_enricher", IpTypeEnricher()),
         ("stream_enricher", StreamEnricher()),
-        ("server_type_enricher", ServerTypeEnricher()),
         ("dns_lookup_enricher", DnsLookupEnricher()),
+        ("server_type_enricher", ServerTypeEnricher()),
         ("ad_enricher", AdEnricher()),
         ("threat_info_enricher", ThreatInfoEnricher())
     ])
