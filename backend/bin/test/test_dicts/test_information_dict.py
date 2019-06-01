@@ -16,6 +16,7 @@ class TestInformationDict(unittest.TestCase):
             "ip_type_information",
             "stream_id",
             "dns_lookup_information",
+            "server_types",
             "ad_value",
             "threat_information"
         ]

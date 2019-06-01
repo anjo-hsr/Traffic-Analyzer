@@ -14,7 +14,7 @@ class TlsEnricher(Enricher):
         print_text = "Print out for {} streams to tls version entries"
         PrintHelper.print_dict(self.stream_to_handshake_version, print_text)
 
-    def get_tls_ssl_version(self, packet) -> str:
+    def get_information(self, packet, information_dict) -> None:
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
         stream = packet["tcp.stream"]
@@ -25,9 +25,10 @@ class TlsEnricher(Enricher):
 
         if handshake_version != "" and is_server_hello:
             self.stream_to_handshake_version[stream] = handshake_version
-            return handshake_version
+            information_dict["tls_ssl_version_negotiated"] = handshake_version
 
-        if stream in self.stream_to_handshake_version:
-            return self.stream_to_handshake_version[stream]
+        elif stream in self.stream_to_handshake_version:
+            information_dict["tls_ssl_version_negotiated"] = self.stream_to_handshake_version[stream]
 
-        return '""'
+        else:
+            information_dict["tls_ssl_version_negotiated"] = '""'

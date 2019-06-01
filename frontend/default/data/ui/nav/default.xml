@@ -1,11 +1,13 @@
 <nav search_view="search" color="3C444C">
   <view name="overview" default="true"/>
   <collection label="Endpoints">
+    <view name="serverTypes"/>
     <view name="internalDevices"/>
     <view name="externalDevices"/>
   </collection>
   <collection label="Traffic">
     <view name="trafficTypes"/>
+    <view name="streamInformation"/>
     <view name="adLocations"/>
     <view name="threatLocations"/>
   </collection>

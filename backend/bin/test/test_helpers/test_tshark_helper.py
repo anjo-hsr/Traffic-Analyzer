@@ -7,12 +7,13 @@ class TestTsharkHelperMethods(unittest.TestCase):
     def test_tshark_get_arguments(self) -> None:
         filename = "test.pcap"
         args = ["-r", filename, "-T", "fields",
-                "-e", "_ws.col.Time", "-e", "_ws.col.Protocol",
-                "-e", "frame.cap_len",
+                "-e", "frame.time", "-e", "frame.len",
+                "-e", "_ws.col.Protocol",
                 "-e", "eth.dst", "-e", "eth.src",
                 "-e", "ip.dst", "-e", "ip.src", "-e", "ip.proto",
                 "-e", "tcp.srcport", "-e", "tcp.dstport", "-e", "tcp.flags", "-e", "tcp.len", "-e", "tcp.stream",
                 "-e", "udp.srcport", "-e", "udp.dstport", "-e", "udp.length",
+                "-e", "dhcp.option.dhcp",
                 "-e", "dns.flags.response", "-e", "dns.qry.name",
                 "-e", "dns.a", "-e", "dns.aaaa", "-e", "dns.resp.name", "-e", "dns.resp.type",
                 "-e", "http.request.method", "-e", "http.request.uri",

@@ -6,6 +6,8 @@ from main.enrichers.ad_enricher import AdEnricher
 class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        cls.information_dict = {}
+        cls.packet = {}
         cls.blacklist_domains = [
             "adserver.news.com.au",
             "yab-adimages.s3.amazonaws.com",
@@ -54,12 +56,16 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
             self.assertTrue(self.ad_enricher.is_ad_domain(blacklist_domain))
 
     def test_domain_mixed(self) -> None:
-        mixed_domains_string = ",".join(self.mixex_domains)
-        self.assertTrue(self.ad_enricher.test_domains(mixed_domains_string))
+        self.information_dict["domains"] = ",".join(self.mixex_domains)
+        self.ad_enricher.get_information(self.packet, self.information_dict)
+        ad_category = "1"
+        self.assertEqual(self.information_dict["ad_category"], ad_category)
 
-    def test_domain_mixed_empty(self) -> None:
-        empty_domains_string = ",".join(self.empty_domains)
-        self.assertTrue(self.ad_enricher.test_domains(empty_domains_string))
+    def test_domain_empty(self) -> None:
+        self.information_dict["domains"] = ",".join(self.empty_domains)
+        self.ad_enricher.get_information(self.packet, self.information_dict)
+        ad_category = "0"
+        self.assertEqual(self.information_dict["ad_category"], ad_category)
 
 
 if __name__ == "__main__":

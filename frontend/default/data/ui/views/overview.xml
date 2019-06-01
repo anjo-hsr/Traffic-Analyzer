@@ -1,5 +1,46 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Overview</label>
+  <search id="source_overview">
+    <query>
+      $source_token$
+      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
+      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _*
+      | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
+      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _time
+    </query>
+  </search>
+  <search base="source_overview" id="recommended_cipher_suites">
+    <query>
+      | dedup cipher_suite_number
+      | join cipher_suite_number
+        [ search sourcetype=list source="*cipher_suites.csv" ]
+      | table cipher_suite_number, recommended
+    </query>
+  </search>
+  <search base="source_overview" id="is_secure">
+    <query>
+      | eval issecure=if(cipher_suite_number=="","no","yes")
+      | table issecure
+      | top issecure
+    </query>
+  </search>
+  <search base="source_overview" id="bytes_transfered">
+    <query>
+      | dedup ip_src
+      | eval src_is_private_extended=if(
+        cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
+        src_is_private_ip == "1", "True", "False")
+      | where src_is_private_extended == "True"
+      | where ip_src!="" AND ip_src!="0.0.0.0"
+      | table ip_src
+      | rename ip_src as ip
+    </query>
+    <done>
+      <condition>
+        <set token="subsearch_id_bytes_transfered">$job.sid$</set>
+      </condition>
+    </done>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -13,10 +54,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -31,12 +74,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">1.2.3.4/32</set>
-          <set token="form.custom_ip_range">1.2.3.4/32</set>
+          <unset token="use_custom_ip_range"/>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -44,30 +87,33 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
     <panel>
-      <title>Protocols by packets</title>
+      <title>Protocols by # of packets</title>
       <chart>
-        <search>
-          <query>$source_token$
-                | table frame_time, ip_proto
-                | stats count by ws_col_Protocol
-                | rename count as packets
+        <search base="source_overview">
+          <query>
+            | table frame_time, ip_proto, ws_col_Protocol
+            | stats count by ws_col_Protocol
+            | rename count as packets
           </query>
         </search>
         <option name="charting.chart">pie</option>
+        <drilldown>
+          <link target="_blank">https://en.wikipedia.org/wiki/$click.value$</link>
+        </drilldown>
       </chart>
     </panel>
     <panel>
-      <title>Protocols by traffic</title>
+      <title>Protocols by volume</title>
       <chart>
-        <search>
-          <query>$source_token$
-                | table frame_time, ws_col_Protocol, frame_cap_len
-                | stats sum(frame_cap_len) as "traffic size" by ws_col_Protocol
+        <search base="source_overview">
+          <query>
+            | table frame_time, ws_col_Protocol, frame_len
+            | stats sum(frame_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -78,11 +124,11 @@
     <panel>
       <title>Total number of tcp streams</title>
       <single>
-        <search>
-          <query>$source_token$
-                | where tcp_stream!=""
-                | dedup traffic_analyzer_tcp_stream
-                | stats count as "# of streams"
+        <search base="source_overview">
+          <query>
+            | where tcp_stream!=""
+            | dedup traffic_analyzer_stream
+            | stats count as "# of streams"
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -99,16 +145,12 @@
       <title>Number of inadvisable cipher suites used</title>
       <single>
         <title>Absolute</title>
-        <search>
-          <query>$source_token$
-                | dedup cipher_suite_number
-                | join cipher_suite_number
-                   [ search sourcetype=list source="*cipher_suites.csv" ]
-                | table cipher_suite_number, recommended
-                | stats count as amount by recommended
-                | where recommended="N"
-                | table amount
-                | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+        <search base="recommended_cipher_suites">
+          <query>
+            | stats count as amount by recommended
+            | where recommended="N"
+            | table amount
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -122,18 +164,14 @@
       </single>
       <single>
         <title>Percent</title>
-        <search>
-          <query>$source_token$
-                | dedup cipher_suite_number
-                | join cipher_suite_number
-                   [ search sourcetype=list source="*cipher_suites.csv" ]
-                | table cipher_suite_number, recommended
-                | eventstats count as amount by recommended
-                | eventstats count as totalAmount
-                | where recommended="N" | dedup recommended
-                | eval percOfTotal= 100 / totalAmount * amount
-                | table percOfTotal
-                | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
+        <search base="recommended_cipher_suites">
+          <query>
+            | eventstats count as amount by recommended
+            | eventstats count as totalAmount
+            | where recommended="N" | dedup recommended
+            | eval percOfTotal= 100 / totalAmount * amount
+            | table percOfTotal
+            | appendpipe [stats count | where count=0 | eval percOfTotal=0 | table percOfTotal]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -153,14 +191,11 @@
       <title>Amount of unsecured traffic (by # of packets)</title>
       <single>
         <title>Absolute</title>
-        <search>
-          <query>$source_token$
-                | eval issecure=if(cipher_suite_number=="","no","yes")
-                | table issecure
-                | top issecure
-                | where issecure="no"
-                | table count
-                | appendpipe [stats count | where count=0 | eval count=0 | table count]
+        <search base="is_secure">
+          <query>
+            | where issecure="no"
+            | table count
+            | appendpipe [stats count | where count=0 | eval count=0 | table count]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -175,14 +210,11 @@
       </single>
       <single>
         <title>Percent</title>
-        <search>
-          <query>$source_token$
-                | eval issecure=if(cipher_suite_number=="","no","yes")
-                | table issecure
-                | top issecure
-                | where issecure="no"
-                | table percent
-                | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
+        <search base="is_secure">
+          <query>
+            | where issecure="no"
+            | table percent
+            | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
           </query>
         </search>
         <option name="colorBy">value</option>
@@ -192,6 +224,110 @@
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
         <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Traffic incomming</title>
+      <single>
+        <title>Bytes incomming</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(frame_len) as bytes_in_per_ip by ip_dst
+                | rename ip_dst as ip ]
+            | stats sum(bytes_in_per_ip) as sum_bytes
+            | table sum_bytes
+            | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Bytes</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title># of packets</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(linecount) as "# of packets" by ip_dst
+                | rename ip_dst as ip ]
+            | stats sum("# of packets") as sum_packets
+            | table sum_packets
+            | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Packets</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Traffic outgoing</title>
+      <single>
+        <title>Bytes outgoing</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(frame_len) as bytes_out_per_ip by ip_src
+                | rename ip_src as ip ]
+            | stats sum(bytes_out_per_ip) as sum_bytes
+            | table sum_bytes
+            | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Bytes</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <title># of packets</title>
+        <search base="bytes_transfered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_bytes_transfered$
+                | stats sum(linecount) as "# of packets" by ip_src
+                | rename ip_src as ip ]
+            | stats sum("# of packets") as sum_packets
+            | table sum_packets
+            | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="unit">Packets</option>
         <option name="unitPosition">after</option>
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>

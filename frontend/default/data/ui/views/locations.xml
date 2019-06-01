@@ -1,5 +1,20 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Locations</label>
+  <search id="source_locations">
+    <query>
+     $source_token$
+     | fields dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_stream, -*
+     | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_stream
+    </query>
+  </search>
+  <search base="source_locations" id="destinations_by_country">
+    <query>
+      | dedup traffic_analyzer_stream
+      | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
+        dst_latitude as latitude, dst_longitude as longitude
+      | lookup geo_countries longitude, latitude
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -13,10 +28,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -31,12 +48,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">1.2.3.4/32</set>
-          <set token="form.custom_ip_range">1.2.3.4/32</set>
+          <unset token="use_custom_ip_range"/>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -44,25 +61,23 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
     <panel>
       <title>Choropleth Map</title>
       <map>
-        <search>
-          <query>$source_token$
-                | dedup dst_fqdn
-                | table dst_fqdn, dst_latitude, dst_longitude
-                | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
-                | lookup geo_countries longitude, latitude
-                | stats count by featureId
-                | rename count as Destinations, featureId as Country
-                | geom geo_countries featureIdField="Country"
+        <search base="source_locations">
+          <query>
+            | dedup dst_fqdn
+            | table dst_fqdn, dst_latitude, dst_longitude
+            | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
+            | lookup geo_countries longitude, latitude
+            | stats count by featureId
+            | rename count as Destinations, featureId as Country
+            | geom geo_countries featureIdField="Country"
           </query>
-          <earliest>0</earliest>
-          <latest></latest>
         </search>
         <option name="drilldown">all</option>
         <option name="mapping.type">choropleth</option>
@@ -76,21 +91,14 @@
     <panel>
       <title>Destinations in $selectedCountry$</title>
       <table>
-        <search>
-          <query>$source_token$
-                | table dst_query_name, dst_fqdn, dst_latitude, dst_longitude, traffic_analyzer_tcp_stream
-                | dedup traffic_analyzer_tcp_stream
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
-                  dst_latitude as latitude, dst_longitude as longitude
-                | lookup geo_countries longitude, latitude
-                | $selectedCountryFilter$
-                | stats count(traffic_analyzer_tcp_stream) by "Reverse Lookup", "DNS Query"
-                | table "DNS Query", "Reverse Lookup", count(traffic_analyzer_tcp_stream)
-                | rename count(traffic_analyzer_tcp_stream) as "# of connections"
-                | sort - "# of connections"
+        <search base="destinations_by_country">
+          <query>
+            | $selectedCountryFilter$
+            | stats count(traffic_analyzer_stream) by "Reverse Lookup", "DNS Query"
+            | table "DNS Query", "Reverse Lookup", count(traffic_analyzer_stream)
+            | rename count(traffic_analyzer_stream) as "# of connections"
+            | sort - "# of connections"
           </query>
-          <earliest>0</earliest>
-          <latest></latest>
         </search>
       </table>
     </panel>

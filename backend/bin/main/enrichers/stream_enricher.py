@@ -8,7 +8,7 @@ from main.helpers.print_helper import PrintHelper
 class StreamEnricher(Enricher):
     def __init__(self):
         enricher_type = "stream enricher"
-        header = "traffic_analyzer_tcp_stream"
+        header = "traffic_analyzer_stream"
         Enricher.__init__(self, enricher_type, header)
 
         self.stream_ids = {"": ""}
@@ -17,25 +17,26 @@ class StreamEnricher(Enricher):
         print_text = "Print out for {} tcp stream entries"
         PrintHelper.print_dict(self.stream_ids, print_text)
 
-    def get_stream_id(self, packet) -> str:
+    def get_information(self, packet, information_dict) -> None:
         inbound_outbound_string = self.get_combined_strings(packet)
         if inbound_outbound_string in self.stream_ids:
-            return self.stream_ids[inbound_outbound_string]
+            information_dict["traffic_analyzer_stream"] = self.stream_ids[inbound_outbound_string]
+            return
 
         stream_entry = self.generate_stream_id(inbound_outbound_string)
 
         self.stream_ids[stream_entry["combined_string"]] = stream_entry["stream_id"]
-        return stream_entry["stream_id"]
+        information_dict["traffic_analyzer_stream"] = stream_entry["stream_id"]
 
     @staticmethod
     def get_combined_strings(packet) -> str:
         dst_ip = packet["ip.dst"]
         src_ip = packet["ip.src"]
+        protocol = packet["ip.proto"]
         tcp_dst_port = packet["tcp.dstport"]
         tcp_src_port = packet["tcp.srcport"]
         udp_dst_port = packet["udp.dstport"]
         udp_src_port = packet["udp.srcport"]
-        protocol = packet["_ws.col.Protocol"]
 
         are_ports_set = (tcp_dst_port != "" and tcp_src_port != "") or \
                         (udp_dst_port != "" and udp_src_port != "")

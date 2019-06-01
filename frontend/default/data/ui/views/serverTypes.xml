@@ -1,0 +1,139 @@
+<form stylesheet="customStyle.css" script="tokenStorer.js">
+  <label>Server Types</label>
+  <search id="source_server_types">
+    <query>
+      $source_token$
+      | fields table ip_src, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn, ws_col_Protocol, -*
+      | table table ip_src, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn, ws_col_Protocol
+      | where $server_type_token$="1"
+    </query>
+  </search>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="multiselect" token="source_token" searchWhenChanged="false">
+      <label>Choose capture file:</label>
+      <default>*</default>
+      <prefix>(sourcetype=capture </prefix>
+      <suffix>)</suffix>
+      <valuePrefix>source="*/</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <choice value="*">ALL</choice>
+      <fieldForLabel>shortSource</fieldForLabel>
+      <fieldForValue>shortSource</fieldForValue>
+      <search>
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
+        </query>
+      </search>
+    </input>
+    <input type="text" searchWhenChanged="true" token="filteredMAC">
+      <label>Show for following  Device (MAC):</label>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="ip_range" searchWhenChanged="false">
+      <label>Define internal IP range</label>
+      <choice value="default">Default (RFC 1918)</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default (RFC 1918)">
+          <set token="use_default_ip_range">true</set>
+          <unset token="use_custom_ip_range"/>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ip_range"/>
+          <set token="use_custom_ip_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
+      <label>Internal IP range:</label>
+      <default/>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Server Types</title>
+      <input type="dropdown" token="server_type_token" searchWhenChanged="true">
+        <label>Select the server type</label>
+        <choice value="src_is_dhcp">DHCP</choice>
+        <choice value="src_is_dns">DNS / MDNS</choice>
+        <choice value="src_is_cdn">CDN</choice>
+        <change>
+          <condition label="DHCP">
+            <set token="server_type_name">DHCP</set>
+          </condition>
+          <condition label="DNS / MDNS">
+            <set token="server_type_name">DNS / MDNS</set>
+          </condition>
+          <condition label="CDN">
+            <set token="server_type_name">CDN</set>
+          </condition>
+        </change>
+      </input>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title># of $server_type_name$ servers</title>
+        <search base="source_server_types">
+          <query>
+            | table ip_src
+            | dedup ip_src
+            | stats count
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title># of $server_type_name$ responses</title>
+        <search base="source_server_types">
+          <query>
+            | table ip_src
+            | stats count
+            | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <search base="source_server_types">
+          <query>
+            | where ip_src != ""
+            | table ip_src, src_query_name, src_fqdn, ws_col_Protocol
+            | dedup ip_src
+            | sort ws_col_Protocol, ip_src
+          </query>
+        </search>
+      </table>
+    </panel>
+  </row>
+</form>

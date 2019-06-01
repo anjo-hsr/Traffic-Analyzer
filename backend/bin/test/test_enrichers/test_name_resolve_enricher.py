@@ -1,42 +1,48 @@
 import unittest
 
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.helpers.string_helper import enclose_with_quotes
 
 
 class TestNameResolveEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.name_resolver_enricher = NameResolverEnricher()
-        cls.dst_src_information_local = {
-            "dst": {
-                "rdns": "10.0.0.1",
-                "asn": "",
-                "isp": "",
-                "latitude": "",
-                "longitude": ""
-            },
-            "src": {
-                "rdns": "10.0.0.2",
-                "asn": "",
-                "isp": "",
-                "latitude": "",
-                "longitude": ""
+        cls.packet = {}
+        cls.information_dict_local = {
+            "dst_src_information": {
+                "dst": {
+                    "rdns": "10.0.0.1",
+                    "asn": "",
+                    "isp": "",
+                    "latitude": "",
+                    "longitude": ""
+                },
+                "src": {
+                    "rdns": "10.0.0.2",
+                    "asn": "",
+                    "isp": "",
+                    "latitude": "",
+                    "longitude": ""
+                }
             }
         }
-        cls.dst_src_information_public = {
-            "dst": {
-                "rdns": "google-public-dns-a.google.com",
-                "asn": "15169",
-                "isp": "Google LLC",
-                "latitude": "37.751",
-                "longitude": "-97.822"
-            },
-            "src": {
-                "rdns": "10.0.0.1",
-                "asn": "",
-                "isp": "",
-                "latitude": "",
-                "longitude": ""
+        cls.information_dict_public = {
+            "dst_src_information": {
+                "dst": {
+                    "rdns": "google-public-dns-a.google.com",
+                    "asn": "15169",
+                    "isp": "Google LLC",
+                    "latitude": "37.751",
+                    "longitude": "-97.822"
+                },
+                "src": {
+                    "rdns": "10.0.0.1",
+                    "asn": "",
+                    "isp": "",
+                    "latitude": "",
+                    "longitude": ""
+                }
             }
         }
 
@@ -45,14 +51,18 @@ class TestNameResolveEnricherMethods(unittest.TestCase):
         self.assertEqual(self.name_resolver_enricher.header, expected_header)
 
     def test_extract_location_local_connection(self) -> None:
-        fqdns = self.name_resolver_enricher.extract_fqdn(self.dst_src_information_local)
-        empty_fqdns = '"10.0.0.1","10.0.0.2"'
-        self.assertEqual(fqdns, empty_fqdns)
+        self.name_resolver_enricher.get_information(self.packet, self.information_dict_local)
+        dst_fqdns = enclose_with_quotes("10.0.0.1")
+        src_fqdns = enclose_with_quotes("10.0.0.2")
+        self.assertEqual(self.information_dict_local["dst_fqdn"], dst_fqdns)
+        self.assertEqual(self.information_dict_local["src_fqdn"], src_fqdns)
 
     def test_extract_location_public_connection(self) -> None:
-        fqdns = self.name_resolver_enricher.extract_fqdn(self.dst_src_information_public)
-        expected_fqdns = '"google-public-dns-a.google.com","10.0.0.1"'
-        self.assertEqual(fqdns, expected_fqdns)
+        self.name_resolver_enricher.get_information(self.packet, self.information_dict_public)
+        dst_fqdns = enclose_with_quotes("google-public-dns-a.google.com")
+        src_fqdns = enclose_with_quotes("10.0.0.1")
+        self.assertEqual(self.information_dict_public["dst_fqdn"], dst_fqdns)
+        self.assertEqual(self.information_dict_public["src_fqdn"], src_fqdns)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
 from main.enrichers.ip_type_enricher import IpTypeEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.enrichers.server_type_enricher import ServerTypeEnricher
 from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 from main.enrichers.tls_enricher import TlsEnricher
@@ -20,6 +21,7 @@ def get_enricher_dict() -> OrderedDict:
         ("ip_type_enricher", IpTypeEnricher()),
         ("stream_enricher", StreamEnricher()),
         ("dns_lookup_enricher", DnsLookupEnricher()),
+        ("server_type_enricher", ServerTypeEnricher()),
         ("ad_enricher", AdEnricher()),
         ("threat_info_enricher", ThreatInfoEnricher())
     ])

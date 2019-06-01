@@ -13,10 +13,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -31,12 +33,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">1.2.3.4/32</set>
-          <set token="form.custom_ip_range">1.2.3.4/32</set>
+          <unset token="use_custom_ip_range"/>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -44,7 +46,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
@@ -52,16 +54,17 @@
       <title>Cluster Map</title>
       <map>
         <search>
-          <query>$source_token$
-                | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | table dst_latitude, dst_longitude, ad_category
-                | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
+          <query>
+            $source_token$
+            | dedup dst_fqdn
+            | rename ad_category as ad_id
+            | join ad_id
+              [ search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category ]
+            | table dst_latitude, dst_longitude, ad_category
+            | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
           </query>
           <earliest>0</earliest>
-          <latest></latest>
+          <latest/>
         </search>
         <option name="mapping.fieldColors">
           {"no ad": #2BC3FF,
@@ -82,19 +85,20 @@
       <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
       <table>
         <search>
-          <query>$source_token$
-                | rename dst_latitude as latitude, dst_longitude as longitude
-                | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-                | dedup dst_fqdn
-                | rename ad_category as ad_id
-                | where ad_id != 0
-                | join ad_id
-                  [search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category]
-                | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
-                | table "DNS Query", "Reverse Lookup", "AD Category"
+          <query>
+            $source_token$
+            | rename dst_latitude as latitude, dst_longitude as longitude
+            | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
+            | dedup dst_fqdn
+            | rename ad_category as ad_id
+            | where ad_id != 0
+            | join ad_id
+              [ search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category ]
+            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
+            | table "DNS Query", "Reverse Lookup", "AD Category"
           </query>
           <earliest>0</earliest>
-          <latest></latest>
+          <latest/>
         </search>
       </table>
     </panel>

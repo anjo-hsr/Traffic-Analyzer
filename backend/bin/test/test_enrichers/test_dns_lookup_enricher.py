@@ -8,6 +8,7 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.dns_lookup_enricher = DnsLookupEnricher()
         cls.stream_id = 127
+        cls.information_dict = {}
         cls.dns_packet = {
             "ip.src": "10.0.0.2",
             "ip.dst": "8.8.8.8",
@@ -38,10 +39,6 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
         expected_header = "dst_query_name,dst_hostnames,src_query_name,src_hostnames"
         self.assertEqual(self.dns_lookup_enricher.header, expected_header)
 
-    def test_is_response(self) -> None:
-        self.assertTrue(self.dns_lookup_enricher.is_response(self.dns_packet))
-        self.assertFalse(self.dns_lookup_enricher.is_response(self.normal_packet))
-
     def test_get_empty_dict(self) -> None:
         expected_dict = {
             "query_name": "",
@@ -50,24 +47,29 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
         self.assertDictEqual(self.dns_lookup_enricher.get_empty_dict(), expected_dict)
 
     def test_generate_dns_information_without_dns_response(self) -> None:
-        expected_dns_value = '"",""'
-        self.assertEqual(
-            self.dns_lookup_enricher.generate_dns_information(self.normal_packet["ip.src"]),
-            expected_dns_value)
-        self.assertEqual(
-            self.dns_lookup_enricher.generate_dns_information(self.normal_packet["ip.dst"]),
-            expected_dns_value)
+        empty_string = '""'
 
-    def test_generate_dns_information_with_dns_reponse(self) -> None:
-        expected_dns_value_src = '"",""'
-        expected_dns_value_dst = '"www.hsr.ch","www.hsr.ch,lb-ext-web1.hsr.ch"'
         self.dns_lookup_enricher.save_dns_query(self.dns_packet)
-        self.assertEqual(
-            self.dns_lookup_enricher.generate_dns_information(self.normal_packet["ip.src"]),
-            expected_dns_value_src)
-        self.assertEqual(
-            self.dns_lookup_enricher.generate_dns_information(self.normal_packet["ip.dst"]),
-            expected_dns_value_dst)
+        self.dns_lookup_enricher.get_information(self.dns_packet, self.information_dict)
+
+        self.assertEqual(self.information_dict["dst_query_name"], empty_string)
+        self.assertEqual(self.information_dict["dst_hostnames"], empty_string)
+        self.assertEqual(self.information_dict["src_query_name"], empty_string)
+        self.assertEqual(self.information_dict["src_hostnames"], empty_string)
+
+    def test_generate_dns_information_with_dns_reponse_dst(self) -> None:
+        dst_query_name = '"www.hsr.ch"'
+        dst_hostnames = '"www.hsr.ch,lb-ext-web1.hsr.ch"'
+        src_query_name= '""'
+        src_hostnames = '""'
+
+        self.dns_lookup_enricher.save_dns_query(self.dns_packet)
+        self.dns_lookup_enricher.get_information(self.normal_packet, self.information_dict)
+
+        self.assertEqual(self.information_dict["dst_query_name"], dst_query_name)
+        self.assertEqual(self.information_dict["dst_hostnames"], dst_hostnames)
+        self.assertEqual(self.information_dict["src_query_name"], src_query_name)
+        self.assertEqual(self.information_dict["src_hostnames"], src_hostnames)
 
     def test_safe_dns_query_with_a_record(self) -> None:
         self.dns_lookup_enricher.save_dns_query(self.dns_packet)

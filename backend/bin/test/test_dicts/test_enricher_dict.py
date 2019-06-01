@@ -8,6 +8,7 @@ from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
 from main.enrichers.ip_type_enricher import IpTypeEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
+from main.enrichers.server_type_enricher import ServerTypeEnricher
 from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 from main.enrichers.tls_enricher import TlsEnricher
@@ -25,6 +26,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "ip_type_enricher",
             "stream_enricher",
             "dns_lookup_enricher",
+            "server_type_enricher",
             "ad_enricher",
             "threat_info_enricher"
         ]
@@ -55,6 +57,9 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             elif key == "dns_lookup_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], DnsLookupEnricher))
 
+            elif key == "server_type_enricher":
+                self.assertTrue(isinstance(self.enricher_dict[key], ServerTypeEnricher))
+
             elif key == "ad_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], AdEnricher))
 
@@ -72,7 +77,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
     def test_enricher_dict_keys(self) -> None:
         id_index = 0
         enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict.keys()]
-        self.assertEqual(enricher_classes_key_ids, id_keys)
+        self.assertListEqual(enricher_classes_key_ids, id_keys)
 
 
 if __name__ == "__main__":

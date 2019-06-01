@@ -1,5 +1,12 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Protocols</label>
+  <search id="source_protocols">
+    <query>
+      $source_token$
+      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, _*
+      | table frame_time, ip_proto, ws_col_Protocol, frame_len, _time
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -13,10 +20,12 @@
       <fieldForLabel>shortSource</fieldForLabel>
       <fieldForValue>shortSource</fieldForValue>
       <search>
-        <query>sourcetype=capture
-              | dedup source
-              | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
-              | table shortSource
+        <query>
+          sourcetype=capture
+          | dedup source
+          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | table shortSource
+          | sort shortSource
         </query>
       </search>
     </input>
@@ -31,12 +40,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">1.2.3.4/32</set>
-          <set token="form.custom_ip_range">1.2.3.4/32</set>
+          <unset token="use_custom_ip_range"/>
+          <set token="custom_ip_range">203.0.113.0/24</set>
+          <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
+          <unset token="use_default_ip_range"/>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -44,30 +53,33 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default></default>
+      <default/>
     </input>
   </fieldset>
   <row>
     <panel>
       <title>Protocols by # of packets</title>
       <chart>
-        <search>
-          <query>$source_token$
-                | table frame_time, ip_proto
-                | stats count by ws_col_Protocol
-                | rename count as packets
+        <search base="source_protocols">
+          <query>
+            | table frame_time, ip_proto, ws_col_Protocol
+            | stats count by ws_col_Protocol
+            | rename count as packets
           </query>
         </search>
         <option name="charting.chart">pie</option>
+        <drilldown>
+          <link target="_blank">https://en.wikipedia.org/wiki/$click.value$</link>
+        </drilldown>
       </chart>
     </panel>
     <panel>
       <title>Protocols by volume</title>
       <chart>
-        <search>
-          <query>$source_token$
-                | table frame_time, ws_col_Protocol, frame_cap_len
-                | stats sum(frame_cap_len) as "bytes" by ws_col_Protocol
+        <search base="source_protocols">
+          <query>
+            | table frame_time, ws_col_Protocol, frame_len
+            | stats sum(frame_len) as "bytes" by ws_col_Protocol
           </query>
         </search>
         <option name="charting.chart">pie</option>
@@ -78,10 +90,11 @@
     <panel>
       <title>Protokolle über Zeit</title>
       <chart>
-        <search>
-          <query>$source_token$
-                | timechart span=1m count by ws_col_Protocol usenull=f
-                | rename VALUE as Other
+        <search base="source_protocols">
+          <query>
+            | table frame_time, ws_col_Protocol, _time
+            | timechart span=1m count by ws_col_Protocol usenull=f
+            | rename VALUE as Other
           </query>
         </search>
         <option name="charting.chart">area</option>
