@@ -5,9 +5,9 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from main.enrichers.enricher import Enricher
-from main.helpers import string_helper
 from main.helpers.combine_helper import CombineHelper
 from main.helpers.file import file_read_helper
+from main.helpers.string_helper import remove_quotations
 
 
 class ThreatInfoEnricher(Enricher):
@@ -36,7 +36,7 @@ class ThreatInfoEnricher(Enricher):
 
     def get_information(self, packet, information_dict) -> None:
         domain_array = information_dict["domains"].split(",")
-        domain_array = list(map(string_helper.remove_quotations, domain_array))
+        domain_array = list(map(remove_quotations, domain_array))
 
         if all(domain == "" for domain in domain_array):
             information_dict["threat_category"] = '""'
@@ -81,7 +81,7 @@ class ThreatInfoEnricher(Enricher):
         return list(map(lambda domain: {"url": domain}, filtered_domains))
 
     def update_threat_dict(self, response_dict) -> None:
-        if response_dict == {}:
+        if not response_dict:
             return
 
         for match in response_dict["matches"]:

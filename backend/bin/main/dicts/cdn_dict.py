@@ -158,7 +158,7 @@ class CdnDict:
 
     def get_cdn_domains_to_names(self) -> Dict[str, str]:
         cdn_domains = {}
-        for key in self.cdn_names.keys():
+        for key in self.cdn_names:
             for domain in self.cdn_names[key]:
                 cdn_domains[domain] = key
 
@@ -166,12 +166,11 @@ class CdnDict:
 
     def check_domains(self, domains) -> bool:
         domain_list = domains.split(",")
-        domain_list = list(map(lambda domain: remove_quotations(domain), domain_list))
+        domain_list = list(map(remove_quotations, domain_list))
         return any(self.check_domain(domain) for domain in domain_list)
 
     def check_domain(self, domain) -> bool:
-        domain_keys = self.get_cdn_domains_to_names().keys()
-        for domain_key in domain_keys:
+        for domain_key in self.get_cdn_domains_to_names():
             if domain_key in domain:
                 return self.test_for_wildcard(domain, domain_key)
 

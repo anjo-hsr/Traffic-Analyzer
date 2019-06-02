@@ -32,7 +32,7 @@ class TestInformationDict(unittest.TestCase):
 
     def test_information_dict_keys(self) -> None:
         id_index = 0
-        information_enricher_key_ids = [key.split("_")[id_index] for key in self.information_dict.keys()]
+        information_enricher_key_ids = [key.split("_")[id_index] for key in self.information_dict]
         self.assertEqual(information_enricher_key_ids, id_keys)
 
 
