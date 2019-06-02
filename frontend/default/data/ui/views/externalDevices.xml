@@ -3,8 +3,8 @@
   <search id="source_external">
     <query>
       $source_token$ eth_dst=$filteredMAC$
-      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream, _*
-      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream
+      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream, _*
+      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream
     </query>
     <done>
       <condition>
@@ -97,7 +97,7 @@
                 | stats sum(frame_len) as b_in by ip_dst
                 | rename ip_dst as ip ]
             | join type=left ip
-              [ | loadjob $subsearch_id_external$ | table traffic_analyzer_stream, ip_src, ip_dst | untable traffic_analyzer_stream, type, ip | dedup traffic_analyzer_stream, type | stats count(traffic_analyzer_stream) as "# of connections" by ip | where ip!="" | table ip, "# of connections"]
+              [ | loadjob $subsearch_id_external$ | table traffic_analyzer_stream, ip_src, ip_dst, tcp_stream | where tcp_stream!="" | untable traffic_analyzer_stream, type, ip | dedup traffic_analyzer_stream, type | stats count(traffic_analyzer_stream) as "# of connections" by ip | where ip!="" | table ip, "# of connections"]
             | eval "traffic in" = b_in/1024, "traffic out" = b_out/1024
             | table ip,  "DNS Query", "Reverse Lookup", "traffic out", "traffic in", "# of connections"
             | fillnull value=0
