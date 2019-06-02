@@ -68,7 +68,7 @@
         <search base="source_internal_endpoints">
           <query>
             | dedup ip_src
-            | where if("$filteredMAC$"="*",like(eth_src, "%"),like (eth_src, "%$filteredMAC$%") OR like (eth_src, "%$filteredMAC$%"))
+            | where if("$filteredMAC$"="*",like(eth_src, "%"),like (eth_src, "%$filteredMAC$%") OR like (eth_dst, "%$filteredMAC$%"))
             | eval src_is_private_extended=if(
               cidrmatch("$custom_ip_range$", ip_src) OR
               src_is_private_ip == "1", "True", "False")
