@@ -3,8 +3,8 @@
   <search id="source_internal_endpoints">
     <query>
       $source_token$ eth_src=$filteredMAC$
-      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, _*
-      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type
+      | fields ip_src, src_query_name, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, _*
+      | table ip_src, src_query_name, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type
     </query>
     <done>
       <condition>
@@ -77,7 +77,7 @@
             | join type=left eth_short
               [ search sourcetype="list" source="*mac_vendor.csv" ]
             | fillnull value="no vendor found"
-            | table eth_src, vendor, ip_src
+            | table eth_src, vendor, ip_src, src_query_name
             | dedup ip_src
             | rename ip_src as ip
             | join type=left ip
@@ -88,12 +88,6 @@
               [ | loadjob $subsearch_id_internal_endpoints$
                 | stats sum(frame_len) as "bytes in" by ip_dst
                 | rename ip_dst as ip ]
-            | join type=left ip
-              [ | loadjob $subsearch_id_internal_endpoints$
-                | rename ip_src as ip
-                | where tls_handshake_type=1
-                | eval client_hello=1
-                | table client_hello, ip ]
             | fillnull value=0
           </query>
         </search>
