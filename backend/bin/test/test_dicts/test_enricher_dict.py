@@ -35,7 +35,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
         self.enricher_dict = get_enricher_dict()
 
     def test_create_enrichers_classes(self) -> None:
-        for key in self.enricher_dict.keys():
+        for key in self.enricher_dict:
             if key == "location_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], LocationEnricher))
 
@@ -72,11 +72,11 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
         self.assertTrue(isinstance(self.enricher_dict, OrderedDict))
 
     def test_create_enrichers_keys(self) -> None:
-        self.assertEqual(list(self.enricher_dict.keys()), self.enricher_keys)
+        self.assertEqual(list(self.enricher_dict), self.enricher_keys)
 
     def test_enricher_dict_keys(self) -> None:
         id_index = 0
-        enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict.keys()]
+        enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict]
         self.assertListEqual(enricher_classes_key_ids, id_keys)
 
 
