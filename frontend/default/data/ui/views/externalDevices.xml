@@ -95,12 +95,6 @@
               [ | loadjob $subsearch_id_external_endpoints$
                 | stats sum(frame_len) as "bytes in" by ip_dst
                 | rename ip_dst as ip ]
-            | join type=left ip
-              [ | loadjob $subsearch_id_external_endpoints$
-                | rename ip_src as ip
-                | where tls_handshake_type=1
-                | eval client_hello=1
-                | table client_hello, ip ]
             | table ip,  "DNS Query", "Reverse Lookup", "bytes out", "bytes in"
             | fillnull value=0
           </query>
