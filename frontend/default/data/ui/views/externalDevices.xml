@@ -2,9 +2,9 @@
   <label>External Endpoints</label>
   <search id="source_external">
     <query>
-      $source_token$ eth_dst=$filteredMAC$ src_is_private_ip="0"
-      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
-      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
+      $source_token$ eth_dst=$filteredMAC$
+      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream, _*
+      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream
     </query>
     <done>
       <condition>
@@ -14,14 +14,15 @@
   </search>
   <search base="source_external" id="source_external_endpoints">
     <query>
+    | where src_is_private_ip="0"
     | search
       [ | loadjob $subsearch_id_external$
-        | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+        | where NOT cidrmatch("$custom_ip_range$", ip_src)
         | dedup eth_src
         | table eth_src]
-    | where ip_src!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
-    | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
-    | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
+    | where ip_src!="" AND NOT cidrmatch("$custom_ip_range$", ip_src)
+    | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream,_*
+    | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream
     </query>
     <done>
       <condition>
@@ -62,12 +63,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"/>
+          <unset token="use_custom_ip_range"></unset>
           <set token="custom_ip_range">203.0.113.0/24</set>
           <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"/>
+          <unset token="use_default_ip_range"></unset>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -75,7 +76,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default/>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -88,17 +89,27 @@
             | dedup ip_src
             | rename ip_src as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
             | join type=left ip
-              [ | loadjob $subsearch_id_external_endpoints$
-                | stats sum(frame_len) as "bytes out" by ip_src
+              [ | loadjob $subsearch_id_external$
+                | stats sum(frame_len) as b_out by ip_src
                 | rename ip_src as ip ]
             | join type=left ip
-              [ | loadjob $subsearch_id_external_endpoints$
-                | stats sum(frame_len) as "bytes in" by ip_dst
+              [ | loadjob $subsearch_id_external$
+                | stats sum(frame_len) as b_in by ip_dst
                 | rename ip_dst as ip ]
-            | table ip,  "DNS Query", "Reverse Lookup", "bytes out", "bytes in"
+            | join type=left ip
+              [ | loadjob $subsearch_id_external$ | untable traffic_analyzer_stream, type, ip | dedup traffic_analyzer_stream, type | stats count(traffic_analyzer_stream) as "# of connections" by ip | where ip!="" | table ip, "# of connections"]
+            | eval "traffic in" = b_in/1024, "traffic out" = b_out/1024
+            | table ip,  "DNS Query", "Reverse Lookup", "traffic out", "traffic in", "# of connections"
             | fillnull value=0
           </query>
         </search>
+        <option name="count">10</option>
+        <format type="number" field="traffic out">
+          <option name="unit">KB</option>
+        </format>
+        <format type="number" field="traffic in">
+          <option name="unit">KB</option>
+        </format>
       </table>
     </panel>
   </row>
