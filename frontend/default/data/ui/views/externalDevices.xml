@@ -97,7 +97,7 @@
                 | stats sum(frame_len) as b_in by ip_dst
                 | rename ip_dst as ip ]
             | join type=left ip
-              [ | loadjob $subsearch_id_external$ | untable traffic_analyzer_stream, type, ip | dedup traffic_analyzer_stream, type | stats count(traffic_analyzer_stream) as "# of connections" by ip | where ip!="" | table ip, "# of connections"]
+              [ | loadjob $subsearch_id_external$ | table traffic_analyzer_stream, ip_src, ip_dst | untable traffic_analyzer_stream, type, ip | dedup traffic_analyzer_stream, type | stats count(traffic_analyzer_stream) as "# of connections" by ip | where ip!="" | table ip, "# of connections"]
             | eval "traffic in" = b_in/1024, "traffic out" = b_out/1024
             | table ip,  "DNS Query", "Reverse Lookup", "traffic out", "traffic in", "# of connections"
             | fillnull value=0
