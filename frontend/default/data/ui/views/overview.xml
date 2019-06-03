@@ -30,7 +30,8 @@
     <query>
       | dedup ip_src_combined
       | eval src_is_private_extended=if(
-        cidrmatch("$custom_ip_range$", ip_src_combined) OR
+        cidrmatch("$custom_ipv4_range$", ip_src_combined) OR
+        cidrmatch("$custom_ipv6_range$", ip_src_combined) OR
         src_is_private_ip == "1", "True", "False")
       | where src_is_private_extended == "True"
       | where ip_src_combined!="" AND ip_src_combined!="0.0.0.0"
@@ -96,7 +97,7 @@
       <choice value="default">Default (RFC 4291)</choice>
       <choice value="custom">Custom</choice>
       <change>
-        <condition label="Default (RFC xxxx)">
+        <condition label="Default (RFC 4291)">
           <set token="use_default_ipv6_range">true</set>
           <unset token="use_custom_ipv6_range"></unset>
           <set token="custom_ipv6_range">fe80::/48</set>

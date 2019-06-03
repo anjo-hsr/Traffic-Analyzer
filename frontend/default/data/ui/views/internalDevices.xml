@@ -67,7 +67,7 @@
       <choice value="default">Default (RFC 4291)</choice>
       <choice value="custom">Custom</choice>
       <change>
-        <condition label="Default (RFC xxxx)">
+        <condition label="Default (RFC 4291)">
           <set token="use_default_ipv6_range">true</set>
           <unset token="use_custom_ipv6_range"></unset>
           <set token="custom_ipv6_range">fe80::/48</set>

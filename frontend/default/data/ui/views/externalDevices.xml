@@ -72,10 +72,13 @@
             | where src_is_private_ip="0"
             | search
               [ | loadjob $subsearch_id_external$
-                | where NOT cidrmatch("$custom_ip_range$", ip_src_combined)
+                | where NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
+                  AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
                 | dedup eth_src
                 | table eth_src]
-            | where ip_src_combined!="" AND NOT cidrmatch("$custom_ip_range$", ip_src_combined)
+            | where ip_src_combined!=""
+              AND NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
+              AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
             | fillnull value=""
             | dedup ip_src_combined
             | rename ip_src_combined as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
