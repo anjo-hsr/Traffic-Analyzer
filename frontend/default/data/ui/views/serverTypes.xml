@@ -3,8 +3,10 @@
   <search id="source_server_types">
     <query>
       $source_token$
-      | fields table ip_src, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn, ws_col_Protocol, -*
-      | table table ip_src, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn, ws_col_Protocol
+      | fields table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
+        ws_col_Protocol, -*
+      | table table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
+      ws_col_Protocol
       | where $server_type_token$="1"
     </query>
   </search>
@@ -34,27 +36,49 @@
       <label>Show for following Device (MAC):</label>
       <default>*</default>
     </input>
-    <input type="dropdown" token="ip_range" searchWhenChanged="false">
-      <label>Define internal IP range</label>
+    <input type="dropdown" token="ipv4_range" searchWhenChanged="false">
+      <label>Define internal IPv4 range</label>
       <choice value="default">Default (RFC 1918)</choice>
       <choice value="custom">Custom</choice>
       <change>
         <condition label="Default (RFC 1918)">
-          <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"/>
-          <set token="custom_ip_range">203.0.113.0/24</set>
-          <set token="form.custom_ip_range">203.0.113.0/24</set>
+          <set token="use_default_ipv4_range">true</set>
+          <unset token="use_custom_ipv4_range"></unset>
+          <set token="custom_ipv4_range">203.0.113.0/24</set>
+          <set token="form.custom_ipv4_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"/>
-          <set token="use_custom_ip_range">true</set>
+          <unset token="use_default_ipv4_range"></unset>
+          <set token="use_custom_ipv4_range">true</set>
         </condition>
       </change>
       <default>default</default>
     </input>
-    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
-      <label>Internal IP range:</label>
-      <default/>
+    <input type="text" token="custom_ipv4_range" depends="$use_custom_ipv4_range$">
+      <label>Internal IPv4 range:</label>
+      <default></default>
+    </input>
+    <input type="dropdown" token="ipv6_range" searchWhenChanged="false">
+      <label>Define internal IPv6 range</label>
+      <choice value="default">Default (RFC 4291)</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default (RFC 4291)">
+          <set token="use_default_ipv6_range">true</set>
+          <unset token="use_custom_ipv6_range"></unset>
+          <set token="custom_ipv6_range">fe80::/48</set>
+          <set token="form.custom_ipv6_range">fe80::/48</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ipv6_range"></unset>
+          <set token="use_custom_ipv6_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
+      <label>Internal IPv6 range:</label>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -85,8 +109,8 @@
         <title># of $server_type_name$ servers</title>
         <search base="source_server_types">
           <query>
-            | table ip_src
-            | dedup ip_src
+            | table ip_src_combined
+            | dedup ip_src_combined
             | stats count
             | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
@@ -106,7 +130,7 @@
         <title># of $server_type_name$ responses</title>
         <search base="source_server_types">
           <query>
-            | table ip_src
+            | table ip_src_combined
             | stats count
             | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
@@ -127,10 +151,10 @@
       <table>
         <search base="source_server_types">
           <query>
-            | where ip_src != ""
-            | table ip_src, src_query_name, src_fqdn, ws_col_Protocol
-            | dedup ip_src
-            | sort ws_col_Protocol, ip_src
+            | where ip_src_combined != ""
+            | table ip_src_combined, src_query_name, src_fqdn, ws_col_Protocol
+            | dedup ip_src_combined
+            | sort ws_col_Protocol, ip_src_combined
           </query>
         </search>
       </table>

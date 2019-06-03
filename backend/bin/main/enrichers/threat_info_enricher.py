@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from main.enrichers.enricher import Enricher
-from main.helpers.combine_helper import CombineHelper
+from main.combiners.field_combiner import FieldCombiner
 from main.helpers.file import file_read_helper
 from main.helpers.string_helper import remove_quotations
 
@@ -49,7 +49,7 @@ class ThreatInfoEnricher(Enricher):
         self.get_domains_threat_infomation(filtered_domains)
         matched_threat_types = self.reduce_threat_information(domain_array)
         threat_numbers = list(map(self.get_threat_number, matched_threat_types))
-        information_dict["threat_category"] = CombineHelper.join_with_quotes(threat_numbers)
+        information_dict["threat_category"] = FieldCombiner.join_with_quotes(threat_numbers)
 
     def get_domains_threat_infomation(self, domains) -> None:
         if self.is_api_key_correct and domains and self.api_key != "":

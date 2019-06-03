@@ -1,6 +1,6 @@
 from os import path
 
-from main.helpers.combine_helper import CombineHelper
+from main.combiners.field_combiner import FieldCombiner
 from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_write_helper
@@ -17,7 +17,7 @@ def combine_information(row) -> str:
     cipher_suite_number = calculate_hex(row["Value"])
     description = row["Description"]
     recommended = row["Recommended"]
-    line = CombineHelper.join_list_elements([cipher_suite_number, description, recommended])
+    line = FieldCombiner.join_list_elements([cipher_suite_number, description, recommended])
     return line
 
 

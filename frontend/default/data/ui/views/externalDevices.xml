@@ -3,8 +3,10 @@
   <search id="source_external">
     <query>
       $source_token$ eth_dst=$filteredMAC$
-      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream, _*
-      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream
+      | fields ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type,
+        src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream, _*
+      | table ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type,
+        src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream
     </query>
     <done>
       <condition>
@@ -38,26 +40,48 @@
       <label>Show for following Device (MAC):</label>
       <default>*</default>
     </input>
-    <input type="dropdown" token="ip_range" searchWhenChanged="false">
-      <label>Define internal IP range</label>
+    <input type="dropdown" token="ipv4_range" searchWhenChanged="false">
+      <label>Define internal IPv4 range</label>
       <choice value="default">Default (RFC 1918)</choice>
       <choice value="custom">Custom</choice>
       <change>
         <condition label="Default (RFC 1918)">
-          <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"></unset>
-          <set token="custom_ip_range">203.0.113.0/24</set>
-          <set token="form.custom_ip_range">203.0.113.0/24</set>
+          <set token="use_default_ipv4_range">true</set>
+          <unset token="use_custom_ipv4_range"></unset>
+          <set token="custom_ipv4_range">203.0.113.0/24</set>
+          <set token="form.custom_ipv4_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"></unset>
-          <set token="use_custom_ip_range">true</set>
+          <unset token="use_default_ipv4_range"></unset>
+          <set token="use_custom_ipv4_range">true</set>
         </condition>
       </change>
       <default>default</default>
     </input>
-    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
-      <label>Internal IP range:</label>
+    <input type="text" token="custom_ipv4_range" depends="$use_custom_ipv4_range$">
+      <label>Internal IPv4 range:</label>
+      <default></default>
+    </input>
+    <input type="dropdown" token="ipv6_range" searchWhenChanged="false">
+      <label>Define internal IPv6 range</label>
+      <choice value="default">Default (RFC 4291)</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default (RFC 4291)">
+          <set token="use_default_ipv6_range">true</set>
+          <unset token="use_custom_ipv6_range"></unset>
+          <set token="custom_ipv6_range">fe80::/48</set>
+          <set token="form.custom_ipv6_range">fe80::/48</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ipv6_range"></unset>
+          <set token="use_custom_ipv6_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
+      <label>Internal IPv6 range:</label>
       <default></default>
     </input>
   </fieldset>
@@ -70,24 +94,44 @@
             | where src_is_private_ip="0"
             | search
               [ | loadjob $subsearch_id_external$
-                | where NOT cidrmatch("$custom_ip_range$", ip_src)
+                | where NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
+                  AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
                 | dedup eth_src
                 | table eth_src]
-            | where ip_src!="" AND NOT cidrmatch("$custom_ip_range$", ip_src)
+            | where ip_src_combined!=""
+              AND NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
+              AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
             | fillnull value=""
-            | dedup ip_src
-            | rename ip_src as ip
+            | dedup ip_src_combined
+            | rename ip_src_combined as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
+            | join type=left ip
+              [ | loadjob $subsearch_id_external_endpoints$
+                | stats sum(frame_len) as "bytes out" by ip_src_combined
+                | rename ip_src_combined as ip ]
+            | join type=left ip
+              [ | loadjob $subsearch_id_external_endpoints$
+                | stats sum(frame_len) as "bytes in" by ip_dst_combined
+                | rename ip_dst_combined as ip ]
+            | join type=left ip
+              [ | loadjob $subsearch_id_external_endpoints$
+                | rename ip_src_combined as ip
+                | where tls_handshake_type=1
+                | eval client_hello=1
+                | table client_hello, ip ]
+            | table ip,  "DNS Query", "Reverse Lookup", "bytes out", "bytes in"
+            | dedup ip_src_combined
+            | rename ip_src_combined as ip
             | join type=left ip
               [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as b_out by ip_src
-                | rename ip_src as ip ]
+                | stats sum(frame_len) as b_out by ip_src_combined
+                | rename ip_src_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as b_in by ip_dst
-                | rename ip_dst as ip ]
+                | stats sum(frame_len) as b_in by ip_dst_combined
+                | rename ip_dst_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_external$
-                | table traffic_analyzer_stream, ip_src, ip_dst, tcp_stream
+                | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined, tcp_stream
                 | where tcp_stream!=""
                 | untable traffic_analyzer_stream, type, ip
                 | dedup traffic_analyzer_stream, type

@@ -48,27 +48,49 @@
       <label>Show for following Device (MAC):</label>
       <default>*</default>
     </input>
-    <input type="dropdown" token="ip_range" searchWhenChanged="false">
-      <label>Define internal IP range</label>
+    <input type="dropdown" token="ipv4_range" searchWhenChanged="false">
+      <label>Define internal IPv4 range</label>
       <choice value="default">Default (RFC 1918)</choice>
       <choice value="custom">Custom</choice>
       <change>
         <condition label="Default (RFC 1918)">
-          <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"/>
-          <set token="custom_ip_range">203.0.113.0/24</set>
-          <set token="form.custom_ip_range">203.0.113.0/24</set>
+          <set token="use_default_ipv4_range">true</set>
+          <unset token="use_custom_ipv4_range"></unset>
+          <set token="custom_ipv4_range">203.0.113.0/24</set>
+          <set token="form.custom_ipv4_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"/>
-          <set token="use_custom_ip_range">true</set>
+          <unset token="use_default_ipv4_range"></unset>
+          <set token="use_custom_ipv4_range">true</set>
         </condition>
       </change>
       <default>default</default>
     </input>
-    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
-      <label>Internal IP range:</label>
-      <default/>
+    <input type="text" token="custom_ipv4_range" depends="$use_custom_ipv4_range$">
+      <label>Internal IPv4 range:</label>
+      <default></default>
+    </input>
+    <input type="dropdown" token="ipv6_range" searchWhenChanged="false">
+      <label>Define internal IPv6 range</label>
+      <choice value="default">Default (RFC 4291)</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default (RFC 4291)">
+          <set token="use_default_ipv6_range">true</set>
+          <unset token="use_custom_ipv6_range"></unset>
+          <set token="custom_ipv6_range">fe80::/48</set>
+          <set token="form.custom_ipv6_range">fe80::/48</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ipv6_range"></unset>
+          <set token="use_custom_ipv6_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
+      <label>Internal IPv6 range:</label>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -201,7 +223,7 @@
           <colorPalette type="map">{"N":#FC4737}</colorPalette>
         </format>
         <drilldown>
-          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ip_range$%22,%20ip_src)%7C%20dedup%20ip_dst%20cipher_suite_number%20ip_src%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src%20%7C%20sort%20ip_dst%20%7C%20mvcombine%20ip_src&amp;earliest=$earliest$&amp;latest=$latest$</link>
+          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ipv4_range$%22,%20ip_src_combined)%20OR%20cidrmatch(%22$custom_ipv6_range$%22,%20ip_src_combined)%20%7C%20dedup%20ip_dst_combined%20cipher_suite_number%20ip_src_combined%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst_combined,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src_combined%20%7C%20sort%20ip_dst_combined%20%7C%20mvcombine%20ip_src_combined&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>
       </table>
     </panel>
