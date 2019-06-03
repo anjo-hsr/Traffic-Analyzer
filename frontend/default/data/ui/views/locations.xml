@@ -68,7 +68,7 @@
     <panel>
       <title>Choropleth Map</title>
       <map>
-      <title>Click on a country for detailed information about destinations</title>
+        <title>Click on a country for detailed information about destinations</title>
         <search base="source_locations">
           <query>
             | dedup dst_fqdn
