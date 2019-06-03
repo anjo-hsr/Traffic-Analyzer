@@ -2,9 +2,11 @@
   <label>Internal Endpoints</label>
   <search id="source_internal_endpoints">
     <query>
-      $source_token$ eth_src=$filteredMAC$
-      | fields ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type, _*
-      | table ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type
+      $source_token$
+      | fields ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
+        tls_handshake_type, traffic_analyzer_stream, tcp_stream,  _*
+      | table ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
+        tls_handshake_type, traffic_analyzer_stream, tcp_stream
     </query>
     <done>
       <condition>
@@ -35,7 +37,7 @@
       </search>
     </input>
     <input type="text" searchWhenChanged="true" token="filteredMAC">
-      <label>Show for following  Device (MAC):</label>
+      <label>Show for following Device (MAC):</label>
       <default>*</default>
     </input>
     <input type="dropdown" token="ip_range" searchWhenChanged="false">
@@ -45,12 +47,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"/>
+          <unset token="use_custom_ip_range"></unset>
           <set token="custom_ip_range">203.0.113.0/24</set>
           <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"/>
+          <unset token="use_default_ip_range"></unset>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -58,7 +60,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default/>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -68,8 +70,10 @@
         <search base="source_internal_endpoints">
           <query>
             | dedup ip_src_combined
+            | where if("$filteredMAC$"="*", like(eth_src, "%"), like(eth_src, "%$filteredMAC$%")
+              OR like(eth_dst, "%$filteredMAC$%"))
             | eval src_is_private_extended=if(
-              cidrmatch(&quot;$custom_ip_range$&quot;, ip_src_combined) OR
+              cidrmatch("$custom_ip_range$", ip_src_combined) OR
               src_is_private_ip == "1", "True", "False")
             | where src_is_private_extended == "True"
             | where ip_src_combined!="" AND ip_src_combined!="0.0.0.0"
@@ -77,26 +81,38 @@
             | join type=left eth_short
               [ search sourcetype="list" source="*mac_vendor.csv" ]
             | fillnull value="no vendor found"
-            | table eth_src, vendor, ip_src_combined
+            | table eth_src, vendor, ip_src_combined, src_query_name
             | dedup ip_src_combined
             | rename ip_src_combined as ip
             | join type=left ip
               [ | loadjob $subsearch_id_internal_endpoints$
-                | stats sum(frame_len) as "bytes out" by ip_src_combined
+                | stats sum(frame_len) as out by ip_src_combined
                 | rename ip_src_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_internal_endpoints$
-                | stats sum(frame_len) as "bytes in" by ip_dst_combined
+                | stats sum(frame_len) as in by ip_dst_combined
                 | rename ip_dst_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_internal_endpoints$
-                | rename ip_src_combined as ip
-                | where tls_handshake_type=1
-                | eval client_hello=1
-                | table client_hello, ip ]
+                | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined, tcp_stream
+                | where tcp_stream!=""
+                | untable traffic_analyzer_stream, type, ip
+                | dedup traffic_analyzer_stream, type
+                | stats count(traffic_analyzer_stream) as "# of Connections" by ip
+                | where ip!=""
+                | table ip, "# of Connections" ]
+            | eval "Traffic In" = in/1024, "Traffic Out" = out/1024
+            | table eth_src, vendor, ip, src_query_name, "Traffic In", "Traffic Out", "# of Connections"
+            | rename eth_src as "MAC", vendor as "Vendor", ip as "IP", src_query_name as "DNS Name"
             | fillnull value=0
           </query>
         </search>
+        <format type="number" field="Traffic In">
+          <option name="unit">KB</option>
+        </format>
+        <format type="number" field="Traffic Out">
+          <option name="unit">KB</option>
+        </format>
       </table>
     </panel>
   </row>
