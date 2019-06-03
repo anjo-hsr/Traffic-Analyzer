@@ -1,12 +1,12 @@
 import unittest
 
-from main.dicts.blacklist_dict import BlacklistDict
+from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
 
 
 class TestBlacklistDictMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.blacklist_domains = [
+        cls.ad_or_tracking_domains = [
             "adserver.news.com.au",
             "yab-adimages.s3.amazonaws.com",
             "analytics.google.com",
@@ -26,9 +26,9 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "",
         ]
 
-        cls.blacklist_dict = BlacklistDict(cls.blacklist_domains)
+        cls.ad_or_tracking_dict = AdOrTrackingDict(cls.ad_or_tracking_domains)
 
-    def test_create_blacklist_dict(self) -> None:
+    def test_create_ad_or_tracking_dict(self) -> None:
         expected_dict = {
             "au": {"com": {"news": {
                 "adserver": "adserver.news.com.au"
@@ -48,7 +48,7 @@ class TestBlacklistDictMethods(unittest.TestCase):
                 "webtrends": "webtrends.telegraph.co.uk"
             }}},
         }
-        self.assertDictEqual(self.blacklist_dict.blacklist_dict, expected_dict)
+        self.assertDictEqual(self.ad_or_tracking_dict.ad_or_tracking_dict, expected_dict)
 
 
 if __name__ == "__main__":

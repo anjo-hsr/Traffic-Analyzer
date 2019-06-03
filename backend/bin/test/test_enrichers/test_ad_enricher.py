@@ -8,7 +8,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.information_dict = {}
         cls.packet = {}
-        cls.blacklist_domains = [
+        cls.ad_or_tracking_domains = [
             "adserver.news.com.au",
             "yab-adimages.s3.amazonaws.com",
             "analytics.google.com",
@@ -32,7 +32,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
             "",
         ]
 
-        cls.ad_enricher = AdEnricher(cls.blacklist_domains)
+        cls.ad_enricher = AdEnricher(cls.ad_or_tracking_domains)
 
     def test_header(self) -> None:
         expected_header = "ad_category"
@@ -46,14 +46,14 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         for ip in self.ips:
             self.assertFalse(self.ad_enricher.is_ad_domain(ip))
 
-    def test_domain_blacklist(self) -> None:
-        for blacklist_domain in self.blacklist_domains:
-            self.assertTrue(self.ad_enricher.is_ad_domain(blacklist_domain))
+    def test_domain_ad_or_tracking(self) -> None:
+        for ad_or_tracking_domain in self.ad_or_tracking_domains:
+            self.assertTrue(self.ad_enricher.is_ad_domain(ad_or_tracking_domain))
 
-    def test_domain_blacklist_subdomain(self) -> None:
-        for blacklist_domain in self.blacklist_domains:
-            blacklist_domain = "subdomain." + blacklist_domain
-            self.assertTrue(self.ad_enricher.is_ad_domain(blacklist_domain))
+    def test_domain_ad_or_tracking_subdomain(self) -> None:
+        for ad_or_tracking_domain in self.ad_or_tracking_domains:
+            ad_or_tracking_domain = "subdomain." + ad_or_tracking_domain
+            self.assertTrue(self.ad_enricher.is_ad_domain(ad_or_tracking_domain))
 
     def test_domain_mixed(self) -> None:
         self.information_dict["domains"] = ",".join(self.mixex_domains)

@@ -1,17 +1,17 @@
-from main.dicts.blacklist_dict import BlacklistDict
+from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
 from main.enrichers.enricher import Enricher
 from main.helpers import string_helper
 from main.helpers.ip_helper import IpHelper
 
 
 class AdEnricher(Enricher):
-    def __init__(self, blacklist_domains=None) -> None:
+    def __init__(self, ad_or_tracking_domains=None) -> None:
         enricher_type = "ad enricher"
         header = "ad_category"
         Enricher.__init__(self, enricher_type, header)
 
         self.ip_to_category = {}
-        self.blacklist_dict = BlacklistDict(blacklist_domains)
+        self.ad_or_tracking_dict = AdOrTrackingDict(ad_or_tracking_domains)
         self.domain_to_ad_dict = {}
 
     def get_information(self, packet, information_dict) -> None:
@@ -30,7 +30,7 @@ class AdEnricher(Enricher):
         if domain in self.domain_to_ad_dict:
             return self.domain_to_ad_dict[domain]
 
-        dict_to_test = self.blacklist_dict.blacklist_dict
+        dict_to_test = self.ad_or_tracking_dict.ad_or_tracking_dict
         is_ad = self.is_domain_in_dict(domain, dict_to_test)
 
         is_ad = is_ad or not dict_to_test
