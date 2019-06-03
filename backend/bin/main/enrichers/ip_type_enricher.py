@@ -3,7 +3,7 @@ from main.helpers.ip_helper import IpHelper
 
 
 class IpTypeEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "ip type enricher"
         header = "dst_is_private_ip,src_is_private_ip"
         Enricher.__init__(self, enricher_type, header)

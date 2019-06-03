@@ -4,7 +4,7 @@ from main.helpers.string_helper import remove_quotations
 
 
 class CdnDict:
-    def __init__(self):
+    def __init__(self) -> None:
         # Source from https://github.com/WPO-Foundation/wptagent/blob/master/internal/optimization_checks.py
         self.cdn_names = {
             'Advanced Hosters CDN': ['.pix-cdn.org'],
@@ -177,12 +177,12 @@ class CdnDict:
         return False
 
     @staticmethod
-    def test_for_wildcard(domain, domain_key):
+    def test_for_wildcard(domain, domain_key) -> bool:
         if domain_key.endswith("."):
             return True
 
         return CdnDict.test_domain_ending(domain, domain_key)
 
     @staticmethod
-    def test_domain_ending(domain, domain_key):
+    def test_domain_ending(domain, domain_key) -> bool:
         return domain.endswith(domain_key)

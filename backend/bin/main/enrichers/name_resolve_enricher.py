@@ -3,7 +3,7 @@ from main.helpers.string_helper import enclose_with_quotes
 
 
 class NameResolverEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "name resolve enricher"
         header = "dst_fqdn,src_fqdn"
         Enricher.__init__(self, enricher_type, header)

@@ -51,7 +51,7 @@ class TestBlacklistDictMethods(unittest.TestCase):
         for domain in normal_domains:
             self.assertFalse(self.cdn_dict.check_domain(domain))
 
-    def test_check_domains_cdn(self):
+    def test_check_domains_cdn(self) -> None:
         cdn_domains = [
             "analytics.google.com,zrh04s15-in-f14.1e100.net",
             "www.youtube.ch,zrh04s15-in-f14.1e100.net",
@@ -59,7 +59,7 @@ class TestBlacklistDictMethods(unittest.TestCase):
         for domains in cdn_domains:
             self.assertTrue(self.cdn_dict.check_domains(domains))
 
-    def test_check_domains_normal(self):
+    def test_check_domains_normal(self) -> None:
         cdn_domains = [
             "www.hsr.ch,lb-ext-web1.hsr.ch",
             "www.github.com,lb-140-82-118-4-ams.github.com"

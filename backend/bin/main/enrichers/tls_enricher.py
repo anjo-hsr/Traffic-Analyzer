@@ -3,7 +3,7 @@ from main.helpers.print_helper import PrintHelper
 
 
 class TlsEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "tls enricher"
         header = "tls_ssl_version_negotiated"
         Enricher.__init__(self, enricher_type, header)

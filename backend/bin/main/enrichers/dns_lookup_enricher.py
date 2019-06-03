@@ -8,7 +8,7 @@ from main.helpers.string_helper import enclose_with_quotes
 
 
 class DnsLookupEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "dns lookup enricher"
         header = "dst_query_name,dst_hostnames,src_query_name,src_hostnames"
         Enricher.__init__(self, enricher_type, header)

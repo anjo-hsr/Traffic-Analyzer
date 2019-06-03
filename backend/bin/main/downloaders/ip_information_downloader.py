@@ -10,7 +10,7 @@ from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
 class IpInformationDownloader:
-    def __init__(self, limiter=TrafficLimitHelper(2, 1)):
+    def __init__(self, limiter=TrafficLimitHelper(2, 1)) -> None:
         self.ip_information = {}
         self.header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
         self.limiter = limiter
