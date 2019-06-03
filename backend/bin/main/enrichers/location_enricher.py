@@ -3,7 +3,7 @@ from main.helpers.string_helper import enclose_with_quotes
 
 
 class LocationEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "location enricher"
         header = "dst_latitude,dst_longitude,src_latitude,src_longitude"
         Enricher.__init__(self, enricher_type, header)

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 
 class BlacklistDict:
-    def __init__(self, blacklist_domains):
+    def __init__(self, blacklist_domains) -> None:
         self.blacklist_dict = {}
 
         if blacklist_domains is None:

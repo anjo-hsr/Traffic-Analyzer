@@ -2,7 +2,7 @@ from main.enrichers.enricher import Enricher
 
 
 class IpAddressCombineEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "ip address combine enricher"
         header = "ip_src_combined,ip_dst_combined"
         Enricher.__init__(self, enricher_type, header)

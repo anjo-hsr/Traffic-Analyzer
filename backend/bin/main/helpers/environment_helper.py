@@ -5,8 +5,7 @@ import psutil
 
 
 class EnvironmentHelper:
-
-    def __init__(self):
+    def __init__(self) -> None:
         self.production_process_name = "splunkd"
 
     def get_environment(self) -> Dict[str, str]:

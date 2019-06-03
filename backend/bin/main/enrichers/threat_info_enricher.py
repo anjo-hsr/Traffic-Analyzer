@@ -11,7 +11,7 @@ from main.helpers.string_helper import remove_quotations
 
 
 class ThreatInfoEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         header = "threat_category"
         enricher_type = "threat enricher"
         Enricher.__init__(self, enricher_type, header)

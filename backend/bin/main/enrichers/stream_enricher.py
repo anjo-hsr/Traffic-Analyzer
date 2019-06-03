@@ -6,7 +6,7 @@ from main.helpers.print_helper import PrintHelper
 
 
 class StreamEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "stream enricher"
         header = "traffic_analyzer_stream"
         Enricher.__init__(self, enricher_type, header)

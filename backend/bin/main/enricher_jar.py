@@ -7,7 +7,7 @@ from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
 class EnricherJar:
-    def __init__(self, limiter=TrafficLimitHelper(2, 1)):
+    def __init__(self, limiter=TrafficLimitHelper(2, 1)) -> None:
         self.limiter = limiter
         self.enricher_classes = get_enricher_dict()
         self.enricher_headers = []

@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class TrafficLimitHelper:
-    def __init__(self, requests_per_period, period_time):
+    def __init__(self, requests_per_period, period_time) -> None:
         self.requests_per_period = requests_per_period
         self.period_time = period_time
         self.period_start_timestamp = self.get_timestamp()

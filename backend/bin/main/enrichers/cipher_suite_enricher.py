@@ -3,7 +3,7 @@ from main.helpers.print_helper import PrintHelper
 
 
 class CipherSuiteEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "cipher_suite_enricher"
         header = "cipher_suite_number"
         Enricher.__init__(self, enricher_type, header)
