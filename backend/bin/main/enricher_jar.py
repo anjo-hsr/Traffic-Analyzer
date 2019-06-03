@@ -30,7 +30,6 @@ class EnricherJar:
 
     def create_information_dict(self, packet) -> OrderedDict:
         ip_information_downloader = self.ip_information_downloader
-        PacketCombiner.combine_ip_versions(packet)
         dst_src = PacketCombiner.get_dst_src(packet)
         information_dict = OrderedDict([
             ("dst_src_information", ip_information_downloader.get_dst_src_information(dst_src))

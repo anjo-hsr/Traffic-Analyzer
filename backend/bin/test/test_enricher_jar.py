@@ -12,7 +12,9 @@ class TestEnricherJarMethods(unittest.TestCase):
     def test_create_information_dict(self) -> None:
         packet = {
             "ip.dst": "10.0.0.2",
-            "ip.src": "10.0.0.1"
+            "ip.src": "10.0.0.1",
+            "ipv6.dst": "",
+            "ipv6.src": ""
         }
         expected_ordered_dict = OrderedDict([
             ('dst_src_information',

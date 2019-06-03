@@ -1,9 +1,9 @@
 import unittest
 
+from main.combiners.field_combiner import FieldCombiner
 from main.combiners.packet_combiner import PacketCombiner
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
-from main.combiners.field_combiner import FieldCombiner
 
 
 class TestFieldCombinerMethods(unittest.TestCase):
@@ -24,8 +24,16 @@ class TestFieldCombinerMethods(unittest.TestCase):
         self.assertEqual(FieldCombiner.delimiter, self.csv_delimiter)
 
     def test_get_src_dst(self) -> None:
-        packet = {"ip.dst": "8.8.8.8", "ip.src": "10.0.0.1"}
-        dst_src_list = {"dst": "8.8.8.8", "src": "10.0.0.1"}
+        packet = {
+            "ip.dst": "8.8.8.8",
+            "ip.src": "10.0.0.1",
+            "ipv6.dst": "",
+            "ipv6.src": ""
+        }
+        dst_src_list = {
+            "dst": "8.8.8.8",
+            "src": "10.0.0.1"
+        }
 
         self.assertEqual(PacketCombiner.get_dst_src(packet), dst_src_list)
 
