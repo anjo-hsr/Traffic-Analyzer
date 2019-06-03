@@ -1,8 +1,8 @@
 import re
 from os import path, remove
 
-from main.enricher_jar import EnricherJar
 from main.combiners.field_combiner import FieldCombiner
+from main.enricher_jar import EnricherJar
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_name_helper, file_read_helper, file_write_helper, \
     file_path_helper
@@ -22,10 +22,6 @@ def enrich_file(dirpath, file, new_file, enricher_jar) -> None:
 
 def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
     for index, packet in enumerate(csv_reader):
-        ip_enumerate_character = ","
-        packet["ip.dst"] = packet["ip.dst"].split(ip_enumerate_character)[0]
-        packet["ip.src"] = packet["ip.src"].split(ip_enumerate_character)[0]
-
         if file_read_helper.is_header(index):
             default_header = csv_reader.fieldnames
             enricher_classes = enricher_jar.enricher_classes
