@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from main.combiners.packet_combiner import PacketCombiner
 from main.dicts.enrichers_dict import get_enricher_dict
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.combiners.field_combiner import FieldCombiner
@@ -30,7 +31,7 @@ class EnricherJar:
 
     def create_information_dict(self, packet) -> OrderedDict:
         ip_information_downloader = self.ip_information_downloader
-        dst_src = FieldCombiner.get_dst_src(packet)
+        dst_src = PacketCombiner.get_dst_src(packet)
         information_dict = OrderedDict([
             ("dst_src_information", ip_information_downloader.get_dst_src_information(dst_src))
         ])
