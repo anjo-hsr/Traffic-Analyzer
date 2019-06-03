@@ -3,8 +3,8 @@
   <search id="source_stream_information">
     <query>
       $source_token$
-      | fields traffic_analyzer_stream, ip_src, ip_dst, frame_len, threat_category, ad_category, _*
-      | table traffic_analyzer_stream, ip_src, ip_dst, frame_len, threat_category, ad_category, _time
+      | fields traffic_analyzer_stream, ip_src_combined, ip_dst_combined, frame_len, threat_category, ad_category, _*
+      | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined, frame_len, threat_category, ad_category, _time
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -63,12 +63,12 @@
         <search base="source_stream_information">
           <query>
             | eventstats sum(frame_len) as "Bytes transfered" by traffic_analyzer_stream
-            | table "Bytes transfered", _time, traffic_analyzer_stream, ws_col_Protocol, ip_src, ip_dst,
+            | table "Bytes transfered", _time, traffic_analyzer_stream, ws_col_Protocol, ip_src_combined, ip_dst_combined,
               threat_category, ad_category
             | eventstats last(_time) as last_event, first(_time) as first_event by traffic_analyzer_stream
             | eval timespan=round(first_event-last_event,3)
             | dedup traffic_analyzer_stream
-            | table traffic_analyzer_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src, ip_dst,
+            | table traffic_analyzer_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src_combined, ip_dst_combined,
               threat_category, ad_category
             | eval threat_category=if(threat_category="",0,split(threat_category,","))
             | mvexpand threat_category
@@ -78,7 +78,7 @@
             | join threat_category
               [ search sourcetype="list" source="*threat*"
                 | table id, category | rename id as threat_category, category as threatcategory ]
-            | table traffic_analyzer_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src, ip_dst,
+            | table traffic_analyzer_stream, "Bytes transfered", timespan, ws_col_Protocol, ip_src_combined, ip_dst_combined,
               adcategory, threatcategory
             | mvcombine threatcategory
           </query>

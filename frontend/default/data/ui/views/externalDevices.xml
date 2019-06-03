@@ -3,8 +3,10 @@
   <search id="source_external">
     <query>
       $source_token$ eth_dst=$filteredMAC$ src_is_private_ip="0"
-      | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
-      | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
+      | fields ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type,
+        src_query_name, src_fqdn, _*
+      | table ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type,
+        src_query_name, src_fqdn
     </query>
     <done>
       <condition>
@@ -16,12 +18,14 @@
     <query>
     | search
       [ | loadjob $subsearch_id_external$
-        | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
+        | where NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src_combined)
         | dedup eth_src
         | table eth_src]
-    | where ip_src!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src)
-    | fields ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn, _*
-    | table ip_src, ip_dst, frame_len, src_is_private_ip, eth_src, tls_handshake_type, src_query_name, src_fqdn
+    | where ip_src_combined!="" AND NOT cidrmatch(&quot;$custom_ip_range$&quot;, ip_src_combined)
+    | fields ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src,
+      tls_handshake_type, src_query_name, src_fqdn, _*
+    | table ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src,
+      tls_handshake_type, src_query_name, src_fqdn
     </query>
     <done>
       <condition>
@@ -85,19 +89,19 @@
         <search base="source_external_endpoints">
           <query>
             | fillnull value=""
-            | dedup ip_src
-            | rename ip_src as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
+            | dedup ip_src_combined
+            | rename ip_src_combined as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
             | join type=left ip
               [ | loadjob $subsearch_id_external_endpoints$
-                | stats sum(frame_len) as "bytes out" by ip_src
-                | rename ip_src as ip ]
+                | stats sum(frame_len) as "bytes out" by ip_src_combined
+                | rename ip_src_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_external_endpoints$
-                | stats sum(frame_len) as "bytes in" by ip_dst
-                | rename ip_dst as ip ]
+                | stats sum(frame_len) as "bytes in" by ip_dst_combined
+                | rename ip_dst_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_external_endpoints$
-                | rename ip_src as ip
+                | rename ip_src_combined as ip
                 | where tls_handshake_type=1
                 | eval client_hello=1
                 | table client_hello, ip ]

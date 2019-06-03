@@ -201,7 +201,7 @@
           <colorPalette type="map">{"N":#FC4737}</colorPalette>
         </format>
         <drilldown>
-          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ip_range$%22,%20ip_src)%7C%20dedup%20ip_dst%20cipher_suite_number%20ip_src%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src%20%7C%20sort%20ip_dst%20%7C%20mvcombine%20ip_src&amp;earliest=$earliest$&amp;latest=$latest$</link>
+          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ip_range$%22,%20ip_src_combined)%7C%20dedup%20ip_dst_combined_combined%20cipher_suite_number%20ip_src_combined%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst_combined,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src_combined%20%7C%20sort%20ip_dst_combined%20%7C%20mvcombine%20ip_src_combined&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>
       </table>
     </panel>

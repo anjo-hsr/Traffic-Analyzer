@@ -4,9 +4,11 @@
     <query>
       $source_token$
       | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
-      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _*
+        traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
+        src_is_private_ip, linecount, _*
       | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
-      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _time
+        traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
+        src_is_private_ip, linecount, _time
     </query>
   </search>
   <search base="source_overview" id="recommended_cipher_suites">
@@ -26,14 +28,14 @@
   </search>
   <search base="source_overview" id="bytes_transfered">
     <query>
-      | dedup ip_src
+      | dedup ip_src_combined
       | eval src_is_private_extended=if(
-        cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
+        cidrmatch(&quot;$custom_ip_range$&quot;, ip_src_combined) OR
         src_is_private_ip == "1", "True", "False")
       | where src_is_private_extended == "True"
-      | where ip_src!="" AND ip_src!="0.0.0.0"
-      | table ip_src
-      | rename ip_src as ip
+      | where ip_src_combined!="" AND ip_src_combined!="0.0.0.0"
+      | table ip_src_combined
+      | rename ip_src_combined as ip
     </query>
     <done>
       <condition>
@@ -239,8 +241,8 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(frame_len) as bytes_in_per_ip by ip_dst
-                | rename ip_dst as ip ]
+                | stats sum(frame_len) as bytes_in_per_ip by ip_dst_combined
+                | rename ip_dst_combined as ip ]
             | stats sum(bytes_in_per_ip) as sum_bytes
             | table sum_bytes
             | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
@@ -263,8 +265,8 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(linecount) as "# of packets" by ip_dst
-                | rename ip_dst as ip ]
+                | stats sum(linecount) as "# of packets" by ip_dst_combined
+                | rename ip_dst_combined as ip ]
             | stats sum("# of packets") as sum_packets
             | table sum_packets
             | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
@@ -290,8 +292,8 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(frame_len) as bytes_out_per_ip by ip_src
-                | rename ip_src as ip ]
+                | stats sum(frame_len) as bytes_out_per_ip by ip_src_combined
+                | rename ip_src_combined as ip ]
             | stats sum(bytes_out_per_ip) as sum_bytes
             | table sum_bytes
             | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
@@ -314,8 +316,8 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(linecount) as "# of packets" by ip_src
-                | rename ip_src as ip ]
+                | stats sum(linecount) as "# of packets" by ip_src_combined
+                | rename ip_src_combined as ip ]
             | stats sum("# of packets") as sum_packets
             | table sum_packets
             | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
