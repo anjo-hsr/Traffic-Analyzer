@@ -64,7 +64,7 @@
       </search>
     </input>
     <input type="text" searchWhenChanged="true" token="filteredMAC">
-      <label>Show for following  Device (MAC):</label>
+      <label>Show for following Device (MAC):</label>
       <default>*</default>
     </input>
     <input type="dropdown" token="ip_range" searchWhenChanged="false">
