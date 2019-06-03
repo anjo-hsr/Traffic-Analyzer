@@ -91,13 +91,12 @@
                 | where tcp_stream!=""
                 | untable traffic_analyzer_stream, type, ip
                 | dedup traffic_analyzer_stream, type
-                | stats count(traffic_analyzer_stream) as "# of connections" by ip
+                | stats count(traffic_analyzer_stream) as "# of Connections" by ip
                 | where ip!=""
-                | table ip, "# of connections" ]
-            | eval "traffic in" = b_in/1024, "traffic out" = b_out/1024
-            | table ip, src_query_name, src_fqdn, "traffic in", "traffic out", "# of connections"
-            | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup",
-              "traffic in" as "Traffic In", "traffic out" as "Traffic Out", "# of connections" as "# of Connections"
+                | table ip, "# of Connections" ]
+            | eval "Traffic In" = b_in/1024, "Traffic Out" = b_out/1024
+            | table ip, src_query_name, src_fqdn, "Traffic In", "Traffic Out", "# of Connections"
+            | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup"
             | fillnull value=0
           </query>
         </search>

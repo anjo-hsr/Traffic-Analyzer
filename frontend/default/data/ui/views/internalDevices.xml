@@ -96,13 +96,12 @@
                 | where tcp_stream!=""
                 | untable traffic_analyzer_stream, type, ip
                 | dedup traffic_analyzer_stream, type
-                | stats count(traffic_analyzer_stream) as "# of connections" by ip
+                | stats count(traffic_analyzer_stream) as "# of Connections" by ip
                 | where ip!=""
-                | table ip, "# of connections" ]
-            | eval "traffic in" = in/1024, "traffic out" = out/1024
-            | table eth_src, vendor, ip, src_query_name, "traffic in", "traffic out", "# of connections"
-            | rename eth_src as "MAC", vendor as "Vendor", ip as "IP", src_query_name as "DNS Name",
-              "traffic in" as "Traffic In", "traffic out" as "Traffic Out", "# of connections" as "# of Connections"
+                | table ip, "# of Connections" ]
+            | eval "Traffic In" = in/1024, "Traffic Out" = out/1024
+            | table eth_src, vendor, ip, src_query_name, "Traffic In", "Traffic Out", "# of Connections"
+            | rename eth_src as "MAC", vendor as "Vendor", ip as "IP", src_query_name as "DNS Name"
             | fillnull value=0
           </query>
         </search>
