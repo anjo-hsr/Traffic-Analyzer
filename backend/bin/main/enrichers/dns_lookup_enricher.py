@@ -1,7 +1,7 @@
 from typing import Dict, Union, List
 
 from main.enrichers.enricher import Enricher
-from main.helpers.combine_helper import CombineHelper
+from main.combiners.field_combiner import FieldCombiner
 from main.helpers.ip_helper import IpHelper
 from main.helpers.response_helper import ResponseHelper
 from main.helpers.string_helper import enclose_with_quotes
@@ -37,14 +37,14 @@ class DnsLookupEnricher(Enricher):
         information_dict["src_query_name"] = self.get_dns_query(src_ip)
         information_dict["src_hostnames"] = self.get_hostnames(src_ip)
 
-        information_dict["domains"] = CombineHelper.join_list_elements([
+        information_dict["domains"] = FieldCombiner.join_list_elements([
             information_dict["dst_query_name"],
             information_dict["dst_hostnames"],
             information_dict["src_query_name"],
             information_dict["src_hostnames"]
         ], True)
 
-        information_dict["src_domains"] = CombineHelper.join_list_elements([
+        information_dict["src_domains"] = FieldCombiner.join_list_elements([
             information_dict["src_query_name"],
             information_dict["src_hostnames"]
         ], True)
@@ -55,7 +55,7 @@ class DnsLookupEnricher(Enricher):
 
     def get_hostnames(self, ip) -> str:
         ip_information = self.dns_responses.get(ip, self.get_empty_dict())
-        return CombineHelper.join_with_quotes(ip_information["hostnames"])
+        return FieldCombiner.join_with_quotes(ip_information["hostnames"])
 
     def save_dns_query(self, packet) -> None:
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")

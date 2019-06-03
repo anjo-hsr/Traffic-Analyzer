@@ -2,7 +2,7 @@ import re
 from os import path, remove
 
 from main.enricher_jar import EnricherJar
-from main.helpers.combine_helper import CombineHelper
+from main.combiners.field_combiner import FieldCombiner
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_move_helper, file_name_helper, file_read_helper, file_write_helper, \
     file_path_helper
@@ -30,7 +30,7 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             default_header = csv_reader.fieldnames
             enricher_classes = enricher_jar.enricher_classes
             helper_headers = [enricher_classes[helper_key].header for helper_key in enricher_classes]
-            line = CombineHelper.join_list_elements(default_header + helper_headers, False)
+            line = FieldCombiner.join_list_elements(default_header + helper_headers, False)
 
             # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
             # for encrypted and bootp is the search key for dhcp traffic. ssl.* and bootp.* could be deprecated in
@@ -43,11 +43,11 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             set_enricher_headers(enricher_jar, helper_headers)
 
         else:
-            joined_default_cells = CombineHelper.join_default_cells(packet, csv_reader.fieldnames)
+            joined_default_cells = FieldCombiner.join_default_cells(packet, csv_reader.fieldnames)
             information_dict = enricher_jar.get_information_dict(packet)
-            enriched_line = CombineHelper.delimiter.join(
+            enriched_line = FieldCombiner.delimiter.join(
                 str(information_dict.get(key, "")) for key in enricher_jar.enricher_headers)
-            line = CombineHelper.combine_packet_information(joined_default_cells, enriched_line)
+            line = FieldCombiner.combine_packet_information(joined_default_cells, enriched_line)
 
         file_write_helper.write_line(output_file, line)
 
