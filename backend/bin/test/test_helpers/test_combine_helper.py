@@ -1,7 +1,7 @@
 import unittest
 
 from main.combiners.field_combiner import FieldCombiner
-from main.combiners.packet_combiner import PacketCombiner
+from main.combiners.packet_combiner import get_dst_src
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
 
@@ -35,7 +35,7 @@ class TestFieldCombinerMethods(unittest.TestCase):
             "src": "10.0.0.1"
         }
 
-        self.assertEqual(PacketCombiner.get_dst_src(packet), dst_src_list)
+        self.assertEqual(get_dst_src(packet), dst_src_list)
 
     def test_combine_fields_with_quotes(self) -> None:
         row = "number,name,description"
