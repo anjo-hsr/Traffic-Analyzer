@@ -8,7 +8,7 @@ from main.helpers.response_helper import ResponseHelper
 class ServerTypeEnricher(Enricher):
     def __init__(self) -> None:
         enricher_type = "server type enricher"
-        header = "src_is_dhcp,src_is_dns,src_is_cdn"
+        header = "src_is_dhcp,src_is_dns,src_is_cdn,src_is_social_network"
         Enricher.__init__(self, enricher_type, header)
 
         self.server_type_dict = {
