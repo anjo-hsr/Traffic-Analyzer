@@ -1,4 +1,5 @@
 id_keys = [
+    "ip",
     "location",
     "fqdn",
     "cipher",
