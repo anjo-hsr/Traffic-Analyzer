@@ -19,16 +19,20 @@ class ServerTypeEnricher(Enricher):
         }
 
     def get_information(self, packet, information_dict) -> None:
-        information_dict["src_is_dhcp"] = self.detect_type(packet, ResponseHelper.is_dhcp_response, "dhcp")
-        information_dict["src_is_dns"] = self.detect_type(packet, ResponseHelper.is_dns_response, "dns")
-        information_dict["src_is_cdn"] = self.test_category(information_dict, cdn_providers, "cdn")
+        information_dict["src_is_dhcp"] = self.detect_type(
+            packet, information_dict, ResponseHelper.is_dhcp_response, "dhcp")
+        information_dict["src_is_dns"] = self.detect_type(
+            packet, information_dict, ResponseHelper.is_dns_response, "dns")
+
+        information_dict["src_is_cdn"] = self.test_category(
+            information_dict, cdn_providers, "cdn")
         information_dict["src_is_social_network"] = self.test_category(
             information_dict, social_network_providers, "social_network")
 
-    def detect_type(self, packet, response_check, dict_key) -> str:
+    def detect_type(self, packet, information_dict, response_check, dict_key) -> str:
         is_type = False
         if response_check(packet):
-            self.save_entry(dict_key, packet)
+            self.save_entry(dict_key, information_dict)
             is_type = True
 
         return "1" if is_type else "0"
@@ -38,10 +42,10 @@ class ServerTypeEnricher(Enricher):
         domain_dict_helper = DomainDictHelper(provider_dict)
         domain_is_in_dict = domain_dict_helper.check_domains(domains)
         if domain_is_in_dict:
-            self.save_entry(key, domains)
+            self.save_entry(key, information_dict)
 
         return "1" if domain_is_in_dict else "0"
 
-    def save_entry(self, dict_key, packet) -> None:
-        server_address = packet["ip.src"]
+    def save_entry(self, dict_key, information_dict) -> None:
+        server_address = information_dict["ip_src_combined"]
         self.server_type_dict[dict_key].add(server_address)

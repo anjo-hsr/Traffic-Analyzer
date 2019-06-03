@@ -35,6 +35,10 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
     def setUp(self) -> None:
         self.dns_lookup_enricher.dns_responses = {}
 
+    def set_information_dict(self, packet):
+        self.information_dict["ip_src_combined"] = packet["ip.src"]
+        self.information_dict["ip_dst_combined"] = packet["ip.dst"]
+
     def test_header(self) -> None:
         expected_header = "dst_query_name,dst_hostnames,src_query_name,src_hostnames"
         self.assertEqual(self.dns_lookup_enricher.header, expected_header)
@@ -48,6 +52,7 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
 
     def test_generate_dns_information_without_dns_response(self) -> None:
         empty_string = '""'
+        self.set_information_dict(self.dns_packet)
 
         self.dns_lookup_enricher.save_dns_query(self.dns_packet)
         self.dns_lookup_enricher.get_information(self.dns_packet, self.information_dict)
@@ -63,7 +68,10 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
         src_query_name = '""'
         src_hostnames = '""'
 
+        self.set_information_dict(self.dns_packet)
         self.dns_lookup_enricher.save_dns_query(self.dns_packet)
+
+        self.set_information_dict(self.normal_packet)
         self.dns_lookup_enricher.get_information(self.normal_packet, self.information_dict)
 
         self.assertEqual(self.information_dict["dst_query_name"], dst_query_name)

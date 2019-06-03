@@ -28,8 +28,8 @@ class DnsLookupEnricher(Enricher):
         if ResponseHelper.is_dns_response(packet):
             self.save_dns_query(packet)
 
-        src_ip = packet["ip.src"]
-        dst_ip = packet["ip.dst"]
+        src_ip = information_dict["ip_src_combined"]
+        dst_ip = information_dict["ip_dst_combined"]
 
         information_dict["dst_query_name"] = self.get_dns_query(dst_ip)
         information_dict["dst_hostnames"] = self.get_hostnames(dst_ip)
