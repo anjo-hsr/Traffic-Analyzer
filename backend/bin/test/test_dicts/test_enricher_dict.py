@@ -13,7 +13,6 @@ from main.enrichers.server_type_enricher import ServerTypeEnricher
 from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 from main.enrichers.tls_enricher import TlsEnricher
-from test.test_dicts.keys import id_keys
 
 
 class TestEnrichmentClassesMethods(unittest.TestCase):
@@ -80,9 +79,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
         self.assertEqual(list(self.enricher_dict), self.enricher_keys)
 
     def test_enricher_dict_keys(self) -> None:
-        id_index = 0
-        enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict]
-        self.assertListEqual(enricher_classes_key_ids, id_keys)
+        self.assertListEqual(list(self.enricher_dict), self.enricher_keys)
 
 
 if __name__ == "__main__":
