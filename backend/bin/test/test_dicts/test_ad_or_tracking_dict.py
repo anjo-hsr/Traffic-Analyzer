@@ -3,7 +3,7 @@ import unittest
 from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
 
 
-class TestBlacklistDictMethods(unittest.TestCase):
+class TestAdOrTrackingDictMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.ad_or_tracking_domains = [
@@ -52,5 +52,5 @@ class TestBlacklistDictMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestBlacklistDictMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestAdOrTrackingDictMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
