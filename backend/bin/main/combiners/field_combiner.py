@@ -1,11 +1,8 @@
-from typing import Dict
-
 from main.helpers.string_helper import enclose_with_quotes
 
 
 class FieldCombiner:
     delimiter = ","
-
 
     @staticmethod
     def combine_packet_information(joined_default_cells, enriched_line) -> str:

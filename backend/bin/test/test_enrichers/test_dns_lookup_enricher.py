@@ -60,7 +60,7 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
     def test_generate_dns_information_with_dns_reponse_dst(self) -> None:
         dst_query_name = '"www.hsr.ch"'
         dst_hostnames = '"www.hsr.ch,lb-ext-web1.hsr.ch"'
-        src_query_name= '""'
+        src_query_name = '""'
         src_hostnames = '""'
 
         self.dns_lookup_enricher.save_dns_query(self.dns_packet)

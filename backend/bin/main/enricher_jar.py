@@ -3,7 +3,6 @@ from collections import OrderedDict
 from main.combiners.packet_combiner import PacketCombiner
 from main.dicts.enrichers_dict import get_enricher_dict
 from main.downloaders.ip_information_downloader import IpInformationDownloader
-from main.combiners.field_combiner import FieldCombiner
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
