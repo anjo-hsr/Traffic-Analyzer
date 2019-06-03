@@ -1,7 +1,7 @@
 from typing import Dict, Union, List
 
-from main.enrichers.enricher import Enricher
 from main.combiners.field_combiner import FieldCombiner
+from main.enrichers.enricher import Enricher
 from main.helpers.ip_helper import IpHelper
 from main.helpers.response_helper import ResponseHelper
 from main.helpers.string_helper import enclose_with_quotes

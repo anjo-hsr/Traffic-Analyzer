@@ -1,7 +1,7 @@
 from main.dicts.cdn_dict import cdn_providers
-from main.helpers.domain_dict_helper import DomainDictHelper
 from main.dicts.social_network_dict import social_network_providers
 from main.enrichers.enricher import Enricher
+from main.helpers.domain_dict_helper import DomainDictHelper
 from main.helpers.response_helper import ResponseHelper
 
 
