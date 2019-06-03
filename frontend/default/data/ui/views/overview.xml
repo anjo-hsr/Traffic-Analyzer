@@ -28,7 +28,7 @@
     <query>
       | dedup ip_src
       | eval src_is_private_extended=if(
-        cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
+        cidrmatch("$custom_ip_range$", ip_src) OR
         src_is_private_ip == "1", "True", "False")
       | where src_is_private_extended == "True"
       | where ip_src!="" AND ip_src!="0.0.0.0"
@@ -74,12 +74,12 @@
       <change>
         <condition label="Default (RFC 1918)">
           <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"/>
+          <unset token="use_custom_ip_range"></unset>
           <set token="custom_ip_range">203.0.113.0/24</set>
           <set token="form.custom_ip_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"/>
+          <unset token="use_default_ip_range"></unset>
           <set token="use_custom_ip_range">true</set>
         </condition>
       </change>
@@ -87,7 +87,7 @@
     </input>
     <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
       <label>Internal IP range:</label>
-      <default/>
+      <default></default>
     </input>
   </fieldset>
   <row>
@@ -242,6 +242,7 @@
                 | stats sum(frame_len) as bytes_in_per_ip by ip_dst
                 | rename ip_dst as ip ]
             | stats sum(bytes_in_per_ip) as sum_bytes
+            | eval sum_bytes=sum_bytes/1024
             | table sum_bytes
             | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
           </query>
@@ -249,10 +250,10 @@
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
+        <option name="numberPrecision">0.00</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
-        <option name="unit">Bytes</option>
+        <option name="unit">KB</option>
         <option name="unitPosition">after</option>
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
@@ -293,6 +294,7 @@
                 | stats sum(frame_len) as bytes_out_per_ip by ip_src
                 | rename ip_src as ip ]
             | stats sum(bytes_out_per_ip) as sum_bytes
+            | eval sum_bytes=sum_bytes/1024
             | table sum_bytes
             | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
           </query>
@@ -300,10 +302,10 @@
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
+        <option name="numberPrecision">0.00</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
-        <option name="unit">Bytes</option>
+        <option name="unit">KB</option>
         <option name="unitPosition">after</option>
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
