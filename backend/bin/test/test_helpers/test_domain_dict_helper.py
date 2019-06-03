@@ -1,6 +1,7 @@
 import unittest
 
 from main.dicts.cdn_dict import cdn_providers
+from main.dicts.social_network_dict import social_network_providers
 from main.helpers.domain_dict_helper import DomainDictHelper
 
 
@@ -11,7 +12,7 @@ class TestDomainDictHelperMethods(unittest.TestCase):
             "www.hsr.ch",
             "www.google.com",
         ]
-        cls.mixex_domains = [
+        cls.mixed_cdn_domains = [
             "analytics.google.com",
             "zrh04s15-in-f14.1e100.net",
         ]
@@ -20,6 +21,7 @@ class TestDomainDictHelperMethods(unittest.TestCase):
             "",
         ]
         cls.cdn_dict_helper = DomainDictHelper(cdn_providers)
+        cls.social_network_dict_helper = DomainDictHelper(social_network_providers)
 
     def test_get_cdn_domains_to_names(self) -> None:
         company_name = "Google"
@@ -33,6 +35,12 @@ class TestDomainDictHelperMethods(unittest.TestCase):
         self.assertEqual(len(self.cdn_dict_helper.domain_provider_dict), 147)
         for domain in domains:
             self.assertEqual(self.cdn_dict_helper.domain_provider_dict[domain], company_name)
+
+    def test_social_networking_domains_to_names(self) -> None:
+        domain_provider_dict = self.social_network_dict_helper.domain_provider_dict
+        for domain in domain_provider_dict:
+            self.assertTrue(isinstance(domain, str))
+            self.assertTrue(isinstance(domain_provider_dict[domain], str))
 
     def test_check_domain_cdn(self) -> None:
         cdn_domains = [
