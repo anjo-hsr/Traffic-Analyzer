@@ -68,7 +68,8 @@
         <search base="source_internal_endpoints">
           <query>
             | dedup ip_src
-            | where if("$filteredMAC$"="*",like(eth_src, "%"),like (eth_src, "%$filteredMAC$%") OR like (eth_dst, "%$filteredMAC$%"))
+            | where if("$filteredMAC$"="*",like(eth_src, "%"),like (eth_src, "%$filteredMAC$%")
+              OR like (eth_dst, "%$filteredMAC$%"))
             | eval src_is_private_extended=if(
               cidrmatch("$custom_ip_range$", ip_src) OR
               src_is_private_ip == "1", "True", "False")
@@ -90,16 +91,24 @@
                 | stats sum(frame_len) as in by ip_dst
                 | rename ip_dst as ip ]
             | join type=left ip
-              [ | loadjob $subsearch_id_internal_endpoints$ | table traffic_analyzer_stream, ip_src, ip_dst, tcp_stream | where tcp_stream!=""  | untable traffic_analyzer_stream, type, ip | dedup traffic_analyzer_stream, type | stats count(traffic_analyzer_stream) as "# of connections" by ip | where ip!="" | table ip, "# of connections"]
+              [ | loadjob $subsearch_id_internal_endpoints$ | table traffic_analyzer_stream, ip_src, ip_dst, tcp_stream
+                | where tcp_stream!=""
+                | untable traffic_analyzer_stream, type, ip
+                | dedup traffic_analyzer_stream, type
+                | stats count(traffic_analyzer_stream) as "# of connections" by ip
+                | where ip!=""
+                | table ip, "# of connections"]
             | eval "traffic in" = in/1024, "traffic out" = out/1024
             | table eth_src, vendor, ip, src_query_name, "traffic in", "traffic out", "# of connections"
+            | rename eth_src as "MAC", vendor as "Vendor", ip as "IP", src_query_name as "DNS Name",
+              "traffic in" as "Traffic In", "traffic out" as "Traffic Out", "# of connections" as "# of Connections"
             | fillnull value=0
           </query>
         </search>
-        <format type="number" field="traffic in">
+        <format type="number" field="Traffic In">
           <option name="unit">KB</option>
         </format>
-        <format type="number" field="traffic out">
+        <format type="number" field="Traffic Out">
           <option name="unit">KB</option>
         </format>
       </table>
