@@ -27,15 +27,7 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             enricher_classes = enricher_jar.enricher_classes
             helper_headers = [enricher_classes[helper_key].header for helper_key in enricher_classes]
             line = FieldCombiner.join_list_elements(default_header + helper_headers, False)
-
-            # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key
-            # for encrypted and bootp is the search key for dhcp traffic. ssl.* and bootp.* could be deprecated in
-            # future releases
-            # https://tracker.debian.org/pkg/wireshark
-            # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
-            line = re.sub(r"ssl\.", r"tls.", line)
-            line = re.sub(r"bootp\.", r"dhcp.", line)
-
+            line = fix_thsark_fields(line)
             set_enricher_headers(enricher_jar, helper_headers)
 
         else:
@@ -46,6 +38,24 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             line = FieldCombiner.combine_packet_information(joined_default_cells, enriched_line)
 
         file_write_helper.write_line(output_file, line)
+
+
+def fix_thsark_fields(line) -> str:
+    # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key for
+    # encrypted and bootp is the search key for dhcp traffic. ssl.* and bootp.* could be deprecated in future releases
+    # https://tracker.debian.org/pkg/wireshark
+    # https://www.wireshark.org/docs/relnotes/wireshark-3.0.0.html
+    search_replace_touples = [
+        (r"ssl\.", r"tls."),
+        (r"bootp\.", r"dhcp.")
+    ]
+    return substitute_line(line, search_replace_touples)
+
+
+def substitute_line(line, search_replace_touples) -> str:
+    for touple in search_replace_touples:
+        line = re.sub(touple[0], touple[1], line)
+    return line
 
 
 def set_enricher_headers(enricher_jar, helper_headers) -> None:
