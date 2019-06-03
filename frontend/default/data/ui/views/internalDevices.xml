@@ -91,13 +91,14 @@
                 | stats sum(frame_len) as in by ip_dst
                 | rename ip_dst as ip ]
             | join type=left ip
-              [ | loadjob $subsearch_id_internal_endpoints$ | table traffic_analyzer_stream, ip_src, ip_dst, tcp_stream
+              [ | loadjob $subsearch_id_internal_endpoints$
+                | table traffic_analyzer_stream, ip_src, ip_dst, tcp_stream
                 | where tcp_stream!=""
                 | untable traffic_analyzer_stream, type, ip
                 | dedup traffic_analyzer_stream, type
                 | stats count(traffic_analyzer_stream) as "# of connections" by ip
                 | where ip!=""
-                | table ip, "# of connections"]
+                | table ip, "# of connections" ]
             | eval "traffic in" = in/1024, "traffic out" = out/1024
             | table eth_src, vendor, ip, src_query_name, "traffic in", "traffic out", "# of connections"
             | rename eth_src as "MAC", vendor as "Vendor", ip as "IP", src_query_name as "DNS Name",
