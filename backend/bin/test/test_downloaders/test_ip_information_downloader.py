@@ -49,7 +49,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         ip_address = self.public_ip
         self.assert_ip_data(ip_address, self.ip_data_public)
 
-    @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
+    @patch("dns.resolver.Resolver.query", MagicMock(return_value=["router.hsr.ch"]))
     def test_get_ip_information_private(self) -> None:
         ip_address = self.private_ip
         self.assert_ip_data(ip_address, self.ip_data_private)
@@ -58,7 +58,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         ip_address = self.multicast_ip
         self.assert_ip_data(ip_address, self.ip_data_multicast)
 
-    @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
+    @patch("dns.resolver.Resolver.query", MagicMock(return_value=["router.hsr.ch"]))
     def test_get_ip_information_twice(self) -> None:
         ip_address = self.private_ip
         length = 1
