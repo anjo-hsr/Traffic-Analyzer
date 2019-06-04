@@ -16,19 +16,26 @@ class IpInformationDownloader:
         self.ip_information = {}
         self.limiter = limiter
         self.dns_resolver = resolver.Resolver()
+
+        self.set_dns_resolver()
+
+    def set_dns_resolver(self, dns_lifetime=2) -> None:
+        self.dns_resolver.lifetime = dns_lifetime
         self.set_dns_server()
 
-    def set_dns_server(self):
+    def set_dns_server(self) -> None:
         config_name = "traffic-analyzer.conf"
         key = "internal_dns_server"
         dns_server = file_read_helper.get_config_value(config_name, key)
-        if dns_server == "":
-            return
+        self.check_dns_server_entry(dns_server)
 
+    def check_dns_server_entry(self, dns_server):
         self.dns_resolver.nameservers = [dns_server]
-        self.dns_resolver.lifetime = 2
         if not self.is_dns_server_avaiable(dns_server):
-            self.dns_resolver.nameservers = []
+            self.reser_dns_server()
+
+    def reser_dns_server(self):
+        self.dns_resolver.nameservers = []
 
     def is_dns_server_avaiable(self, dns_server_address):
         try:
@@ -102,10 +109,19 @@ class IpInformationDownloader:
             "longitude": ""
         }
 
-    def get_fqdn(self, fqdn, ip_address) -> str:
+    def get_fqdn(self, fqdn, ip_address, counter=0) -> str:
         try:
             in_addr_arpa_address = reversename.from_address(ip_address)
             fqdn = str(self.dns_resolver.query(in_addr_arpa_address, "PTR")[0])
+
+        except exception.Timeout:
+            if counter < 5:
+                time.sleep(2)
+                self.get_fqdn(fqdn, ip_address, counter + 1)
+
+            self.reser_dns_server()
+
         except resolver.NXDOMAIN:
             pass
+
         return fqdn
