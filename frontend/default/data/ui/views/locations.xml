@@ -111,7 +111,13 @@
         </drilldown>
       </map>
     </panel>
-    <panel>
+    <panel rejects="$selectedCountryFilter$">
+      <title>Destinations by country</title>
+      <html><p>
+        This space will display information once a country is selected.
+      </p></html>
+    </panel>
+    <panel depends="$selectedCountryFilter$">
       <title>Destinations in $selectedCountry$</title>
       <table>
         <search base="destinations_by_country">
