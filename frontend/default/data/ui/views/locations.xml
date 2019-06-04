@@ -150,7 +150,8 @@
         <h3 class="dashboard-element-title" stype="display: block">
           $data_privacy_text$
           <br/>
-          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf">Document from the swiss governmnet</a>
+          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf"
+             target="_blank" rel="noopener noreferrer">Document from the swiss governmnet</a>
         </h3>
       </html>
       <table>
