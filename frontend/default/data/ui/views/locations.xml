@@ -17,14 +17,26 @@
   </search>
   <search>
     <query>
-      sourcetype=list source="*data_privacy_countries_switzerland.csv" $selectedCountry$
-      | where country != ""
-      | table country,"appropriate safety for natural persons","appropriate safety under specified conditions","no appropiate safety"
+      sourcetype=list source="*data_privacy_countries_switzerland.csv"
+      | table country, "appropriate safety for natural persons", "appropriate safety under specified conditions", "no appropiate safety"
       | untable country, type, value
-      | where value = 1
+      | append
+        [ search sourcetype=list source="*data_privacy_countries_switzerland.csv"
+        | table country, type, value
+        | top 1 country
+        | eval country=$selectedCountry$, type="not found", value="1" ]
+      | where country=$selectedCountry$
+      | where value=1
+      | dedup country
+      | eval text=case(
+        type="appropriate safety for natural persons", "Appropriate safety for data privacy of natural persons considered by the swiss government.",
+        type="appropriate safety under specified conditions", "Appropriate safety for data privacy under specified conditions considered by the swiss government.",
+        type="no appropiate safety", "No Appropiate safety for data privacy considered by the swiss government.",
+        type="not found", "Country is not listed by the swiss government."
+      )
     </query>
     <done>
-      <set token="data_privacy_by_country">$result.type$</set>
+      <set token="data_privacy_text">$result.text$</set>
     </done>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -136,8 +148,9 @@
       <title>Destinations in $selectedCountry$</title>
       <html>
         <h3 class="dashboard-element-title" stype="display: block">
-          Considered as $data_privacy_by_country$
-          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf">by the swiss government</a>
+          $data_privacy_text$
+          <br/>
+          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf">Document from the swiss governmnet</a>
         </h3>
       </html>
       <table>
