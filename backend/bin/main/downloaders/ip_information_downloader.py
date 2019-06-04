@@ -121,7 +121,7 @@ class IpInformationDownloader:
 
             self.reser_dns_server()
 
-        except resolver.NXDOMAIN:
+        except resolver.NXDOMAIN and resolver.NoNameservers:
             pass
 
         return fqdn
