@@ -22,7 +22,7 @@ class ConfigApp(admin.MConfigHandler):
 
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
-            for arg in ["safe_browsing_api_key", "pcap_location"]:
+            for arg in ["safe_browsing_api_key", "pcap_location", "internal_dns_server"]:
                 self.supportedArgs.addOptArg(arg)
 
     '''
@@ -44,7 +44,7 @@ class ConfigApp(admin.MConfigHandler):
 
     def handleList(self, configuration_information):
         configuration_dictionary = self.readConf("traffic-analyzer")
-        field_name_list = ["safe_browsing_api_key", "pcap_location"]
+        field_name_list = ["safe_browsing_api_key", "pcap_location", "internal_dns_server"]
         if configuration_dictionary is not None:
             for stanza, settings in configuration_dictionary.items():
                 for key, value in settings.items():
@@ -66,6 +66,7 @@ class ConfigApp(admin.MConfigHandler):
 
         self.check_field_value("safe_browsing_api_key")
         self.check_field_value("pcap_location")
+        self.check_field_value("internal_dns_server")
 
         '''
         Since we are using a conf file to store parameters, write them to the [setupentity]
