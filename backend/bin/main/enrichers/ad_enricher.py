@@ -1,7 +1,7 @@
 from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
 from main.enrichers.enricher import Enricher
-from main.helpers import string_helper
 from main.helpers.ip_helper import IpHelper
+from main.helpers.string_helper import remove_quotations
 
 
 class AdEnricher(Enricher):
@@ -21,7 +21,7 @@ class AdEnricher(Enricher):
             if domain == "":
                 continue
 
-            domain = string_helper.remove_quotations(domain)
+            domain = remove_quotations(domain)
             is_ad = is_ad or self.is_ad_domain(domain)
 
         information_dict["ad_category"] = "1" if is_ad else "0"
