@@ -121,7 +121,7 @@ class IpInformationDownloader:
 
             self.reser_dns_server()
 
-        except resolver.NXDOMAIN and resolver.NoNameservers:
+        except (resolver.NXDOMAIN, resolver.NoNameservers):
             # Let pass if the server has no reverse lookup zone for the specified ip address or the ip was
             # not found in the reverse lookup zone.
             pass
