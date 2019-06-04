@@ -15,6 +15,18 @@
       | lookup geo_countries longitude, latitude
     </query>
   </search>
+  <search>
+    <query>
+      sourcetype=list source="*data_privacy_countries_switzerland.csv" $selectedCountry$
+      | where country != ""
+      | table country,"appropriate safety for natural persons","appropriate safety under specified conditions","no appropiate safety"
+      | untable country, type, value
+      | where value = 1
+    </query>
+    <done>
+      <set token="data_privacy_by_country">$result.type$</set>
+    </done>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -114,14 +126,14 @@
         </drilldown>
       </map>
     </panel>
-    <panel rejects="$selectedCountryFilter$">
-      <title>Destinations by country</title>
-      <html><p>
-        This space will display information once a country is selected.
-      </p></html>
-    </panel>
-    <panel depends="$selectedCountryFilter$">
+    <panel>
       <title>Destinations in $selectedCountry$</title>
+      <html>
+        <h3 class="dashboard-element-title" stype="display: block">
+          Considered as $data_privacy_by_country$
+          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf">by the swiss government</a>
+        </h3>
+      </html>
       <table>
         <search base="destinations_by_country">
           <query>
