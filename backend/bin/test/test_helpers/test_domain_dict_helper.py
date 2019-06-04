@@ -1,16 +1,18 @@
 import unittest
 
-from main.dicts.cdn_dict import CdnDict
+from main.dicts.cdn_dict import cdn_providers
+from main.dicts.social_network_dict import social_network_providers
+from main.helpers.domain_dict_helper import DomainDictHelper
 
 
-class TestBlacklistDictMethods(unittest.TestCase):
+class TestDomainDictHelperMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.normal_domains = [
             "www.hsr.ch",
             "www.google.com",
         ]
-        cls.mixex_domains = [
+        cls.mixed_cdn_domains = [
             "analytics.google.com",
             "zrh04s15-in-f14.1e100.net",
         ]
@@ -18,7 +20,8 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "",
             "",
         ]
-        cls.cdn_dict = CdnDict()
+        cls.cdn_dict_helper = DomainDictHelper(cdn_providers)
+        cls.social_network_dict_helper = DomainDictHelper(social_network_providers)
 
     def test_get_cdn_domains_to_names(self) -> None:
         company_name = "Google"
@@ -29,10 +32,15 @@ class TestBlacklistDictMethods(unittest.TestCase):
             ".googleusercontent.com"
         ]
 
-        domain_to_company = self.cdn_dict.get_cdn_domains_to_names()
-        self.assertEqual(len(domain_to_company), 147)
+        self.assertEqual(len(self.cdn_dict_helper.domain_provider_dict), 147)
         for domain in domains:
-            self.assertEqual(domain_to_company[domain], company_name)
+            self.assertEqual(self.cdn_dict_helper.domain_provider_dict[domain], company_name)
+
+    def test_social_networking_domains_to_names(self) -> None:
+        domain_provider_dict = self.social_network_dict_helper.domain_provider_dict
+        for domain in domain_provider_dict:
+            self.assertTrue(isinstance(domain, str))
+            self.assertTrue(isinstance(domain_provider_dict[domain], str))
 
     def test_check_domain_cdn(self) -> None:
         cdn_domains = [
@@ -41,7 +49,7 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "traffic-analyzer.googleusercontent.com"
         ]
         for domain in cdn_domains:
-            self.assertTrue(self.cdn_dict.check_domain(domain))
+            self.assertTrue(self.cdn_dict_helper.check_domain(domain))
 
     def test_check_domain_normal(self) -> None:
         normal_domains = [
@@ -49,7 +57,7 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "www.20min.ch"
         ]
         for domain in normal_domains:
-            self.assertFalse(self.cdn_dict.check_domain(domain))
+            self.assertFalse(self.cdn_dict_helper.check_domain(domain))
 
     def test_check_domains_cdn(self) -> None:
         cdn_domains = [
@@ -57,7 +65,7 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "www.youtube.ch,zrh04s15-in-f14.1e100.net",
         ]
         for domains in cdn_domains:
-            self.assertTrue(self.cdn_dict.check_domains(domains))
+            self.assertTrue(self.cdn_dict_helper.check_domains(domains))
 
     def test_check_domains_normal(self) -> None:
         cdn_domains = [
@@ -65,9 +73,9 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "www.github.com,lb-140-82-118-4-ams.github.com"
         ]
         for domains in cdn_domains:
-            self.assertFalse(self.cdn_dict.check_domains(domains))
+            self.assertFalse(self.cdn_dict_helper.check_domains(domains))
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestBlacklistDictMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestDomainDictHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

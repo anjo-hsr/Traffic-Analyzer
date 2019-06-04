@@ -4,8 +4,8 @@ from urllib import request
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
-from main.enrichers.enricher import Enricher
 from main.combiners.field_combiner import FieldCombiner
+from main.enrichers.enricher import Enricher
 from main.helpers.file import file_read_helper
 from main.helpers.string_helper import remove_quotations
 
