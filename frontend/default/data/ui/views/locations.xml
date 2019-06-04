@@ -15,7 +15,7 @@
       | lookup geo_countries longitude, latitude
     </query>
   </search>
-  <search>
+  <search id="source_privacy">
     <query>
       sourcetype=list source="*data_privacy_countries_switzerland.csv"
       | table country, "appropriate safety for natural persons", "appropriate safety under specified conditions", "no appropiate safety"
@@ -24,8 +24,8 @@
         [ search sourcetype=list source="*data_privacy_countries_switzerland.csv"
         | table country, type, value
         | top 1 country
-        | eval country=$selectedCountry$, type="not found", value="1" ]
-      | where country=$selectedCountry$
+        | eval country="NO", type="not found", value="1" ]
+      | where if(isnull("$selectedCountry$") ,  country="NO", country="$selectedCountry$")
       | where value=1
       | dedup country
       | eval text=case(
