@@ -96,7 +96,7 @@
   </fieldset>
   <row>
     <panel>
-      <title>Cluster Map</title>
+      <title>Choropleth Map</title>
       <input type="dropdown" token="threat_category_token" searchWhenChanged="true">
         <label>Threat Category</label>
         <choice value="*">all threats</choice>
