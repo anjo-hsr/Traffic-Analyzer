@@ -104,6 +104,9 @@
         </search>
         <option name="drilldown">all</option>
         <option name="mapping.type">choropleth</option>
+        <option name="mapping.choroplethLayer.maximumColor">0x2028c0</option>
+        <option name="mapping.tileLayer.maxZoom">10</option>
+        <option name="mapping.tileLayer.url">http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</option>
         <option name="trellis.enabled">0</option>
         <drilldown>
           <set token="selectedCountry">$click.value$</set>
