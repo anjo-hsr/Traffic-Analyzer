@@ -40,4 +40,18 @@
       <type>text</type>
     </input>
   </block>
+  <block title="Configure internal DNS server for name resolution from internal devices"
+         endpoint="data/inputs/script"
+         entity=".%2Fbin%2Fdownload.sh">
+    <text>
+      This DNS server is used for name resolution of internal endpoints only. If not set, the default dns server of the
+      system will be used.
+    </text>
+    <input field="internal_dns_server">
+      <label>
+        DNS servers ip address
+      </label>
+      <type>text</type>
+    </input>
+  </block>
 </setup>

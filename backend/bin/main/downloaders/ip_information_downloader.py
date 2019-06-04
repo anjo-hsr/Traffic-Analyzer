@@ -4,7 +4,9 @@ import time
 from typing import Dict
 
 import requests
+from dns import resolver, reversename, exception
 
+from main.helpers.file import file_read_helper
 from main.helpers.ip_helper import IpHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
@@ -13,6 +15,30 @@ class IpInformationDownloader:
     def __init__(self, limiter=TrafficLimitHelper(2, 1)) -> None:
         self.ip_information = {}
         self.limiter = limiter
+        self.dns_resolver = resolver.Resolver()
+        self.set_dns_server()
+
+    def set_dns_server(self):
+        config_name = "traffic-analyzer.conf"
+        key = "internal_dns_server"
+        dns_server = file_read_helper.get_config_value(config_name, key)
+        if dns_server == "":
+            return
+
+        self.dns_resolver.nameservers = [dns_server]
+        self.dns_resolver.lifetime = 2
+        if not self.is_dns_server_avaiable(dns_server):
+            self.dns_resolver.nameservers = []
+
+    def is_dns_server_avaiable(self, dns_server_address):
+        try:
+            if IpHelper.is_ip(dns_server_address):
+                dns_server_address = reversename.from_address(dns_server_address)
+            self.dns_resolver.query(dns_server_address, "PTR")
+            return True
+
+        except exception.Timeout:
+            return False
 
     def get_dst_src_information(self, dst_src) -> Dict[str, str]:
         dst = dst_src["dst"]
@@ -29,36 +55,27 @@ class IpInformationDownloader:
             return
 
         if ip_address == "" or not IpHelper.is_global_ip(ip_address):
-            self.ip_information[ip_address] = IpInformationDownloader.get_private_ip_data(ip_address)
+            self.ip_information[ip_address] = self.get_private_ip_data(ip_address)
             return
 
         self.limiter.check_request_load()
         self.ip_information[ip_address] = self.get_ip_data(ip_address)
 
-    @staticmethod
-    def get_fqdn(fqdn, ip_address) -> str:
-        try:
-            fqdn = socket.getfqdn(ip_address)
-        except socket.herror:
-            pass
-        return fqdn
-
-    @staticmethod
-    def get_ip_data(ip_addr, counter=0) -> Dict[str, str]:
+    def get_ip_data(self, ip_addr, counter=0) -> Dict[str, str]:
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
             response = requests.get(search_url)
             if response.status_code == 200:
                 response_json = json.loads(response.content.decode("utf-8"))
                 geo_data = response_json["data"]["geo"]
-                return IpInformationDownloader.extract_data(geo_data, ip_addr)
+                return self.extract_data(geo_data, ip_addr)
 
         except socket.gaierror:
             if counter < 5:
                 time.sleep(2)
                 IpInformationDownloader.get_ip_data(ip_addr, counter + 1)
 
-        return IpInformationDownloader.get_private_ip_data(ip_addr)
+        return self.get_private_ip_data(ip_addr)
 
     @staticmethod
     def extract_data(geo_data, ip_addr) -> Dict[str, str]:
@@ -71,11 +88,10 @@ class IpInformationDownloader:
             "longitude": geo_data["longitude"],
         }
 
-    @staticmethod
-    def get_private_ip_data(ip_address) -> Dict[str, str]:
+    def get_private_ip_data(self, ip_address) -> Dict[str, str]:
         fqdn = ip_address
         if ip_address != "" and IpHelper.is_private_ip(ip_address):
-            fqdn = IpInformationDownloader.get_fqdn(fqdn, ip_address)
+            fqdn = self.get_fqdn(fqdn, ip_address)
 
         return {
             "ip_address": ip_address,
@@ -85,3 +101,11 @@ class IpInformationDownloader:
             "latitude": "",
             "longitude": ""
         }
+
+    def get_fqdn(self, fqdn, ip_address) -> str:
+        try:
+            in_addr_arpa_address = reversename.from_address(ip_address)
+            fqdn = str(self.dns_resolver.query(in_addr_arpa_address, "PTR")[0])
+        except resolver.NXDOMAIN:
+            pass
+        return fqdn
