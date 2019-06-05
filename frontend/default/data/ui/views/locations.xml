@@ -42,7 +42,7 @@
       <set token="country_name">$result.country$</set>
     </done>
   </search>
-   <search base="source_privacy">
+  <search base="source_privacy">
     <query>
       | where country="$country_name$"
       | where value=1
@@ -178,7 +178,8 @@
           <a href=
              "https://www.edoeb.admin.ch/edoeb/en/home/datenschutz/handel-und-wirtschaft/uebermittlung-ins-ausland.html"
              target="_blank" rel="noopener noreferrer">Source: List of countries by the Swiss Federal
-            Data Protection and Information Commissioner</a>
+            Data Protection and Information Commissioner
+          </a>
         </h3>
       </html>
       <table>
