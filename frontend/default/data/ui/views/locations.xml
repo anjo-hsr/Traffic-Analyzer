@@ -25,13 +25,20 @@
         | table country, type, value
         | top 1 country
         | eval country="NO", type="not found", value="1" ]
-      | where if(isnull("$selectedCountry$") ,  country="NO", country="$selectedCountry$")
+    </query>
+    <done>
+      <set token="source_privacy_job">$job.sid$</set>
+    </done>
+  </search>
+  <search base="source_privacy">
+    <query>
+      | where if(isnull("$selectedCountry$") AND [| loadjob $source_privacy_job$ | stats count by country | where country="$selectedCountry$" | appendpipe [stats count | where count=0 | eval count=0 | table count]],  country="NO", country="$selectedCountry$")
       | where value=1
       | dedup country
       | eval text=case(
-        type="appropriate safety for natural persons", "Appropriate safety for data privacy of natural persons considered by the swiss government.",
-        type="appropriate safety under specified conditions", "Appropriate safety for data privacy under specified conditions considered by the swiss government.",
-        type="no appropiate safety", "No Appropiate safety for data privacy considered by the swiss government.",
+        type="appropriate safety for natural persons", "The Swiss government considers this country to have appropriate safety for personal data of natural persons.",
+        type="appropriate safety under specified conditions", "The Swiss government considers this country to have appropriate safety for personal data under specified conditions.",
+        type="no appropiate safety", "The Swiss government considers this country to have NO appropiate safety for personal data.",
         type="not found", "Country is not listed by the swiss government."
       )
     </query>
