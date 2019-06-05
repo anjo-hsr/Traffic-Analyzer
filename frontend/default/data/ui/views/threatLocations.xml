@@ -1,5 +1,28 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Threat Locations</label>
+  <search id="source_threat_locations">
+    <query>
+     $source_token$
+     | fields dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream, -*
+     | table dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream
+    </query>
+  </search>
+  <search base="source_threat_locations" id="threat_locations_by_country">
+    <query>
+      | dedup dst_fqdn
+      | where threat_category!=""
+      | eval threat_category=split(threat_category,",")
+      | mvexpand threat_category
+      | search threat_category=$threat_category_token$
+      | dedup dst_fqdn
+      | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
+        dst_latitude as latitude, dst_longitude as longitude
+      | rename threat_category as threat_id
+      | join threat_id
+        [ search sourcetype=list source="*threat_types.csv"
+          | rename id as threat_id, category as threat_category ]
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -73,78 +96,57 @@
   </fieldset>
   <row>
     <panel>
-      <title>Cluster Map</title>
+      <title>Choropleth Map</title>
       <input type="dropdown" token="threat_category_token" searchWhenChanged="true">
         <label>Threat Category</label>
+        <choice value="*">all threats</choice>
         <choice value="1">threat type unspecified</choice>
         <choice value="2">malware</choice>
         <choice value="3">social engineering</choice>
         <choice value="4">unwanted software</choice>
         <choice value="5">potentially harmful application</choice>
+        <default>*</default>
       </input>
       <map>
-        <search>
+        <search base="threat_locations_by_country">
           <query>
-            $source_token$
-            | dedup dst_fqdn
-            | eval threat_category=if(threat_category="","",split(threat_category,","))
-            | mvexpand threat_category
-            | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
-            | sort threat_category desc
-            | dedup dst_fqdn
-            | rename threat_category as threat_id
-            | join threat_id
-              [ search sourcetype=list source="*threat_types.csv"
-                | rename id as threat_id, category as threat_category ]
-            | table dst_latitude, dst_longitude, threat_category
-            | geostats count by threat_category latfield=dst_latitude longfield=dst_longitude
+            | table latitude, longitude
+            | lookup geo_countries longitude, latitude
+            | stats count by featureId
+            | rename count as Destinations, featureId as Country
+            | geom geo_countries featureIdField="Country"
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
-        <option name="mapping.fieldColors">
-          {"no threat": #2BC3FF,
-          "threat type unspecified": #FF2850,
-          "malware": #FF2850,
-          "social engineering": #FF2850,
-          "unwanted software": #FF2850,
-          "potentially harmful application": #FF2850}
-        </option>
         <option name="drilldown">all</option>
-        <option name="mapping.type">marker</option>
+        <option name="mapping.type">choropleth</option>
+        <option name="mapping.choroplethLayer.maximumColor">0x2028c0</option>
+        <option name="mapping.tileLayer.maxZoom">10</option>
+        <option name="mapping.tileLayer.url">http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</option>
         <option name="trellis.enabled">0</option>
         <drilldown>
-          <set token="lat_min">$click.bounds.south$</set>
-          <set token="lat_max">$click.bounds.north$</set>
-          <set token="long_min">$click.bounds.west$</set>
-          <set token="long_max">$click.bounds.east$</set>
+          <set token="selectedCountry">$click.value$</set>
+          <set token="selectedCountryFilter">where featureId = "$click.value$"</set>
         </drilldown>
       </map>
     </panel>
-    <panel depends="$lat_min$">
-      <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
+    <panel rejects="$selectedCountryFilter$">
+      <title>Destinations by country</title>
+      <html>
+        <p>This space will display information once a country is selected.</p>
+      </html>
+    </panel>
+    <panel depends="$selectedCountryFilter$">
+      <title>Destinations in $selectedCountry$</title>
       <table>
-        <search>
+        <search base="threat_locations_by_country">
           <query>
-            $source_token$
-            | rename dst_latitude as latitude, dst_longitude as longitude
-            | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-            | dedup dst_fqdn
-            | eval threat_category=if(threat_category="","",split(threat_category,","))
-            | mvexpand threat_category
-            | eval threat_category=if(threat_category=$threat_category_token$,$threat_category_token$,0)
-            | sort threat_category desc
-            | dedup dst_fqdn
-            | rename threat_category as threat_id
-            | where threat_id != 0
-            | join threat_id
-              [ search sourcetype=list source="*threat_types.csv"
-                | rename id as threat_id, category as threat_category ]
-            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", threat_category as "Threat Category"
-            | table DNS_Query, Reverse_Lookup, "Threat Category"
+            | lookup geo_countries longitude, latitude
+            | $selectedCountryFilter$
+            | eventstats count(traffic_analyzer_stream) as "# of connections" by "Reverse Lookup", "DNS Query"
+            | table "DNS Query", "Reverse Lookup", category, "# of connections"
+            | rename category as "Threat Category"
+            | sort - "# of connections"
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
       </table>
     </panel>

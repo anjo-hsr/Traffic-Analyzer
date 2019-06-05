@@ -101,6 +101,8 @@
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
+        <option name="mapping.tileLayer.maxZoom">8</option>
+        <option name="mapping.tileLayer.url">http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</option>
         <option name="trellis.enabled">0</option>
         <drilldown>
           <set token="lat_min">$click.bounds.south$</set>

@@ -21,6 +21,14 @@
       <label>PCAP directory</label>
       <type>text</type>
     </input>
+    <text>
+      This DNS server is used for name resolution of internal endpoints only. If not set, the default dns server of the
+      system will be used.
+    </text>
+    <input field="internal_dns_server">
+      <label>DNS servers ip address</label>
+      <type>text</type>
+    </input>
   </block>
   <block title="Configure pcap collection scheudule"
          endpoint="data/inputs/script"
