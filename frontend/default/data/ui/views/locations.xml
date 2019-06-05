@@ -18,7 +18,8 @@
   <search id="source_privacy">
     <query>
       sourcetype=list source="*data_privacy_countries_switzerland.csv"
-      | table country, "appropriate safety for natural persons", "appropriate safety under specified conditions", "no appropiate safety"
+      | table country, "appropriate safety for natural persons", "appropriate safety under specified conditions",
+        "no appropiate safety"
       | untable country, type, value
       | append
         [ search sourcetype=list source="*data_privacy_countries_switzerland.csv"
@@ -32,7 +33,11 @@
   </search>
   <search base="source_privacy">
     <query>
-      | where if(isnull("$selectedCountry$") AND [| loadjob $source_privacy_job$ | stats count by country | where country="$selectedCountry$" | appendpipe [stats count | where count=0 | eval count=0 | table count]],  country="NO", country="$selectedCountry$")
+      | where if(isnull("$selectedCountry$") OR isnull([
+        | loadjob $source_privacy_job$
+        | stats count by country
+        | where country="$selectedCountry$"
+        | table country]),  country="NO", country="$selectedCountry$")
       | where value=1
       | dedup country
       | eval text=case(
@@ -157,8 +162,8 @@
         <h3 class="dashboard-element-title" stype="display: block">
           $data_privacy_text$
           <br/>
-          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf"
-             target="_blank" rel="noopener noreferrer">Document from the swiss governmnet</a>
+          <a href="https://www.edoeb.admin.ch/edoeb/en/home/datenschutz/handel-und-wirtschaft/uebermittlung-ins-ausland.html"
+             target="_blank" rel="noopener noreferrer">Source: List of countries by the Swiss Federal Data Protection and Information Commissioner</a>
         </h3>
       </html>
       <table>
