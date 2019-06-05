@@ -15,6 +15,55 @@
       | lookup geo_countries longitude, latitude
     </query>
   </search>
+  <search id="source_privacy">
+    <query>
+      sourcetype=list source="*data_privacy_countries_switzerland.csv"
+      | table country, "appropriate safety for natural persons", "appropriate safety under specified conditions",
+        "no appropiate safety"
+      | untable country, type, value
+      | append
+        [ search sourcetype=list source="*data_privacy_countries_switzerland.csv"
+        | table country, type, value
+        | top 1 country
+        | eval country="NO", type="not found", value="1" ]
+    </query>
+    <done>
+      <set token="source_privacy_job">$job.sid$</set>
+    </done>
+  </search>
+  <search base="source_privacy">
+    <query>
+      | stats count by country
+      | where country="$selectedCountry$"
+      | table country
+      | appendpipe [stats count | where count=0 | eval country="NO" | table country]
+    </query>
+    <done>
+      <set token="country_name">$result.country$</set>
+    </done>
+  </search>
+  <search base="source_privacy">
+    <query>
+      | where country="$country_name$"
+      | where value=1
+      | dedup country
+      | eval text=case(
+        type="appropriate safety for natural persons",
+          "The Swiss government considers this country to have appropriate safety for personal data
+          of natural persons.",
+        type="appropriate safety under specified conditions",
+          "The Swiss government considers this country to have appropriate safety for personal data
+          under specified conditions.",
+        type="no appropiate safety",
+          "The Swiss government considers this country to have NO appropiate safety for personal data.",
+        type="not found",
+          "Country is not listed by the swiss government."
+      )
+    </query>
+    <done>
+      <set token="data_privacy_text">$result.text$</set>
+    </done>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -122,6 +171,17 @@
     </panel>
     <panel depends="$selectedCountryFilter$">
       <title>Destinations in $selectedCountry$</title>
+      <html>
+        <h3 class="dashboard-element-title" stype="display: block">
+          $data_privacy_text$
+          <br/>
+          <a href=
+             "https://www.edoeb.admin.ch/edoeb/en/home/datenschutz/handel-und-wirtschaft/uebermittlung-ins-ausland.html"
+             target="_blank" rel="noopener noreferrer">Source: List of countries by the Swiss Federal
+            Data Protection and Information Commissioner
+          </a>
+        </h3>
+      </html>
       <table>
         <search base="destinations_by_country">
           <query>
