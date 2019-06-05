@@ -157,8 +157,8 @@
         <h3 class="dashboard-element-title" stype="display: block">
           $data_privacy_text$
           <br/>
-          <a href="https://www.edoeb.admin.ch/dam/edoeb/de/dokumente/2017/04/staatenliste.pdf.download.pdf/staatenliste.pdf"
-             target="_blank" rel="noopener noreferrer">Document from the swiss governmnet</a>
+          <a href="https://www.edoeb.admin.ch/edoeb/en/home/datenschutz/handel-und-wirtschaft/uebermittlung-ins-ausland.html"
+             target="_blank" rel="noopener noreferrer">Source: List of countries by the Swiss Federal Data Protection and Information Commissioner</a>
         </h3>
       </html>
       <table>
