@@ -101,33 +101,15 @@
             | where ip_src_combined!=""
               AND NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
               AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
-            | fillnull value=""
-            | dedup ip_src_combined
-            | rename ip_src_combined as ip, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
-            | join type=left ip
-              [ | loadjob $subsearch_id_external_endpoints$
-                | stats sum(frame_len) as "bytes out" by ip_src_combined
-                | rename ip_src_combined as ip ]
-            | join type=left ip
-              [ | loadjob $subsearch_id_external_endpoints$
-                | stats sum(frame_len) as "bytes in" by ip_dst_combined
-                | rename ip_dst_combined as ip ]
-            | join type=left ip
-              [ | loadjob $subsearch_id_external_endpoints$
-                | rename ip_src_combined as ip
-                | where tls_handshake_type=1
-                | eval client_hello=1
-                | table client_hello, ip ]
-            | table ip,  "DNS Query", "Reverse Lookup", "bytes out", "bytes in"
             | dedup ip_src_combined
             | rename ip_src_combined as ip
             | join type=left ip
               [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as b_out by ip_src_combined
+                | stats sum(frame_len) as out by ip_src_combined
                 | rename ip_src_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as b_in by ip_dst_combined
+                | stats sum(frame_len) as in by ip_dst_combined
                 | rename ip_dst_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_external$
@@ -138,10 +120,9 @@
                 | stats count(traffic_analyzer_stream) as "# of Connections" by ip
                 | where ip!=""
                 | table ip, "# of Connections" ]
-            | eval "Traffic In" = b_in/1024, "Traffic Out" = b_out/1024
+            | eval "Traffic In" =if(isnull(in), 0, in/1024), "Traffic Out" = if(isnull(out), 0, out/1024)
             | table ip, src_query_name, src_fqdn, "Traffic In", "Traffic Out", "# of Connections"
             | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup"
-            | fillnull value=0
           </query>
         </search>
         <option name="count">10</option>

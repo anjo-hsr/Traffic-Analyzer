@@ -1,26 +1,13 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
-  <label>Threat Locations</label>
-  <search id="source_threat_locations">
+  <label>Social Network Locations</label>
+  <search id="source_social_network">
     <query>
-     $source_token$
-     | fields dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream, _*
-     | table dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream
-    </query>
-  </search>
-  <search base="source_threat_locations" id="threat_locations_by_country">
-    <query>
+      $source_token$
+      | fields dst_latitude, dst_longitude, dst_fqdn, src_is_social_network, dst_query_name, _*
       | dedup dst_fqdn
-      | where threat_category!=""
-      | eval threat_category=split(threat_category,",")
-      | mvexpand threat_category
-      | search threat_category=$threat_category_token$
-      | dedup dst_fqdn
-      | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
-        dst_latitude as latitude, dst_longitude as longitude
-      | rename threat_category as threat_id
-      | join threat_id
-        [ search sourcetype=list source="*threat_types.csv"
-          | rename id as threat_id, category as threat_category ]
+      | where src_is_social_network!=0
+      | rename dst_latitude as latitude, dst_longitude as longitude
+      | table latitude, longitude, dst_fqdn, src_is_social_network, dst_query_name
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -97,18 +84,8 @@
   <row>
     <panel>
       <title>Choropleth Map</title>
-      <input type="dropdown" token="threat_category_token" searchWhenChanged="true">
-        <label>Threat Category</label>
-        <choice value="*">all threats</choice>
-        <choice value="1">threat type unspecified</choice>
-        <choice value="2">malware</choice>
-        <choice value="3">social engineering</choice>
-        <choice value="4">unwanted software</choice>
-        <choice value="5">potentially harmful application</choice>
-        <default>*</default>
-      </input>
       <map>
-        <search base="threat_locations_by_country">
+        <search base="source_social_network">
           <query>
             | table latitude, longitude
             | lookup geo_countries longitude, latitude
@@ -138,14 +115,12 @@
     <panel depends="$selectedCountryFilter$">
       <title>Destinations in $selectedCountry$</title>
       <table>
-        <search base="threat_locations_by_country">
+        <search base="source_social_network">
           <query>
             | lookup geo_countries longitude, latitude
             | $selectedCountryFilter$
-            | eventstats count(traffic_analyzer_stream) as "# of connections" by "Reverse Lookup", "DNS Query"
-            | table "DNS Query", "Reverse Lookup", category, "# of connections"
-            | rename category as "Threat Category"
-            | sort - "# of connections"
+            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup"
+            | table "DNS Query", "Reverse Lookup"
           </query>
         </search>
       </table>

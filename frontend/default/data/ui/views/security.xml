@@ -3,7 +3,7 @@
   <search id="source_security">
     <query>
       $source_token$
-      | fields cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, -*
+      | fields cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, _*
       | table cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated
     </query>
   </search>

@@ -9,6 +9,7 @@
     <view name="trafficTypes"/>
     <view name="streamInformation"/>
     <view name="adLocations"/>
+    <view name="socialNetworkLocations"/>
     <view name="threatLocations"/>
   </collection>
   <view name="protocols"/>
