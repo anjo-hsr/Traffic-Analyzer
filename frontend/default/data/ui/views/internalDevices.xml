@@ -124,14 +124,13 @@
                 | stats count(traffic_analyzer_stream) as "# of Connections" by ip
                 | where ip!=""
                 | table ip, "# of Connections" ]
-            | eval "Traffic In" = in/1024, "Traffic Out" = out/1024
+            | eval "Traffic In" =if(isnull(in), 0, in/1024), "Traffic Out" = if(isnull(out), 0, out/1024)
             | eventstats sum("Traffic In") as "Traffic In", sum("Traffic Out") as "Traffic Out",
               sum("# of Connections") as "# of Connections" by eth_src
             | table eth_src, vendor, ip, src_query_name, "Traffic In", "Traffic Out", "# of Connections"
             | sort ip(ip)
             | mvcombine ip
             | rename eth_src as "MAC", vendor as "Vendor", ip as "IP", src_query_name as "DNS Name"
-            | fillnull value=0
           </query>
         </search>
         <format type="number" field="Traffic In">
