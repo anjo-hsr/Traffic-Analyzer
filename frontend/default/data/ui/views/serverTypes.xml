@@ -89,7 +89,6 @@
         <choice value="src_is_dhcp">DHCP</choice>
         <choice value="src_is_dns">DNS / MDNS</choice>
         <choice value="src_is_cdn">CDN</choice>
-        <choice value="src_is_social_network">Social Network</choice>
         <change>
           <condition label="DHCP">
             <set token="server_type_name">DHCP</set>
@@ -99,9 +98,6 @@
           </condition>
           <condition label="CDN">
             <set token="server_type_name">CDN</set>
-          </condition>
-          <condition label="Social Network">
-            <set token="server_type_name">Social Network</set>
           </condition>
         </change>
       </input>
