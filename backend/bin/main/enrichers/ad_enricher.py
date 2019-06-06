@@ -1,6 +1,6 @@
 from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
 from main.enrichers.enricher import Enricher
-from main.helpers.ip_helper import IpHelper
+from main.helpers.ip_address_helper import IpAddressHelper
 from main.helpers.string_helper import remove_quotations
 
 
@@ -40,7 +40,7 @@ class AdEnricher(Enricher):
     def is_domain_in_dict(self, domain, dict_to_test) -> bool:
         return_value = False
 
-        if IpHelper.is_ip(domain):
+        if IpAddressHelper.is_ip(domain):
             return return_value
 
         for domain_part in reversed(domain.split(".")):

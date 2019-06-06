@@ -7,7 +7,7 @@ import requests
 from dns import resolver, reversename, exception
 
 from main.helpers.file import file_read_helper
-from main.helpers.ip_helper import IpHelper
+from main.helpers.ip_address_helper import IpAddressHelper
 from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
@@ -39,7 +39,7 @@ class IpInformationDownloader:
 
     def is_dns_server_avaiable(self, dns_server_address):
         try:
-            if IpHelper.is_ip(dns_server_address):
+            if IpAddressHelper.is_ip(dns_server_address):
                 dns_server_address = reversename.from_address(dns_server_address)
             self.dns_resolver.query(dns_server_address, "PTR")
             return True
@@ -61,7 +61,7 @@ class IpInformationDownloader:
         if ip_address in self.ip_information:
             return
 
-        if ip_address == "" or not IpHelper.is_global_ip(ip_address):
+        if ip_address == "" or not IpAddressHelper.is_global_ip(ip_address):
             self.ip_information[ip_address] = self.get_private_ip_data(ip_address)
             return
 
@@ -97,7 +97,7 @@ class IpInformationDownloader:
 
     def get_private_ip_data(self, ip_address) -> Dict[str, str]:
         fqdn = ip_address
-        if ip_address != "" and IpHelper.is_private_ip(ip_address):
+        if ip_address != "" and IpAddressHelper.is_private_ip(ip_address):
             fqdn = self.get_fqdn(fqdn, ip_address)
 
         return {

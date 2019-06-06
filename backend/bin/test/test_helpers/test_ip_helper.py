@@ -1,13 +1,13 @@
 import unittest
 
-from main.helpers.ip_helper import IpHelper
+from main.helpers.ip_address_helper import IpAddressHelper
 
 
-class TestIpHelperMethods(unittest.TestCase):
+class TestIpAddressHelperMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.ip_helper = IpHelper()
+        cls.ip_helper = IpAddressHelper()
 
     def test_everything_ip(self) -> None:
         everything_ip = "0.0.0.0"
@@ -58,5 +58,5 @@ class TestIpHelperMethods(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestIpHelperMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestIpAddressHelperMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
