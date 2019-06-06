@@ -79,8 +79,8 @@
         <condition label="Default (RFC 4291)">
           <set token="use_default_ipv6_range">true</set>
           <unset token="use_custom_ipv6_range"></unset>
-          <set token="custom_ipv6_range">fe80::/48</set>
-          <set token="form.custom_ipv6_range">fe80::/48</set>
+          <set token="custom_ipv6_range">2001:DB8::/32</set>
+          <set token="form.custom_ipv6_range">2001:DB8::/32</set>
         </condition>
         <condition label="Custom">
           <unset token="use_default_ipv6_range"></unset>
