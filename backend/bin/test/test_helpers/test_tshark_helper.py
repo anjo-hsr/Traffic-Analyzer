@@ -1,6 +1,6 @@
 import unittest
 
-import main.helpers.tshark_helper as tshark_helper
+from main.helpers.tshark_helper import get_arguments
 
 
 class TestTsharkHelperMethods(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestTsharkHelperMethods(unittest.TestCase):
                 "-e", "tls.handshake.ciphersuite", "-e", "tls.handshake.type",
                 "-E", "header=y", "-E", "separator=,", "-E", "quote=d", "-E", "occurrence=a"]
 
-        self.assertEqual(tshark_helper.get_arguments(filename), args)
+        self.assertEqual(get_arguments(filename), args)
 
 
 if __name__ == "__main__":

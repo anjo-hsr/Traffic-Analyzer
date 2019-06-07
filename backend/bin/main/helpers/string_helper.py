@@ -4,3 +4,7 @@ def remove_quotations(string_value) -> str:
 
 def enclose_with_quotes(string_value) -> str:
     return '"{}"'.format(string_value)
+
+
+def remove_spaces(string_value) -> str:
+    return string_value.replace(" ", "")
