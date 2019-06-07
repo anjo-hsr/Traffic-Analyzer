@@ -10,4 +10,10 @@
   max-width: 340px !important;
 }
 
+div[data-test-panel-id=relative],
+div[data-test-panel-id=realTime],
+div[data-test-panel-id=advanced] {
+  display: none !important;
+}
+
 /*# sourceMappingURL=customStyle.css.map */
