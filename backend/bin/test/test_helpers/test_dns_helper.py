@@ -38,11 +38,9 @@ class TestDomainDictHelperMethods(unittest.TestCase):
         expected_length = len(self.dns_helper.dns_resolver.nameservers) + 1
         self.dns_helper.set_dns_server()
         self.assertEqual(len(self.dns_helper.dns_resolver.nameservers), expected_length)
-        print(self.dns_helper.dns_resolver.nameservers)
         expected_length -= 1
         self.dns_helper.reset_dns_resolver()
         self.assertEqual(len(self.dns_helper.dns_resolver.nameservers), expected_length)
-        print(self.dns_helper.dns_resolver.nameservers)
 
     def test_is_dns_server_available_ok(self) -> None:
         dns_server_address = "8.8.8.8"
