@@ -29,23 +29,23 @@ class TestEnricherJarMethods(unittest.TestCase):
 
     def test_create_information_dict_ip_information(self) -> None:
         expected_ordered_dict = OrderedDict([
-            ('dst_src_information',
+            ("dst_src_information",
              {
-                 'dst': {
-                     'asn': '',
-                     'ip_address': '10.0.0.2',
-                     'isp': '',
-                     'latitude': '',
-                     'longitude': '',
-                     'rdns': '10.0.0.2'
+                 "dst": {
+                     "asn": "",
+                     "ip_address": "10.0.0.2",
+                     "isp": "",
+                     "latitude": "",
+                     "longitude": "",
+                     "rdns": "10.0.0.2"
                  },
-                 'src': {
-                     'asn': '',
-                     'ip_address': '10.0.0.1',
-                     'isp': '',
-                     'latitude': '',
-                     'longitude': '',
-                     'rdns': '10.0.0.1'
+                 "src": {
+                     "asn": "",
+                     "ip_address": "10.0.0.1",
+                     "isp": "",
+                     "latitude": "",
+                     "longitude": "",
+                     "rdns": "10.0.0.1"
                  }
              }
              )
