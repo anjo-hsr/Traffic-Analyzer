@@ -17,7 +17,7 @@ class TestDomainDictHelperMethods(unittest.TestCase):
 
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("main.helpers.file.file_read_helper.open",
-           new=mock_open(read_data="[Stanza]\n" + "internal_dns_server = 8.8.8.8"))
+           new=mock_open(read_data="[Stanza]\n" + "internal_dns_servers = 8.8.8.8"))
     def test_set_dns_server(self) -> None:
         expected_length = len(self.dns_helper.dns_resolver.nameservers) + 1
         self.dns_helper.set_dns_server()
@@ -25,7 +25,7 @@ class TestDomainDictHelperMethods(unittest.TestCase):
 
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("main.helpers.file.file_read_helper.open",
-           new=mock_open(read_data="[Stanza]\n" + "internal_dns_server = 1.1.1.1, 8.8.8.8"))
+           new=mock_open(read_data="[Stanza]\n" + "internal_dns_servers = 1.1.1.1, 8.8.8.8"))
     def test_set_dns_servers(self) -> None:
         expected_length = len(self.dns_helper.dns_resolver.nameservers) + 2
         self.dns_helper.set_dns_server()
@@ -33,7 +33,7 @@ class TestDomainDictHelperMethods(unittest.TestCase):
 
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("main.helpers.file.file_read_helper.open",
-           new=mock_open(read_data="[Stanza]\n" + "internal_dns_server = 8.8.8.8"))
+           new=mock_open(read_data="[Stanza]\n" + "internal_dns_servers = 8.8.8.8"))
     def test_reset_dns_server(self) -> None:
         expected_length = len(self.dns_helper.dns_resolver.nameservers) + 1
         self.dns_helper.set_dns_server()

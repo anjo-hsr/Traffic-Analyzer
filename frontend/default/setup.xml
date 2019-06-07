@@ -22,11 +22,13 @@
       <type>text</type>
     </input>
     <text>
-      This DNS server is used for name resolution of internal endpoints only. If not set, the default dns server of the
-      system will be used.
+      These additional DNS servers are used for name resolution of internal endpoints only. If not set, the default
+      dns servers of the system will be used.
+      <br/>
+      You can add them by ip address [10.0.0.1], by hostname [dns.local] or a combination thereof [10.0.0.1,dns.local].
     </text>
-    <input field="internal_dns_server">
-      <label>DNS servers ip address</label>
+    <input field="internal_dns_servers">
+      <label>DNS server ip addresses</label>
       <type>text</type>
     </input>
   </block>

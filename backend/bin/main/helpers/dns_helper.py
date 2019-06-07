@@ -19,7 +19,7 @@ class DnsHelper:
 
     def set_dns_server(self) -> None:
         config_name = "traffic-analyzer.conf"
-        key = "internal_dns_server"
+        key = "internal_dns_servers"
         dns_servers = file_read_helper.get_config_value(config_name, key)
         dns_servers = remove_spaces(dns_servers)
         for dns_server in dns_servers.split(","):
