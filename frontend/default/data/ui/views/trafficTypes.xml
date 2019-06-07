@@ -1,5 +1,20 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Traffic Types</label>
+  <search id="source_traffic_types">
+    <query>
+      $source_token$
+      | fields dst_fqdn, dst_query_name, threat_category, dst_latitude, dst_longitude, _*
+      | table dst_fqdn, dst_query_name, threat_category, dst_latitude, dst_longitude, _time
+      | dedup dst_fqdn
+      | eval threat_category=if(threat_category="",0,split(threat_category,","))
+      | mvexpand threat_category
+      | sort threat_category desc
+      | dedup dst_fqdn
+      | rename dst_latitude as latitude, dst_longitude as longitude
+    </query>
+    <earliest>$datepicker.earliest$</earliest>
+    <latest>$datepicker.latest$</latest>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -70,29 +85,28 @@
       <label>Internal IPv6 range:</label>
       <default></default>
     </input>
+    <input type="time" token="datepicker">
+      <label>Date Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
+    </input>
   </fieldset>
   <row>
     <panel>
       <title>Cluster Map</title>
       <map>
-        <search>
+        <search base="source_traffic_types">
           <query>
-            $source_token$
-            | dedup dst_fqdn
-            | eval threat_category=if(threat_category="",0,split(threat_category,","))
-            | mvexpand threat_category
-            | sort threat_category desc
-            | dedup dst_fqdn
             | eval traffic_type=case(
                 threat_category&lt;ad_category, "ad",
                 threat_category&gt;ad_category, "threat",
                 true(), "normal"
               )
-            | table dst_latitude, dst_longitude, traffic_type
-            | geostats count by traffic_type latfield=dst_latitude longfield=dst_longitude
+            | table latitude, longitude, traffic_type
+            | geostats count by traffic_type latfield=latitude longfield=longitude
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
         <option name="mapping.fieldColors">
           {"normal": #2BC3FF,
@@ -115,16 +129,9 @@
     <panel depends="$lat_min$">
       <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
       <table>
-        <search>
+        <search base="source_traffic_types">
           <query>
-            $source_token$
-            | rename dst_latitude as latitude, dst_longitude as longitude
             | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-            | dedup dst_fqdn
-            | eval threat_category=if(threat_category="",0,split(threat_category,","))
-            | mvexpand threat_category
-            | sort threat_category desc
-            | dedup dst_fqdn
             | eval traffic_type=case(
                 threat_category&lt;ad_category, "ad",
                 threat_category&gt;ad_category, "threat",
@@ -133,8 +140,6 @@
             | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", traffic_type as "Traffic Type"
             | table "DNS Query", "Reverse Lookup", "Traffic Type"
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
       </table>
     </panel>

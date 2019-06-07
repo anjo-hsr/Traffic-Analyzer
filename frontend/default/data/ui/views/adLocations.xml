@@ -1,5 +1,17 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Ad Locations</label>
+  <search id="source_ad_locations">
+    <query>
+      $source_token$
+      | fields dst_fqdn, dst_query_name, ad_category, dst_latitude, dst_longitude, _*
+      | table dst_fqdn, dst_query_name, ad_category, dst_latitude, dst_longitude, _time
+      | dedup dst_fqdn
+      | rename dst_latitude as latitude, dst_longitude as longitude
+      | rename ad_category as ad_id
+    </query>
+    <earliest>$datepicker.earliest$</earliest>
+    <latest>$datepicker.latest$</latest>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -70,23 +82,25 @@
       <label>Internal IPv6 range:</label>
       <default></default>
     </input>
+    <input type="time" token="datepicker">
+      <label>Date Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
+    </input>
   </fieldset>
   <row>
     <panel>
       <title>Cluster Map</title>
       <map>
-        <search>
+        <search base="source_ad_locations">
           <query>
-            $source_token$
-            | dedup dst_fqdn
-            | rename ad_category as ad_id
             | join ad_id
               [ search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category ]
-            | table dst_latitude, dst_longitude, ad_category
-            | geostats count by ad_category latfield=dst_latitude longfield=dst_longitude
+            | table latitude, longitude, ad_category
+            | geostats count by ad_category latfield=latitude longfield=longitude
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
         <option name="mapping.fieldColors">
           {"no ad": #2BC3FF,
@@ -108,21 +122,15 @@
     <panel depends="$lat_min$">
       <title>Destinations between lat($lat_min$, $lat_max$) and long($long_min$, $long_max$)</title>
       <table>
-        <search>
+        <search base="source_ad_locations">
           <query>
-            $source_token$
-            | rename dst_latitude as latitude, dst_longitude as longitude
             | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
-            | dedup dst_fqdn
-            | rename ad_category as ad_id
             | where ad_id != 0
             | join ad_id
               [ search sourcetype=list source="*ad_categories.csv" | rename id as ad_id, category as ad_category ]
             | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", ad_category as "AD Category"
             | table "DNS Query", "Reverse Lookup", "AD Category"
           </query>
-          <earliest>0</earliest>
-          <latest/>
         </search>
       </table>
     </panel>
