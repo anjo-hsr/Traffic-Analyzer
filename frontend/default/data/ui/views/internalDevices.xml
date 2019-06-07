@@ -6,7 +6,7 @@
       | fields ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
         tls_handshake_type, traffic_analyzer_stream, tcp_stream,  _*
       | table ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
-        tls_handshake_type, traffic_analyzer_stream, tcp_stream
+        tls_handshake_type, traffic_analyzer_stream, tcp_stream, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>

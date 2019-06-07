@@ -5,9 +5,9 @@
       $source_token$
       | fields table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
         ws_col_Protocol, _*
-      | table table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
-      ws_col_Protocol
       | where $server_type_token$="1"
+      | table table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
+        ws_col_Protocol, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>

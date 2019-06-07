@@ -4,7 +4,7 @@
     <query>
      $source_token$
      | fields dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_stream, _*
-     | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_stream
+     | table dst_fqdn, dst_latitude, dst_longitude, dst_query_name, traffic_analyzer_stream, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>

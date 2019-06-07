@@ -4,10 +4,10 @@
     <query>
       $source_token$
       | fields dst_fqdn, dst_query_name, ad_category, dst_latitude, dst_longitude, _*
-      | table dst_fqdn, dst_query_name, ad_category, dst_latitude, dst_longitude, _time
       | dedup dst_fqdn
       | rename dst_latitude as latitude, dst_longitude as longitude
       | rename ad_category as ad_id
+      | table dst_fqdn, dst_query_name, ad_id, latitude, longitude, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>

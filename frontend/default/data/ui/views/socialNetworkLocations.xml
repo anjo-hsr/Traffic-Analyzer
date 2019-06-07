@@ -7,7 +7,7 @@
       | dedup src_fqdn
       | where src_is_social_network!=0
       | rename src_latitude as latitude, src_longitude as longitude
-      | table latitude, longitude, src_fqdn, src_is_social_network, src_query_name
+      | table latitude, longitude, src_fqdn, src_is_social_network, src_query_name, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
