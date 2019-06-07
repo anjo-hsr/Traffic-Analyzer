@@ -3,11 +3,11 @@
   <search id="source_social_network">
     <query>
       $source_token$
-      | fields dst_latitude, dst_longitude, dst_fqdn, src_is_social_network, dst_query_name, _*
-      | dedup dst_fqdn
+      | fields src_latitude, src_longitude, src_fqdn, src_is_social_network, src_query_name, _*
+      | dedup src_fqdn
       | where src_is_social_network!=0
-      | rename dst_latitude as latitude, dst_longitude as longitude
-      | table latitude, longitude, dst_fqdn, src_is_social_network, dst_query_name
+      | rename src_latitude as latitude, src_longitude as longitude
+      | table latitude, longitude, src_fqdn, src_is_social_network, src_query_name
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -119,7 +119,7 @@
           <query>
             | lookup geo_countries longitude, latitude
             | $selectedCountryFilter$
-            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup"
+            | rename src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
             | table "DNS Query", "Reverse Lookup"
           </query>
         </search>
