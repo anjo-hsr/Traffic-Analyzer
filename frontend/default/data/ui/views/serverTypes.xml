@@ -4,7 +4,7 @@
     <query>
       $source_token$
       | fields table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
-        ws_col_Protocol, -*
+        ws_col_Protocol, _*
       | table table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
       ws_col_Protocol
       | where $server_type_token$="1"
@@ -66,8 +66,8 @@
         <condition label="Default (RFC 4291)">
           <set token="use_default_ipv6_range">true</set>
           <unset token="use_custom_ipv6_range"></unset>
-          <set token="custom_ipv6_range">fe80::/48</set>
-          <set token="form.custom_ipv6_range">fe80::/48</set>
+          <set token="custom_ipv6_range">2001:db8::/32</set>
+          <set token="form.custom_ipv6_range">2001:db8::/32</set>
         </condition>
         <condition label="Custom">
           <unset token="use_default_ipv6_range"></unset>
@@ -89,7 +89,6 @@
         <choice value="src_is_dhcp">DHCP</choice>
         <choice value="src_is_dns">DNS / MDNS</choice>
         <choice value="src_is_cdn">CDN</choice>
-        <choice value="src_is_social_network">Social Network</choice>
         <change>
           <condition label="DHCP">
             <set token="server_type_name">DHCP</set>
@@ -99,9 +98,6 @@
           </condition>
           <condition label="CDN">
             <set token="server_type_name">CDN</set>
-          </condition>
-          <condition label="Social Network">
-            <set token="server_type_name">Social Network</set>
           </condition>
         </change>
       </input>
