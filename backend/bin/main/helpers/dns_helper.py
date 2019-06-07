@@ -17,7 +17,7 @@ class DnsHelper:
         self.set_lifetime(dns_lifetime)
         self.set_dns_server()
 
-    def set_lifetime(self, dns_lifetime):
+    def set_lifetime(self, dns_lifetime) -> None:
         self.dns_resolver.lifetime = dns_lifetime
         self.dns_resolver_tester.lifetime = dns_lifetime
 
