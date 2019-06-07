@@ -9,11 +9,14 @@ class TestDomainDictHelperMethods(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.dns_helper = DnsHelper()
 
-    @patch("os.path.isfile", MagicMock(return_value=False))
-    def test_set_dns_resolver(self) -> None:
-        dns_lifetime = 2
-        self.dns_helper.set_dns_resolver()
+    def test_set_lifetime(self) -> None:
+        default_dns_lifetime = 2
+        self.assertTrue(self.dns_helper.dns_resolver.lifetime, default_dns_lifetime)
+        self.assertTrue(self.dns_helper.dns_resolver_tester.lifetime, default_dns_lifetime)
+        dns_lifetime = 1
+        self.dns_helper.set_lifetime(dns_lifetime)
         self.assertTrue(self.dns_helper.dns_resolver.lifetime, dns_lifetime)
+        self.assertTrue(self.dns_helper.dns_resolver_tester.lifetime, dns_lifetime)
 
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("main.helpers.file.file_read_helper.open",
