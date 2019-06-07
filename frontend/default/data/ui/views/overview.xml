@@ -10,8 +10,8 @@
         traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
         src_is_private_ip, linecount, _time
     </query>
-    <earliest>$datepicker.earliest$</earliest>
-    <latest>$datepicker.latest$</latest>
+    <earliest>$datetimepicker.earliest$</earliest>
+    <latest>$datetimepicker.latest$</latest>
   </search>
   <search base="source_overview" id="recommended_cipher_suites">
     <query>
@@ -116,8 +116,8 @@
       <label>Internal IPv6 range:</label>
       <default></default>
     </input>
-    <input type="time" token="datepicker">
-      <label>Date Time Picker</label>
+    <input type="time" token="datetimepicker">
+      <label>Date &amp; Time Picker</label>
       <default>
         <earliest>0</earliest>
         <latest></latest>

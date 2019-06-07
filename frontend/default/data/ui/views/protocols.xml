@@ -6,8 +6,8 @@
       | fields frame_time, ip_proto, ws_col_Protocol, frame_len, _*
       | table frame_time, ip_proto, ws_col_Protocol, frame_len, _time
     </query>
-    <earliest>$datepicker.earliest$</earliest>
-    <latest>$datepicker.latest$</latest>
+    <earliest>$datetimepicker.earliest$</earliest>
+    <latest>$datetimepicker.latest$</latest>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
@@ -79,8 +79,8 @@
       <label>Internal IPv6 range:</label>
       <default></default>
     </input>
-    <input type="time" token="datepicker">
-      <label>Date Time Picker</label>
+    <input type="time" token="datetimepicker">
+      <label>Date &amp; Time Picker</label>
       <default>
         <earliest>0</earliest>
         <latest></latest>
