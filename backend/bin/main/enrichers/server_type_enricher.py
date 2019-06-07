@@ -1,7 +1,4 @@
-from main.dicts.cdn_dict import cdn_providers
-from main.dicts.social_network_dict import social_network_providers
 from main.enrichers.enricher import Enricher
-from main.helpers.domain_dict_helper import DomainDictHelper
 from main.helpers.response_helper import ResponseHelper
 
 
@@ -25,9 +22,9 @@ class ServerTypeEnricher(Enricher):
             packet, information_dict, ResponseHelper.is_dns_response, "dns")
 
         information_dict["src_is_cdn"] = self.test_category(
-            information_dict, cdn_providers, "cdn")
+            information_dict, "cdn")
         information_dict["src_is_social_network"] = self.test_category(
-            information_dict, social_network_providers, "social_network")
+            information_dict, "social_network")
 
     def detect_type(self, packet, information_dict, response_check, dict_key) -> str:
         is_type = False
@@ -37,10 +34,9 @@ class ServerTypeEnricher(Enricher):
 
         return "1" if is_type else "0"
 
-    def test_category(self, information_dict, provider_dict, key) -> str:
+    def test_category(self, information_dict, key) -> str:
         domains = information_dict["src_domains"]
-        domain_dict_helper = DomainDictHelper(provider_dict)
-        domain_is_in_dict = domain_dict_helper.check_domains(domains)
+        domain_is_in_dict = information_dict["domain_dict_helpers"][key].check_domains(domains)
         if domain_is_in_dict:
             self.save_entry(key, information_dict)
 

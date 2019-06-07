@@ -2,7 +2,7 @@ from typing import Dict, Union, List
 
 from main.combiners.field_combiner import FieldCombiner
 from main.enrichers.enricher import Enricher
-from main.helpers.ip_helper import IpHelper
+from main.helpers.ip_address_helper import IpAddressHelper
 from main.helpers.response_helper import ResponseHelper
 from main.helpers.string_helper import enclose_with_quotes
 
@@ -59,7 +59,7 @@ class DnsLookupEnricher(Enricher):
 
     def save_dns_query(self, packet) -> None:
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")
-        filtered_dns_reponse_ips = list(filter(IpHelper.is_ip, dns_response_ips))
+        filtered_dns_reponse_ips = list(filter(IpAddressHelper.is_ip, dns_response_ips))
         if not filtered_dns_reponse_ips:
             return
 

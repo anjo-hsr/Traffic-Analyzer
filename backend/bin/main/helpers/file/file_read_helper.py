@@ -12,7 +12,7 @@ def is_header(line_counter) -> bool:
 
 
 def get_csv_dict_reader(csv_file) -> DictReader:
-    return DictReader(csv_file, delimiter=',')
+    return DictReader(csv_file, delimiter=",")
 
 
 def get_config_value(config_name, key) -> str:
@@ -51,7 +51,7 @@ def get_file_hashsum(file_path, block_size=65536) -> str:
 
     hash_function = hashlib.sha256()
     with open(file_path, "rb") as file:
-        for block in iter(lambda: file.read(block_size), b''):
+        for block in iter(lambda: file.read(block_size), b""):
             hash_function.update(block)
 
         return hash_function.hexdigest()
