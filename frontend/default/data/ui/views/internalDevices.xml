@@ -8,6 +8,8 @@
       | table ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
         tls_handshake_type, traffic_analyzer_stream, tcp_stream
     </query>
+    <earliest>$datepicker.earliest$</earliest>
+    <latest>$datepicker.latest$</latest>
     <done>
       <condition>
         <set token="subsearch_id_internal_endpoints">$job.sid$</set>
@@ -83,6 +85,13 @@
     <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
       <label>Internal IPv6 range:</label>
       <default></default>
+    </input>
+    <input type="time" token="datepicker">
+      <label>Date Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
     </input>
   </fieldset>
   <row>
