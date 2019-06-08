@@ -7,8 +7,10 @@
       | dedup src_fqdn
       | where src_is_social_network!=0
       | rename src_latitude as latitude, src_longitude as longitude
-      | table latitude, longitude, src_fqdn, src_is_social_network, src_query_name
+      | table latitude, longitude, src_fqdn, src_is_social_network, src_query_name, _time
     </query>
+    <earliest>$datetimepicker.earliest$</earliest>
+    <latest>$datetimepicker.latest$</latest>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
@@ -79,6 +81,13 @@
     <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
       <label>Internal IPv6 range:</label>
       <default></default>
+    </input>
+    <input type="time" token="datetimepicker">
+      <label>Date &amp; Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
     </input>
   </fieldset>
   <row>

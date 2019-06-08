@@ -6,6 +6,8 @@
       | fields traffic_analyzer_stream, ip_src_combined, ip_dst_combined, frame_len, threat_category, ad_category, _*
       | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined, frame_len, threat_category, ad_category, _time
     </query>
+    <earliest>$datetimepicker.earliest$</earliest>
+    <latest>$datetimepicker.latest$</latest>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
@@ -76,6 +78,13 @@
     <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
       <label>Internal IPv6 range:</label>
       <default></default>
+    </input>
+    <input type="time" token="datetimepicker">
+      <label>Date &amp; Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
     </input>
   </fieldset>
   <row>

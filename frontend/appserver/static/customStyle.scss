@@ -12,3 +12,9 @@ $caputureInputField: 340px;
   width: $caputureInputField !important;
   max-width: $caputureInputField !important;
 }
+
+div[data-test-panel-id="relative"],
+div[data-test-panel-id="realTime"],
+div[data-test-panel-id="advanced"] {
+  display: none !important;
+}

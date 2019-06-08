@@ -4,8 +4,10 @@
     <query>
      $source_token$
      | fields dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream, _*
-     | table dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream
+     | table dst_fqdn, dst_latitude, dst_longitude, threat_category, traffic_analyzer_stream, _time
     </query>
+    <earliest>$datetimepicker.earliest$</earliest>
+    <latest>$datetimepicker.latest$</latest>
   </search>
   <search base="source_threat_locations" id="threat_locations_by_country">
     <query>
@@ -92,6 +94,13 @@
     <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
       <label>Internal IPv6 range:</label>
       <default></default>
+    </input>
+    <input type="time" token="datetimepicker">
+      <label>Date &amp; Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
     </input>
   </fieldset>
   <row>
