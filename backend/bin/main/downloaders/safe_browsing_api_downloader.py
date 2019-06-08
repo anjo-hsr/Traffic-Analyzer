@@ -1,4 +1,6 @@
 import json
+import socket
+import time
 from typing import Union, List, Dict
 
 import requests
@@ -17,17 +19,23 @@ class SafeBrowsingApiDownloader:
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
 
-    def get_domains_threat_infomation(self, domains) -> Dict:
+    def get_domains_threat_infomation(self, domains, counter=0) -> Dict:
         if self.is_api_key_correct and domains and self.api_key != "":
             request_url = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key
             request_data = self.generate_request_data(domains)
             request_headers = {"Content-Type": "application/json"}
-            response = requests.post(request_url, json=request_data, headers=request_headers)
-            if response.status_code != 200:
-                self.is_api_key_correct = False
-                return {}
+            try:
+                response = requests.post(request_url, json=request_data, headers=request_headers)
+                if response.status_code == 200:
+                    return json.loads(response.content.decode("utf-8"))
 
-            return json.loads(response.content.decode("utf-8"))
+                self.is_api_key_correct = False
+
+            except socket.gaierror:
+                if counter < 5:
+                    time.sleep(2)
+                    SafeBrowsingApiDownloader.get_domains_threat_infomation(domains, counter + 1)
+        return {}
 
     def generate_request_data(self, filtered_domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
         domain_entries = self.get_domain_entries(filtered_domains)
