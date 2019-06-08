@@ -11,7 +11,7 @@ from main.helpers.file import file_read_helper
 class SafeBrowsingApiDownloader:
     def __init__(self):
         self.api_key = self.get_api_key()
-        self.is_api_key_correct = True
+        self.is_api_key_correct = self.api_key != ""
 
     @staticmethod
     def get_api_key() -> str:
