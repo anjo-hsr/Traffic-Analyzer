@@ -1,11 +1,19 @@
 import unittest
+from unittest.mock import patch, MagicMock, mock_open
 
 from main.downloaders.safe_browsing_api_downloader import SafeBrowsingApiDownloader
+
+
+class Response():
+    def __init__(self, status_code=200, content=""):
+        self.status_code = status_code
+        self.content = content.encode("utf-8")
 
 
 class TestSafeBrowsingApiDownloader(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        cls.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
         cls.threat_dict = {
             "": "",
             "domain-threatUnspecified": "THREAT_TYPE_UNSPECIFIED",
@@ -14,7 +22,6 @@ class TestSafeBrowsingApiDownloader(unittest.TestCase):
             "domain-threatSoftware": "UNWANTED_SOFTWARE,POTENTIALLY_HARMFUL_APPLICATION",
             "domain-threatMalwareAndSoftware": "MALWARE,UNWANTED_SOFTWARE,POTENTIALLY_HARMFUL_APPLICATION"
         }
-        cls.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
         cls.normal_domains = ["www.hsr.ch", "www.google.ch"]
         cls.threat_domains = ["domain-threatSocialEngineering", "domain-threatSoftware",
                               "domain-threatMalwareAndSoftware"]
@@ -36,6 +43,37 @@ class TestSafeBrowsingApiDownloader(unittest.TestCase):
     def test_get_domain_entries(self) -> None:
         expected_list = [{"url": "www.hsr.ch"}, {"url": "www.google.ch"}]
         self.assertListEqual(self.safe_browsing_api_downloader.get_domain_entries(self.normal_domains), expected_list)
+
+    @patch("os.path.isfile", MagicMock(return_value=True))
+    @patch("main.helpers.file.file_read_helper.open",
+           new=mock_open(read_data="[Stanza]\n" + "safe_browsing_api_key = "))
+    def test_get_domains_threat_infomation_empty_key(self) -> None:
+        self.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
+        self.assertFalse(self.safe_browsing_api_downloader.is_api_key_correct)
+        self.safe_browsing_api_downloader.get_domains_threat_information(self.normal_domains)
+        self.assertFalse(self.safe_browsing_api_downloader.is_api_key_correct)
+
+    @patch("os.path.isfile", MagicMock(return_value=True))
+    @patch("main.helpers.file.file_read_helper.open",
+           new=mock_open(read_data="[Stanza]\n" + "safe_browsing_api_key = false_key"))
+    def test_get_domains_threat_infomation_false_key(self) -> None:
+        self.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
+        self.assertTrue(self.safe_browsing_api_downloader.is_api_key_correct)
+        self.safe_browsing_api_downloader.get_domains_threat_information(self.normal_domains)
+        self.assertFalse(self.safe_browsing_api_downloader.is_api_key_correct)
+
+    @patch("os.path.isfile", MagicMock(return_value=True))
+    @patch("main.helpers.file.file_read_helper.open",
+           new=mock_open(read_data="[Stanza]\n" + "safe_browsing_api_key = correct_key"))
+    @patch("requests.post")
+    def test_get_domains_threat_infomation_false_key(self, response_mock) -> None:
+        response_mock.return_value = Response(content="{}")
+        self.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
+
+        self.assertTrue(self.safe_browsing_api_downloader.is_api_key_correct)
+        actual_return_value = self.safe_browsing_api_downloader.get_domains_threat_information(self.normal_domains)
+        self.assertEqual(actual_return_value, {})
+        self.assertTrue(self.safe_browsing_api_downloader.is_api_key_correct)
 
 
 if __name__ == "__main__":
