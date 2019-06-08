@@ -1,8 +1,7 @@
 import json
 from typing import Union, List, Dict
-from urllib import request
-from urllib.error import HTTPError
-from urllib.request import urlopen
+
+import requests
 
 from main.helpers.file import file_read_helper
 
@@ -17,18 +16,18 @@ class SafeBrowsingApiDownloader:
         config_name = "traffic-analyzer.conf"
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
-    
+
     def get_domains_threat_infomation(self, domains) -> Dict:
         if self.is_api_key_correct and domains and self.api_key != "":
-            req = request.Request("https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key)
-            req_data = self.generate_request_data(domains)
-            req.add_header("Content-Type", "application/json")
-            try:
-                response = urlopen(req, json.dumps(req_data).encode("utf-8")).read()
-                return json.loads(response.decode("utf-8"))
-            except HTTPError:
+            request_url = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key
+            request_data = self.generate_request_data(domains)
+            request_headers = {"Content-Type": "application/json"}
+            response = requests.post(request_url, json=request_data, headers=request_headers)
+            if response.status_code != 200:
                 self.is_api_key_correct = False
                 return {}
+
+            return json.loads(response.content.decode("utf-8"))
 
     def generate_request_data(self, filtered_domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
         domain_entries = self.get_domain_entries(filtered_domains)
