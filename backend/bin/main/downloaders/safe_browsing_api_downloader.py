@@ -19,7 +19,8 @@ class SafeBrowsingApiDownloader:
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
 
-    def get_domains_threat_infomation(self, domains, counter=0) -> Dict:
+    def get_domains_threat_infomation(self, domains, counter=0) -> \
+            Dict[str, List[Dict[str, Union[str, Dict[str, str]]]]]:
         if self.is_api_key_correct and domains and self.api_key != "":
             request_url = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key
             request_data = self.generate_request_data(domains)
