@@ -1,4 +1,5 @@
 import unittest
+from io import StringIO
 from unittest.mock import patch, mock_open, MagicMock
 
 from main.helpers.file import file_read_helper
@@ -46,6 +47,12 @@ class TestFileReadHelperMethods(unittest.TestCase):
     def test_get_config_value(self) -> None:
         file_path = "test_path"
         expected_hash = "73ab4e71d2aca11a7fd9f7294692f090e804eb7e4093bb3035879cf216d49a6c"
+        self.assertEqual(file_read_helper.get_file_hashsum(file_path), expected_hash)
+
+    @patch("os.path.isfile", MagicMock(return_value=False))
+    def test_get_config_value_not_found(self) -> None:
+        file_path = ""
+        expected_hash = ""
         self.assertEqual(file_read_helper.get_file_hashsum(file_path), expected_hash)
 
 
