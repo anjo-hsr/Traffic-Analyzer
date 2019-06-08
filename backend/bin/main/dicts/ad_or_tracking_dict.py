@@ -1,3 +1,5 @@
+import socket
+import time
 from typing import List
 
 import requests
@@ -14,11 +16,20 @@ class AdOrTrackingDict:
         self.generate_ad_or_tracking_dict(ad_or_tracking_domains)
 
     @staticmethod
-    def get_ad_or_tracking_domains() -> List[str]:
-        url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, "html.parser")
-        return [url for url in soup.pre.text.split("\n") if url != ""]
+    def get_ad_or_tracking_domains(counter=0) -> List[str]:
+        try:
+            url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
+            response = requests.get(url)
+            if response.status_code == 200:
+                soup = BeautifulSoup(response.text, "html.parser")
+                return [url for url in soup.pre.text.split("\n") if url != ""]
+
+        except socket.gaierror:
+            if counter < 5:
+                time.sleep(2)
+                AdOrTrackingDict.get_ad_or_tracking_domains(counter + 1)
+
+        return []
 
     def generate_ad_or_tracking_dict(self, ad_or_tracking_domains) -> None:
         for domain in ad_or_tracking_domains:
