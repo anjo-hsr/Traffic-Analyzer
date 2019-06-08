@@ -40,7 +40,7 @@ class IpInformationDownloader:
     def get_ip_data(self, ip_addr, counter=0) -> Dict[str, str]:
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
-            response = requests.get(search_url)
+            response = requests.get(search_url, timeout=5)
             if response.status_code == 200:
                 response_json = json.loads(response.content.decode("utf-8"))
                 geo_data = response_json["data"]["geo"]
