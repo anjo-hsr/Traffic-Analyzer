@@ -1,6 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>TLS Security</label>
-  <search id="source_security">
+  <search id="source_tls_security">
     <query>
       $source_token$
       | fields cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, _*
@@ -9,7 +9,7 @@
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
   </search>
-  <search base="source_security" id="recommended_cipher_suites">
+  <search base="source_tls_security" id="recommended_cipher_suites">
     <query>
       | dedup cipher_suite_number
       | join cipher_suite_number
@@ -17,7 +17,7 @@
       | table cipher_suite_number, recommended
     </query>
   </search>
-  <search base="source_security" id="is_secure">
+  <search base="source_tls_security" id="is_secure">
     <query>
       | eval issecure=if(cipher_suite_number=="","no","yes")
       | table issecure
@@ -106,7 +106,7 @@
     <panel>
       <title>Total number of tcp streams</title>
       <single>
-        <search base="source_security">
+        <search base="source_tls_security">
           <query>
             | where tcp_stream!=""
             | dedup traffic_analyzer_stream
@@ -216,7 +216,7 @@
     <panel>
       <title>Commonly used cipher suites</title>
       <table>
-        <search base="source_security">
+        <search base="source_tls_security">
           <query>
             | dedup traffic_analyzer_stream
             | stats count as "# of streams" by cipher_suite_number
@@ -232,14 +232,14 @@
           <colorPalette type="map">{"N":#FC4737}</colorPalette>
         </format>
         <drilldown>
-          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ipv4_range$%22,%20ip_src_combined)%20OR%20cidrmatch(%22$custom_ipv6_range$%22,%20ip_src_combined)%20%7C%20dedup%20ip_dst_combined%20cipher_suite_number%20ip_src_combined%20%7C%20join%20cipher_suite_number%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst_combined,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src_combined%20%7C%20sort%20ip_dst_combined%20%7C%20mvcombine%20ip_src_combined&amp;earliest=$earliest$&amp;latest=$latest$</link>
+          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ipv4_range$%22,%20ip_src_combined)%20OR%20cidrmatch(%22$custom_ipv6_range$%22,%20ip_src_combined)%20%7C%20dedup%20ip_dst_combined%20cipher_suite_number%20ip_src_combined%20%7C%20join%20cipher_suite_number%0A%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst_combined,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src_combined%20%7C%20sort%20ip_dst_combined%20%7C%20mvcombine%20ip_src_combined%20%7C%20rename%20ip_dst_combined%20as%20%22Target%20IP%22,%20dst_fqdn%20as%20%22DNS%20Name%22,%20cipher_suite_number%20as%20%22Nr.%22,%20description%20as%20%22Description%22,%20recommended%20as%20%22Recommended%22,%20ip_src_combined%20as%20%22Source%20IP%22&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>
       </table>
     </panel>
     <panel>
       <title>Commonly used SSL/TLS version</title>
       <table>
-        <search base="source_security">
+        <search base="source_tls_security">
           <query>
             | dedup traffic_analyzer_stream
             | stats count as "# of streams" by tls_ssl_version_negotiated
