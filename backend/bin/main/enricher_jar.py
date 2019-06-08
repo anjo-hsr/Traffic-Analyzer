@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from typing import Dict
 
 from main.combiners.packet_combiner import get_dst_src
 from main.dicts.cdn_dict import cdn_providers
@@ -41,7 +42,7 @@ class EnricherJar:
         return information_dict
 
     @staticmethod
-    def create_domain_dict_helpers():
+    def create_domain_dict_helpers() -> Dict[str, DomainDictHelper]:
         return {
             "cdn": DomainDictHelper(cdn_providers),
             "social_network": DomainDictHelper(social_network_providers)

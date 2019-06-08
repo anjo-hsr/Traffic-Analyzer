@@ -1,6 +1,8 @@
 import unittest
+from unittest.mock import MagicMock, patch
 
 from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
+from test.mock_classes.mock_response import MockResponse
 
 
 class TestAdOrTrackingDictMethods(unittest.TestCase):
@@ -49,6 +51,10 @@ class TestAdOrTrackingDictMethods(unittest.TestCase):
             }}},
         }
         self.assertDictEqual(self.ad_or_tracking_dict.ad_or_tracking_dict, expected_dict)
+
+    @patch("requests.get", MagicMock(return_value=MockResponse(status_code=500, content="[]")))
+    def test_get_ad_or_tracking_domains_failed(self) -> None:
+        self.assertListEqual(self.ad_or_tracking_dict.get_ad_or_tracking_domains(), [])
 
 
 if __name__ == "__main__":
