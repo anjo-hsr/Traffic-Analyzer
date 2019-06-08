@@ -35,7 +35,7 @@ class ThreatInfoEnricher(Enricher):
         for domain in filtered_domains:
             self.threat_dict[domain] = ""
 
-        response_dict = self.safe_browsing_api_downloader.get_domains_threat_infomation(filtered_domains)
+        response_dict = self.safe_browsing_api_downloader.get_domains_threat_information(filtered_domains)
         self.update_threat_dict(response_dict)
 
         matched_threat_types = self.reduce_threat_information(domain_array)

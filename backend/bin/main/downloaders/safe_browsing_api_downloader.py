@@ -19,7 +19,7 @@ class SafeBrowsingApiDownloader:
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
 
-    def get_domains_threat_infomation(self, domains, counter=0) -> \
+    def get_domains_threat_information(self, domains, counter=0) -> \
             Dict[str, List[Dict[str, Union[str, Dict[str, str]]]]]:
         if self.is_api_key_correct and domains and self.api_key != "":
             request_url = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key
@@ -35,11 +35,11 @@ class SafeBrowsingApiDownloader:
             except socket.gaierror:
                 if counter < 5:
                     time.sleep(2)
-                    SafeBrowsingApiDownloader.get_domains_threat_infomation(domains, counter + 1)
+                    SafeBrowsingApiDownloader.get_domains_threat_information(domains, counter + 1)
         return {}
 
-    def generate_request_data(self, filtered_domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
-        domain_entries = self.get_domain_entries(filtered_domains)
+    def generate_request_data(self, domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
+        domain_entries = self.get_domain_entries(domains)
         return {
             "threatInfo": {
                 "threatTypes": ["THREAT_TYPE_UNSPECIFIED", "MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE",
