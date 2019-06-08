@@ -2,12 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock, mock_open
 
 from main.downloaders.safe_browsing_api_downloader import SafeBrowsingApiDownloader
-
-
-class Response():
-    def __init__(self, status_code=200, content=""):
-        self.status_code = status_code
-        self.content = content.encode("utf-8")
+from test.mock_classes.mock_response import MockResponse
 
 
 class TestSafeBrowsingApiDownloader(unittest.TestCase):
@@ -65,11 +60,9 @@ class TestSafeBrowsingApiDownloader(unittest.TestCase):
     @patch("os.path.isfile", MagicMock(return_value=True))
     @patch("main.helpers.file.file_read_helper.open",
            new=mock_open(read_data="[Stanza]\n" + "safe_browsing_api_key = correct_key"))
-    @patch("requests.post")
-    def test_get_domains_threat_infomation_false_key(self, response_mock) -> None:
-        response_mock.return_value = Response(content="{}")
+    @patch("requests.post", MagicMock(return_value=MockResponse(content="{}")))
+    def test_get_domains_threat_infomation_false_key(self) -> None:
         self.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
-
         self.assertTrue(self.safe_browsing_api_downloader.is_api_key_correct)
         actual_return_value = self.safe_browsing_api_downloader.get_domains_threat_information(self.normal_domains)
         self.assertEqual(actual_return_value, {})
