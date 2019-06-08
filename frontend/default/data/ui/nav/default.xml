@@ -13,7 +13,7 @@
     <view name="threatLocations"/>
   </collection>
   <view name="protocols"/>
-  <view name="security"/>
+  <view name="tlsSecurity"/>
   <view name="locations"/>
   <a href="/manager/traffic-analyzer/apps/local/traffic-analyzer/setup?action=edit&amp;redirect_override=%2Fapp%2Ftraffic-analyzer%2Foverview;">Settings</a>
 </nav>
