@@ -96,9 +96,73 @@
   </fieldset>
   <row>
     <panel>
+      <single>
+        <title>Number of internal devices</title>
+        <search base="source_deduped_internal_endpoints">
+          <query>
+            | stats count as mac_counter
+            | table mac_counter
+            | appendpipe [stats count | where count=0 | eval mac_counter=0 | table mac_counter]
+          </query>
+        </search>
+      </single>
+      <single>
+        <title>Number of internal IPv4 addresses</title>
+        <search base="source_deduped_internal_endpoints">
+          <query>
+            | mvexpand "IP"
+            | regex "IP"!="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
+            | stats count as ip_address_counter
+            | table ip_address_counter
+            | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
+          </query>
+        </search>
+      </single>
+      <single>
+        <title>Number of internal IPv6 addresses</title>
+        <search base="source_deduped_internal_endpoints">
+          <query>
+            | mvexpand "IP"
+            | regex "IP"="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
+            | stats count as ip_address_counter
+            | table ip_address_counter
+            | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
+          </query>
+        </search>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Complete incoming traffic to internal devices</title>
+        <search base="source_deduped_internal_endpoints">
+          <query>
+            | stats sum("Traffic In") as sum_bytes_in
+            | table sum_bytes_in
+            | appendpipe [stats count | where count=0 | eval sum_bytes_in=0 | table sum_bytes_in]
+          </query>
+        </search>
+        <option name="numberPrecision">0.00</option>
+        <option name="unit">KB</option>
+      </single>
+      <single>
+        <title>Complete outgoing traffic to internal devices</title>
+        <search base="source_deduped_internal_endpoints">
+          <query>
+            | stats sum("Traffic Out") as sum_bytes_out
+            | table sum_bytes_out
+            | appendpipe [stats count | where count=0 | eval sum_bytes_out=0 | table sum_bytes_out]
+          </query>
+        </search>
+        <option name="numberPrecision">0.00</option>
+        <option name="unit">KB</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <title>Endpoints</title>
       <table>
-        <search base="source_internal_endpoints">
+        <search id="source_deduped_internal_endpoints" base="source_internal_endpoints">
           <query>
             | dedup ip_src_combined
             | where if("$filteredMAC$"="*", like(eth_src, "%"), like(eth_src, "%$filteredMAC$%")
