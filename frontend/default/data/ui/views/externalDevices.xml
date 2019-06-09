@@ -2,11 +2,11 @@
   <label>External Endpoints</label>
   <search id="source_external">
     <query>
-      $source_token$ eth_dst=$filteredMAC$
-      | fields ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type,
-        src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream, _*
-      | table ip_src_combined, ip_dst_combined, frame_len, src_is_private_ip, eth_src, tls_handshake_type,
-        src_query_name, src_fqdn, traffic_analyzer_stream, tcp_stream, _time
+      $source_token$
+      | fields ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
+        tls_handshake_type, traffic_analyzer_stream, tcp_stream,  _*
+      | table ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
+        tls_handshake_type, traffic_analyzer_stream, tcp_stream, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -15,6 +15,17 @@
         <set token="subsearch_id_external">$job.sid$</set>
       </condition>
     </done>
+  </search>
+  <search base="source_external" id="source_external_filtered">
+    <query>
+      | where src_is_private_ip="0"
+      | where ip_src_combined!=""
+        AND NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
+        AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
+      | dedup ip_src_combined
+      | rename ip_src_combined as ip
+      | table ip, src_query_name, src_fqdn, eth_src
+    </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
@@ -98,21 +109,20 @@
     <panel>
       <single>
         <title>Number of external devices</title>
-        <search base="source_deduped_external_endpoints">
+        <search base="source_external_filtered">
           <query>
-            | stats count as mac_counter
-            | table mac_counter
+            | stats dc(ip) as ip_counter
+            | table ip_counter
             | appendpipe [stats count | where count=0 | eval mac_counter=0 | table mac_counter]
           </query>
         </search>
       </single>
       <single>
         <title>Number of external IPv4 addresses</title>
-        <search base="source_deduped_external_endpoints">
+        <search base="source_external_filtered">
           <query>
-            | mvexpand "IP"
-            | regex "IP"!="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
-            | stats count as ip_address_counter
+            | where cidrmatch("0.0.0.0/0", ip)
+            | stats dc(ip) as ip_address_counter
             | table ip_address_counter
             | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
           </query>
@@ -120,11 +130,10 @@
       </single>
       <single>
         <title>Number of external IPv6 addresses</title>
-        <search base="source_deduped_external_endpoints">
+        <search base="source_external_filtered">
           <query>
-            | mvexpand "IP"
-            | regex "IP"="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
-            | stats count as ip_address_counter
+            | where cidrmatch("::/0", ip)
+            | stats dc(ip) as ip_address_counter
             | table ip_address_counter
             | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
           </query>
@@ -133,9 +142,14 @@
     </panel>
     <panel>
       <single>
-        <title>Complete incoming traffic to internal devices</title>
-        <search base="source_deduped_external_endpoints">
+        <title>Total incoming traffic from external devices</title>
+        <search base="source_external_filtered">
           <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_external$
+                | stats sum(frame_len) as in by ip_dst_combined
+                | rename ip_dst_combined as ip ]
+            | eval "Traffic In"=if(isnull(in), 0, in/1024)
             | stats sum("Traffic In") as sum_bytes_in
             | table sum_bytes_in
             | appendpipe [stats count | where count=0 | eval sum_bytes_in=0 | table sum_bytes_in]
@@ -145,9 +159,14 @@
         <option name="unit">KB</option>
       </single>
       <single>
-        <title>Complete outgoing traffic to internal devices</title>
-        <search base="source_deduped_external_endpoints">
+        <title>Complete outgoing traffic to external devices</title>
+        <search base="source_external_filtered">
           <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_external$
+                | stats sum(frame_len) as out by ip_src_combined
+                | rename ip_src_combined as ip ]
+            | eval "Traffic Out"=if(isnull(out), 0, out/1024)
             | stats sum("Traffic Out") as sum_bytes_out
             | table sum_bytes_out
             | appendpipe [stats count | where count=0 | eval sum_bytes_out=0 | table sum_bytes_out]
@@ -159,53 +178,37 @@
     </panel>
   </row>
   <row>
-    <panel>
-      <title>Endpoints</title>
-      <table>
-        <search id="source_deduped_external_endpoints" base="source_external">
-          <query>
-            | where src_is_private_ip="0"
-            | search
-              [ | loadjob $subsearch_id_external$
-                | where NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
-                  AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
-                | dedup eth_src
-                | table eth_src]
-            | where ip_src_combined!=""
-              AND NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
-              AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
-            | dedup ip_src_combined
-            | rename ip_src_combined as ip
-            | join type=left ip
-              [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as out by ip_src_combined
-                | rename ip_src_combined as ip ]
-            | join type=left ip
-              [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as in by ip_dst_combined
-                | rename ip_dst_combined as ip ]
-            | join type=left ip
-              [ | loadjob $subsearch_id_external$
-                | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined, tcp_stream
-                | where tcp_stream!=""
-                | untable traffic_analyzer_stream, type, ip
-                | dedup traffic_analyzer_stream, type
-                | stats count(traffic_analyzer_stream) as "# of Connections" by ip
-                | where ip!=""
-                | table ip, "# of Connections" ]
-            | eval "Traffic In" =if(isnull(in), 0, in/1024), "Traffic Out" = if(isnull(out), 0, out/1024)
-            | table ip, src_query_name, src_fqdn, "Traffic In", "Traffic Out", "# of Connections"
-            | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup"
-          </query>
-        </search>
-        <option name="count">10</option>
-        <format type="number" field="Traffic Out">
-          <option name="unit">KB</option>
-        </format>
-        <format type="number" field="Traffic In">
-          <option name="unit">KB</option>
-        </format>
-      </table>
-    </panel>
+    <table>
+      <search base="source_external_filtered">
+        <query>
+              | search
+                [ | loadjob $subsearch_id_external$
+                  | where NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
+                    AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
+                  | dedup eth_src
+                  | table eth_src]
+              | join type=left ip
+                [ | loadjob $subsearch_id_external$
+                  | stats sum(frame_len) as out by ip_src_combined
+                  | rename ip_src_combined as ip ]
+              | join type=left ip
+                [ | loadjob $subsearch_id_external$
+                  | stats sum(frame_len) as in by ip_dst_combined
+                  | rename ip_dst_combined as ip ]
+              | join type=left ip
+                [ | loadjob $subsearch_id_external$
+                  | where tcp_stream!=""
+                  | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined
+                  | untable traffic_analyzer_stream, type, ip
+                  | dedup traffic_analyzer_stream, type
+                  | stats count(traffic_analyzer_stream) as "# of Connections" by ip
+                  | where ip!=""
+                  | table ip, "# of Connections" ]
+              | eval "Traffic In" =if(isnull(in), 0, in/1024), "Traffic Out" = if(isnull(out), 0, out/1024)
+              | table ip, src_query_name, src_fqdn, "Traffic In", "Traffic Out", "# of Connections"
+              | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup"
+        </query>
+      </search>
+    </table>
   </row>
 </form>
