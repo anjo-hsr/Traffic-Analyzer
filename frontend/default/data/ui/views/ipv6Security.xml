@@ -15,12 +15,12 @@
     </done>
   </search>
   <fieldset submitButton="true" autoRun="true">
-    <input type="multiselect" token="source_token" searchWhenChanged="false">
+   <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="*/</valuePrefix>
+      <valuePrefix>source="*/capture-</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
@@ -30,7 +30,7 @@
         <query>
           sourcetype=capture
           | dedup source
-          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | rex field=source "\S*\/capture\-(?&lt;shortSource&gt;[^\)].*)"
           | table shortSource
           | sort shortSource
         </query>
