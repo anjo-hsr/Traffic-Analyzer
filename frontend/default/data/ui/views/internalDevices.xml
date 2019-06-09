@@ -130,7 +130,7 @@
         <title>Number of internal IPv4 addresses</title>
         <search base="source_deduped_internal_endpoints">
           <query>
-            | regex ip!="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
+            | where cidrmatch("0.0.0.0/0", ip)
             | stats dc(ip) as ip_address_counter
             | table ip_address_counter
             | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
@@ -141,7 +141,7 @@
         <title>Number of internal IPv6 addresses</title>
         <search base="source_deduped_internal_endpoints">
           <query>
-            | regex ip="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
+            | where cidrmatch("::/0", ip)
             | stats dc(ip) as ip_address_counter
             | table ip_address_counter
             | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
