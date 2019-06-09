@@ -119,7 +119,7 @@
   </row>
   <row>
     <panel>
-      <title>Protokolle über Zeit</title>
+      <title>Protocols over time</title>
       <chart>
         <search base="source_protocols">
           <query>
