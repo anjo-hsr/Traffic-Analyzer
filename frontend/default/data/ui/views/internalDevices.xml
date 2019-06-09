@@ -16,6 +16,26 @@
       </condition>
     </done>
   </search>
+  <search base="source_internal_endpoints" id="source_deduped_internal_endpoints">
+    <query>
+      | dedup ip_src_combined
+      | where if("$filteredMAC$"="*", like(eth_src, "%"), like(eth_src, "%$filteredMAC$%")
+        OR like(eth_dst, "%$filteredMAC$%"))
+      | eval src_is_private_extended=if(
+        cidrmatch("$custom_ipv4_range$", ip_src_combined) OR
+        cidrmatch("$custom_ipv6_range$", ip_src_combined) OR
+        src_is_private_ip == "1", "True", "False")
+      | where src_is_private_extended == "True"
+      | where ip_src_combined!="" AND ip_src_combined!="0.0.0.0"
+      | eval eth_short=substr(eth_src,1,8)
+      | join type=left eth_short
+        [ search sourcetype="list" source="*mac_vendor.csv" ]
+      | fillnull value="no vendor found"
+      | dedup ip_src_combined
+      | rename ip_src_combined as ip
+      | table eth_src, vendor, ip, src_query_name
+    </query>
+  </search>
   <fieldset submitButton="true" autoRun="true">
     <input type="multiselect" token="source_token" searchWhenChanged="false">
       <label>Choose capture file:</label>
@@ -100,7 +120,7 @@
         <title>Number of internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
-            | stats count as mac_counter
+            | stats dc(eth_src) as mac_counter
             | table mac_counter
             | appendpipe [stats count | where count=0 | eval mac_counter=0 | table mac_counter]
           </query>
@@ -110,9 +130,8 @@
         <title>Number of internal IPv4 addresses</title>
         <search base="source_deduped_internal_endpoints">
           <query>
-            | mvexpand "IP"
-            | regex "IP"!="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
-            | stats count as ip_address_counter
+            | regex ip!="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
+            | stats dc(ip) as ip_address_counter
             | table ip_address_counter
             | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
           </query>
@@ -122,9 +141,8 @@
         <title>Number of internal IPv6 addresses</title>
         <search base="source_deduped_internal_endpoints">
           <query>
-            | mvexpand "IP"
-            | regex "IP"="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
-            | stats count as ip_address_counter
+            | regex ip="[0-9a-fA-F:]*:[0-9a-fA-F:]*"
+            | stats dc(ip) as ip_address_counter
             | table ip_address_counter
             | appendpipe [stats count | where count=0 | eval ip_address_counter=0 | table ip_address_counter]
           </query>
@@ -136,6 +154,11 @@
         <title>Complete incoming traffic to internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_internal_endpoints$
+                | stats sum(frame_len) as in by ip_dst_combined
+                | rename ip_dst_combined as ip ]
+            | eval "Traffic In"=if(isnull(in), 0, in/1024)
             | stats sum("Traffic In") as sum_bytes_in
             | table sum_bytes_in
             | appendpipe [stats count | where count=0 | eval sum_bytes_in=0 | table sum_bytes_in]
@@ -148,6 +171,11 @@
         <title>Complete outgoing traffic to internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_internal_endpoints$
+                | stats sum(frame_len) as out by ip_src_combined
+                | rename ip_src_combined as ip ]
+            | eval "Traffic Out"=if(isnull(out), 0, out/1024)
             | stats sum("Traffic Out") as sum_bytes_out
             | table sum_bytes_out
             | appendpipe [stats count | where count=0 | eval sum_bytes_out=0 | table sum_bytes_out]
@@ -162,24 +190,8 @@
     <panel>
       <title>Endpoints</title>
       <table>
-        <search id="source_deduped_internal_endpoints" base="source_internal_endpoints">
+        <search base="source_deduped_internal_endpoints">
           <query>
-            | dedup ip_src_combined
-            | where if("$filteredMAC$"="*", like(eth_src, "%"), like(eth_src, "%$filteredMAC$%")
-              OR like(eth_dst, "%$filteredMAC$%"))
-            | eval src_is_private_extended=if(
-              cidrmatch("$custom_ipv4_range$", ip_src_combined) OR
-              cidrmatch("$custom_ipv6_range$", ip_src_combined) OR
-              src_is_private_ip == "1", "True", "False")
-            | where src_is_private_extended == "True"
-            | where ip_src_combined!="" AND ip_src_combined!="0.0.0.0"
-            | eval eth_short=substr(eth_src,1,8)
-            | join type=left eth_short
-              [ search sourcetype="list" source="*mac_vendor.csv" ]
-            | fillnull value="no vendor found"
-            | table eth_src, vendor, ip_src_combined, src_query_name
-            | dedup ip_src_combined
-            | rename ip_src_combined as ip
             | join type=left ip
               [ | loadjob $subsearch_id_internal_endpoints$
                 | stats sum(frame_len) as out by ip_src_combined
