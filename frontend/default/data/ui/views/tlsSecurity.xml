@@ -237,7 +237,7 @@
       </table>
     </panel>
     <panel>
-      <title>Commonly used SSL/TLS version</title>
+      <title>Commonly used TLS/SSL versions</title>
       <table>
         <search base="source_tls_security">
           <query>
