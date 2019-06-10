@@ -31,8 +31,8 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
             set_enricher_headers(enricher_jar, helper_headers)
 
         else:
-            joined_default_cells = FieldCombiner.join_default_cells(packet, csv_reader.fieldnames)
             information_dict = enricher_jar.get_information_dict(packet)
+            joined_default_cells = FieldCombiner.join_default_cells(packet, csv_reader.fieldnames)
             enriched_line = FieldCombiner.delimiter.join(
                 str(information_dict.get(key, "")) for key in enricher_jar.enricher_headers)
             line = FieldCombiner.combine_packet_information(joined_default_cells, enriched_line)
