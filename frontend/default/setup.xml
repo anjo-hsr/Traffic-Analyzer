@@ -24,7 +24,7 @@
     <text>
       These additional DNS servers are used for name resolution of internal endpoints only. If not set, the default
       dns servers of the system will be used.
-      <br/>
+      &lt;br/&gt;
       You can add them by ip address [10.0.0.1], by hostname [dns.local] or a combination thereof [10.0.0.1,dns.local].
     </text>
     <input field="internal_dns_servers">

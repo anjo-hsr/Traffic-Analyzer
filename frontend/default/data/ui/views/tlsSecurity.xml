@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>TLS Security</label>
+  <description>Provides information about cipher suites and SSL/TLS versions used for secure communication.</description>
   <search id="source_tls_security">
     <query>
       $source_token$
@@ -30,7 +31,7 @@
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="*/</valuePrefix>
+      <valuePrefix>source="*/capture-</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
@@ -40,7 +41,7 @@
         <query>
           sourcetype=capture
           | dedup source
-          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | rex field=source "\S*\/capture\-(?&lt;shortSource&gt;[^\)].*)"
           | table shortSource
           | sort shortSource
         </query>
@@ -237,7 +238,7 @@
       </table>
     </panel>
     <panel>
-      <title>Commonly used SSL/TLS version</title>
+      <title>Commonly used TLS/SSL versions</title>
       <table>
         <search base="source_tls_security">
           <query>
