@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>TLS Security</label>
+  <description>Provides information about cipher suites and SSL/TLS versions used for secure communication.</description>
   <search id="source_tls_security">
     <query>
       $source_token$

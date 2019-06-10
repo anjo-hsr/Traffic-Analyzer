@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Social Network Locations</label>
+  <description>Provides information about the geographical location of server providing services in regards to social networks.</description>
   <search id="source_social_network">
     <query>
       $source_token$

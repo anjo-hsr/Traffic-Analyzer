@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Overview</label>
+  <description>Provides an overview of information from different analysis.</description>
   <search id="source_overview">
     <query>
       $source_token$

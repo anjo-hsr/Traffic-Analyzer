@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>External Endpoints</label>
+  <description>Provides information about endpoints (e.g. server) outside of your own network.</description>
   <search id="source_external">
     <query>
       $source_token$

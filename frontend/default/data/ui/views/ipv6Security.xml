@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>IPv6 Security</label>
+  <description>Provides information about ???.</description>
   <search id="source_internal_endpoints">
     <query>
       $source_token$

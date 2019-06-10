@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Internal Endpoints</label>
+  <description>Provides information about endpoints (e.g. workstations) inside of your own network.</description>
   <search id="source_internal_endpoints">
     <query>
       $source_token$

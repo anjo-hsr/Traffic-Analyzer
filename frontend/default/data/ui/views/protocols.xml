@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Protocols</label>
+  <description>Provides information about the protocols observed during the time of the selected capture.</description>
   <search id="source_protocols">
     <query>
       $source_token$
