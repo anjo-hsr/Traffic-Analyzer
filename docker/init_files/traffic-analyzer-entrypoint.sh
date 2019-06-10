@@ -36,6 +36,13 @@ function fix_line_endings(){
     sudo find /opt/splunk/etc/apps/traffic-analyzer/bin/ -type f -print0 | xargs -0 sudo dos2unix > /dev/null 2>&1
 }
 
+if [[ -z "$SPLUNK_PASSWORD" ]]; then
+    echo -e "No Password for Splunk login set. Please try again. Example:\n" \
+        "docker run -p 8000:8000 -p 8089:8089 -e SPLUNK_PASSWORD=AnJo-HSR traffic-analyzer -d"
+    exit 1
+fi
+
+
 /sbin/entrypoint.sh start-and-exit
 install_traffic-analyzer
 
