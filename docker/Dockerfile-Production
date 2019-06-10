@@ -10,7 +10,7 @@ EXPOSE $WEB_PORT
 EXPOSE $REST_API_PORT
 
 RUN sudo mkdir -p $INIT_DIR
-ADD init_files $INIT_DIR
+ADD ./docker/init_files $INIT_DIR
 
 RUN sudo apt update
 RUN sudo apt install dos2unix -y

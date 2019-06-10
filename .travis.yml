@@ -48,6 +48,7 @@ jobs:
 
     - stage: publish
       script:
+        - ./app_deployer.sh generate-tar
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t traffic-analyzer -f docker/Dockerfile-Production .
         - docker images
