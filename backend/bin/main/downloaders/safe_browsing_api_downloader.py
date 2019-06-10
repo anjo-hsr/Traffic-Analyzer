@@ -26,13 +26,13 @@ class SafeBrowsingApiDownloader:
             request_data = self.generate_request_data(domains)
             request_headers = {"Content-Type": "application/json"}
             try:
-                response = requests.post(request_url, json=request_data, headers=request_headers)
+                response = requests.post(request_url, json=request_data, headers=request_headers, timeout=5)
                 if response.status_code == 200:
                     return json.loads(response.content.decode("utf-8"))
 
                 self.is_api_key_correct = False
 
-            except socket.gaierror:
+            except (socket.gaierror, requests.exceptions.ReadTimeout):
                 if counter < 5:
                     time.sleep(2)
                     SafeBrowsingApiDownloader.get_domains_threat_information(domains, counter + 1)

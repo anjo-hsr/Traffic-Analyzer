@@ -19,12 +19,12 @@ class AdOrTrackingDict:
     def get_ad_or_tracking_domains(counter=0) -> List[str]:
         try:
             url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
-            response = requests.get(url)
+            response = requests.get(url, timeout=5)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, "html.parser")
                 return [url for url in soup.pre.text.split("\n") if url != ""]
 
-        except socket.gaierror:
+        except (socket.gaierror, requests.exceptions.ReadTimeout):
             if counter < 5:
                 time.sleep(2)
                 AdOrTrackingDict.get_ad_or_tracking_domains(counter + 1)
