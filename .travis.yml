@@ -32,10 +32,12 @@ jobs:
       script:
         - cd ./backend
         - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml bin/test
+
     - stage: build
       script:
         - dos2unix ./app_deployer.sh
         - ./app_deployer.sh recreate
+
     - stage: sonar
       script:
         - cd ./backend
@@ -43,3 +45,11 @@ jobs:
         - mv ./coverage.xml ./bin/test/
         - cd ..
         - sonar-scanner
+
+    - stage: publish
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t traffic-analyzer -f docker/Dockerfile .
+        - docker images
+        - docker tag traffic-analyzer $DOCKER_USERNAME/traffic-analyzer
+        - docker push $DOCKER_USERNAME/traffic-analyzer
