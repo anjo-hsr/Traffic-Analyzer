@@ -24,10 +24,10 @@ class AdOrTrackingDict:
                 soup = BeautifulSoup(response.text, "html.parser")
                 return [url for url in soup.pre.text.split("\n") if url != ""]
 
-        except (socket.gaierror, requests.exceptions.ReadTimeout):
+        except (socket.gaierror, requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
             if counter < 5:
                 time.sleep(2)
-                AdOrTrackingDict.get_ad_or_tracking_domains(counter + 1)
+                return AdOrTrackingDict.get_ad_or_tracking_domains(counter + 1)
 
         return []
 

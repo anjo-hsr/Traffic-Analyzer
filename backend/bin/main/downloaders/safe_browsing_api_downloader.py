@@ -32,10 +32,10 @@ class SafeBrowsingApiDownloader:
 
                 self.is_api_key_correct = False
 
-            except (socket.gaierror, requests.exceptions.ReadTimeout):
+            except (socket.gaierror, requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
                 if counter < 5:
                     time.sleep(2)
-                    SafeBrowsingApiDownloader.get_domains_threat_information(domains, counter + 1)
+                    return self.get_domains_threat_information(domains, counter + 1)
         return {}
 
     def generate_request_data(self, domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
