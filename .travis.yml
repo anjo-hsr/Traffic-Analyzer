@@ -47,7 +47,7 @@ jobs:
         - sonar-scanner
 
     - stage: publish docker container
-      if: branch = master
+      if: branch = master AND type = push AND fork = false
       script:
         - ./app_deployer.sh generate-tar
         - cd ./docker
