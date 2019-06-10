@@ -25,6 +25,7 @@ addons:
 before_install:
   - sudo apt-get update
   - sudo apt-get install dos2unix
+  - dos2unix ./app_deployer.sh
 
 jobs:
   include:
@@ -35,7 +36,6 @@ jobs:
 
     - stage: build
       script:
-        - dos2unix ./app_deployer.sh
         - ./app_deployer.sh recreate
 
     - stage: sonar
@@ -49,7 +49,6 @@ jobs:
     - stage: publish docker container
       if: branch = master
       script:
-        - dos2unix ./app_deployer.sh
         - ./app_deployer.sh generate-tar
         - cd ./docker
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
