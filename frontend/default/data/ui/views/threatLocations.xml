@@ -1,5 +1,6 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Threat Locations</label>
+  <description>Provides information about server that have been linked to malicious content of different kinds in the past.</description>
   <search id="source_threat_locations">
     <query>
      $source_token$
@@ -31,7 +32,7 @@
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="*/</valuePrefix>
+      <valuePrefix>source="*/capture-</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
@@ -41,7 +42,7 @@
         <query>
           sourcetype=capture
           | dedup source
-          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | rex field=source "\S*\/capture\-(?&lt;shortSource&gt;[^\)].*)"
           | table shortSource
           | sort shortSource
         </query>

@@ -1,13 +1,16 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Server Types</label>
+  <description>Provides an overview of server that provide cdn, dhcp or dns services.</description>
   <search id="source_server_types">
     <query>
       $source_token$
       | fields table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
         ws_col_Protocol, _*
       | where $server_type_token$="1"
-      | table table ip_src_combined, src_query_name, src_fqdn, src_is_dhcp, src_is_dns, src_is_cdn,
-        ws_col_Protocol, _time
+      | rename ip_src_combined as IP, src_query_name as "DNS Query", src_fqdn as "Reverse Lookup",
+        ws_col_Protocol as Protocol
+      | table table IP, "DNS Query", "Reverse Lookup", src_is_dhcp, src_is_dns, src_is_cdn,
+        "Protocol", _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -18,7 +21,7 @@
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="*/</valuePrefix>
+      <valuePrefix>source="*/capture-</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
@@ -28,7 +31,7 @@
         <query>
           sourcetype=capture
           | dedup source
-          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | rex field=source "\S*\/capture\-(?&lt;shortSource&gt;[^\)].*)"
           | table shortSource
           | sort shortSource
         </query>
@@ -118,8 +121,8 @@
         <title># of $server_type_name$ servers</title>
         <search base="source_server_types">
           <query>
-            | table ip_src_combined
-            | dedup ip_src_combined
+            | table IP
+            | dedup IP
             | stats count
             | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
@@ -139,7 +142,7 @@
         <title># of $server_type_name$ responses</title>
         <search base="source_server_types">
           <query>
-            | table ip_src_combined
+            | table IP
             | stats count
             | appendpipe [stats count | where count=0 | eval amount=0 | table amount]
           </query>
@@ -160,10 +163,11 @@
       <table>
         <search base="source_server_types">
           <query>
-            | where ip_src_combined != ""
-            | table ip_src_combined, src_query_name, src_fqdn, ws_col_Protocol
-            | dedup ip_src_combined
-            | sort ws_col_Protocol, ip_src_combined
+            | where IP != ""
+            | eventstats count as Responses by IP
+            | dedup IP
+            | table IP, "DNS Query", "Reverse Lookup", "Protocol", Responses
+            | sort "Protocol", IP
           </query>
         </search>
       </table>
