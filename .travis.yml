@@ -48,9 +48,11 @@ jobs:
 
     - stage: publish
       script:
+        - dos2unix ./app_deployer.sh
         - ./app_deployer.sh generate-tar
+        - cd ./docker
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t traffic-analyzer -f docker/Dockerfile-Production .
+        - docker build -t traffic-analyzer -f ./Dockerfile-Production .
         - docker images
         - docker tag traffic-analyzer $DOCKER_USERNAME/traffic-analyzer
         - docker push $DOCKER_USERNAME/traffic-analyzer
