@@ -18,10 +18,10 @@
   </search>
   <search base="source_external" id="source_external_filtered">
     <query>
-      | where src_is_private_ip="0"
       | where ip_src_combined!=""
         AND NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
         AND NOT cidrmatch("$custom_ipv6_range$", ip_src_combined)
+        AND src_is_private_ip="0"
       | dedup ip_src_combined
       | rename ip_src_combined as ip
       | table ip, src_query_name, src_fqdn, eth_src
@@ -197,7 +197,6 @@
                   | rename ip_dst_combined as ip ]
               | join type=left ip
                 [ | loadjob $subsearch_id_external$
-                  | where tcp_stream!=""
                   | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined
                   | untable traffic_analyzer_stream, type, ip
                   | dedup traffic_analyzer_stream, type
@@ -209,6 +208,12 @@
               | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup"
         </query>
       </search>
+      <format type="number" field="Traffic In">
+          <option name="unit">KB</option>
+        </format>
+        <format type="number" field="Traffic Out">
+          <option name="unit">KB</option>
+        </format>
     </table>
   </row>
 </form>
