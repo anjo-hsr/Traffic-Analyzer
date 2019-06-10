@@ -46,7 +46,8 @@ jobs:
         - cd ..
         - sonar-scanner
 
-    - stage: publish
+    - stage: publish docker container
+      if: branch = master
       script:
         - dos2unix ./app_deployer.sh
         - ./app_deployer.sh generate-tar
