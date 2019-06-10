@@ -49,7 +49,7 @@ jobs:
     - stage: publish
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t traffic-analyzer -f docker/Dockerfile .
+        - docker build -t traffic-analyzer -f docker/Dockerfile-Production .
         - docker images
         - docker tag traffic-analyzer $DOCKER_USERNAME/traffic-analyzer
         - docker push $DOCKER_USERNAME/traffic-analyzer

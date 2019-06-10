@@ -1,0 +1,21 @@
+FROM splunk/splunk:latest
+
+ENV INIT_DIR="/tmp/"
+ENV WEB_PORT="8000"
+ENV REST_API_PORT="8089"
+ENV SPLUNK_PASSWORD="AnJo-HSR"
+ENV SPLUNK_START_ARGS="--accept-license"
+
+EXPOSE $WEB_PORT
+EXPOSE $REST_API_PORT
+
+RUN sudo mkdir -p $INIT_DIR
+ADD init_files $INIT_DIR
+
+RUN sudo apt update
+RUN sudo apt install dos2unix -y
+RUN sudo apt install tshark -y
+RUN sudo apt install python3 python3-pip -y
+
+ENV SPLUNK_PASSWORD $SPLUNK_PASSWORD
+ENV SPLUNK_START_ARGS $SPLUNK_START_ARGS
