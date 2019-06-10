@@ -1,6 +1,7 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>IPv6 Security</label>
-  <description>Provides information about ???.</description>
+  <description>Provides information about EUI-64 IPv6 addresses. These addresses may be considered as a security risk
+    as a device MAC address is contained inside the IPv6 address.</description>
   <search id="source_internal_endpoints">
     <query>
       $source_token$
