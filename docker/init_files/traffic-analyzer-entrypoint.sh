@@ -46,5 +46,6 @@ fi
 /sbin/entrypoint.sh start-and-exit
 install_traffic-analyzer
 
+echo -e "Docker container with traffic-analyzer started. You can now access the container."
 sudo -u splunk tail -n 0 -f ${SPLUNK_HOME}/var/log/splunk/splunkd_stderr.log &
 wait
