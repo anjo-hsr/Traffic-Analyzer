@@ -17,7 +17,7 @@ class TlsVersionEnricher(Enricher):
     def get_information(self, packet, information_dict) -> None:
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
-        stream = packet["tcp.stream"]
+        stream = information_dict["traffic_analyzer_stream"]
 
         handshake_version = packet["tls.handshake.extensions.supported_version"]
         if handshake_version == "":

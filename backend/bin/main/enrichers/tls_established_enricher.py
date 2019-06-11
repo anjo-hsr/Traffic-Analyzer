@@ -5,7 +5,7 @@ from main.helpers.print_helper import PrintHelper
 class TlsEstablishedEnricher(Enricher):
     def __init__(self) -> None:
         enricher_type = "tls etablished enricher"
-        header = "is_tls_established"
+        header = "tls_is_established"
         Enricher.__init__(self, enricher_type, header)
 
         self.stream_to_tls_is_established_dict = {}
@@ -26,4 +26,4 @@ class TlsEstablishedEnricher(Enricher):
         elif stream in self.stream_to_tls_is_established_dict:
             packet["_ws.col.Protocol"] = self.stream_to_tls_is_established_dict[stream]
 
-        information_dict["is_tls_established"] = "1" if stream in self.stream_to_tls_is_established_dict else "0"
+        information_dict["tls_is_established"] = "1" if stream in self.stream_to_tls_is_established_dict else "0"
