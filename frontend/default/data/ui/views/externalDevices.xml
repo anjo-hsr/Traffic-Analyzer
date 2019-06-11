@@ -1,6 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>External Endpoints</label>
-  <description>Provides information about endpoints (e.g. server) outside of your own network.</description>
+  <description>
+    Provides information about endpoints (e.g. server) outside of your own network.
+  </description>
   <search id="source_external">
     <query>
       $source_token$
@@ -210,11 +212,11 @@
         </query>
       </search>
       <format type="number" field="Traffic In">
-          <option name="unit">KB</option>
-        </format>
-        <format type="number" field="Traffic Out">
-          <option name="unit">KB</option>
-        </format>
+        <option name="unit">KB</option>
+      </format>
+      <format type="number" field="Traffic Out">
+        <option name="unit">KB</option>
+      </format>
     </table>
   </row>
 </form>

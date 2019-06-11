@@ -1,6 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Traffic Types</label>
-  <description>Provides information about the type of traffic (e.g. ad or malicious).</description>
+  <description>
+    Provides information about the type of traffic (e.g. ad or malicious).
+  </description>
   <search id="source_traffic_types">
     <query>
       $source_token$
