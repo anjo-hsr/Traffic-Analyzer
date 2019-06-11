@@ -19,7 +19,7 @@ class TestTsharkHelperMethods(unittest.TestCase):
                 "-e", "dns.a", "-e", "dns.aaaa", "-e", "dns.resp.name", "-e", "dns.resp.type",
                 "-e", "http.request.method", "-e", "http.request.uri",
                 "-e", "tls.handshake.version", "-e", "tls.handshake.extensions.supported_version",
-                "-e", "tls.handshake.ciphersuite", "-e", "tls.handshake.type",
+                "-e", "tls.handshake.ciphersuite", "-e", "tls.handshake.type", "-e", "tls.record.content_type",
                 "-E", "header=y", "-E", "separator=,", "-E", "quote=d", "-E", "occurrence=a"]
 
         self.assertEqual(get_arguments(filename), args)
