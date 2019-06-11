@@ -135,6 +135,7 @@
         <search base="source_traffic_types">
           <query>
             | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
+            <!--TODO Fix eval statement-->
             | eval traffic_type=case(
                 threat_category&lt;ad_category, "ad",
                 threat_category&gt;ad_category, "threat",
