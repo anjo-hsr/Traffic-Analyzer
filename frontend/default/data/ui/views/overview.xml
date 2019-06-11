@@ -269,9 +269,9 @@
   </row>
   <row>
     <panel>
-      <title>Traffic incomming</title>
+      <title>Traffic incoming</title>
       <single>
-        <title>Bytes incomming</title>
+        <title>Bytes incoming</title>
         <search base="bytes_transfered">
           <query>
             | join type=left ip
