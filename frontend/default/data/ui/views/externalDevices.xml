@@ -1,15 +1,13 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>External Endpoints</label>
-  <description>
-    Provides information about endpoints (e.g. server) outside of your own network.
-  </description>
+  <description>Provides information about endpoints (e.g. server) outside of your own network.</description>
   <search id="source_external">
     <query>
       $source_token$
-      | fields ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
-        tls_handshake_type, traffic_analyzer_stream, tcp_stream,  _*
-      | table ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
-        tls_handshake_type, traffic_analyzer_stream, tcp_stream, _time
+      | fields ip_src_combined, ip_dst_combined, src_query_name, src_fqdn, frame_len, src_is_private_ip, eth_src,
+        tls_handshake_type, traffic_analyzer_stream,  _*
+      | table ip_src_combined, ip_dst_combined, src_query_name, src_fqdn, frame_len, src_is_private_ip, eth_src,
+        tls_handshake_type, traffic_analyzer_stream, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -145,30 +143,13 @@
     </panel>
     <panel>
       <single>
-        <title>Total incoming traffic from external devices</title>
+        <title>Total outgoing traffic to external devices</title>
         <search base="source_external_filtered">
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as in by ip_dst_combined
+                | stats sum(frame_len) as out by ip_dst_combined
                 | rename ip_dst_combined as ip ]
-            | eval "Traffic In"=if(isnull(in), 0, in/1024)
-            | stats sum("Traffic In") as sum_bytes_in
-            | table sum_bytes_in
-            | appendpipe [stats count | where count=0 | eval sum_bytes_in=0 | table sum_bytes_in]
-          </query>
-        </search>
-        <option name="numberPrecision">0.00</option>
-        <option name="unit">KB</option>
-      </single>
-      <single>
-        <title>Complete outgoing traffic to external devices</title>
-        <search base="source_external_filtered">
-          <query>
-            | join type=left ip
-              [ | loadjob $subsearch_id_external$
-                | stats sum(frame_len) as out by ip_src_combined
-                | rename ip_src_combined as ip ]
             | eval "Traffic Out"=if(isnull(out), 0, out/1024)
             | stats sum("Traffic Out") as sum_bytes_out
             | table sum_bytes_out
@@ -178,12 +159,30 @@
         <option name="numberPrecision">0.00</option>
         <option name="unit">KB</option>
       </single>
+      <single>
+        <title>Total incoming traffic from external devices</title>
+        <search base="source_external_filtered">
+          <query>
+            | join type=left ip
+              [ | loadjob $subsearch_id_external$
+                | stats sum(frame_len) as in by ip_src_combined
+                | rename ip_src_combined as ip ]
+            | eval "Traffic In"=if(isnull(in), 0, in/1024)
+            | stats sum("Traffic In") as sum_bytes_in
+            | table sum_bytes_in
+            | appendpipe [stats count | where count=0 | eval sum_bytes_in=0 | table sum_bytes_in]
+          </query>
+        </search>
+        <option name="numberPrecision">0.00</option>
+        <option name="unit">KB</option>
+      </single>
     </panel>
   </row>
   <row>
-    <table>
-      <search base="source_external_filtered">
-        <query>
+    <panel>
+      <table>
+        <search base="source_external_filtered">
+          <query>
               | search
                 [ | loadjob $subsearch_id_external$
                   | where NOT cidrmatch("$custom_ipv4_range$", ip_src_combined)
@@ -192,11 +191,11 @@
                   | table eth_src]
               | join type=left ip
                 [ | loadjob $subsearch_id_external$
-                  | stats sum(frame_len) as out by ip_src_combined
+                  | stats sum(frame_len) as in by ip_src_combined
                   | rename ip_src_combined as ip ]
               | join type=left ip
                 [ | loadjob $subsearch_id_external$
-                  | stats sum(frame_len) as in by ip_dst_combined
+                  | stats sum(frame_len) as out by ip_dst_combined
                   | rename ip_dst_combined as ip ]
               | join type=left ip
                 [ | loadjob $subsearch_id_external$
@@ -207,16 +206,17 @@
                   | where ip!=""
                   | table ip, "# of Connections" ]
               | eval "Traffic In" =if(isnull(in), 0, in/1024), "Traffic Out" = if(isnull(out), 0, out/1024)
-              | table ip, src_query_name, src_fqdn, "Traffic In", "Traffic Out", "# of Connections"
+              | table ip, src_query_name, src_fqdn, "Traffic Out", "Traffic In", "# of Connections"
               | rename ip as "IP", src_query_name as "DNS Name", src_fqdn as "Reverse Lookup"
         </query>
-      </search>
-      <format type="number" field="Traffic In">
-        <option name="unit">KB</option>
-      </format>
-      <format type="number" field="Traffic Out">
-        <option name="unit">KB</option>
-      </format>
-    </table>
+        </search>
+        <format type="number" field="Traffic In">
+          <option name="unit">KB</option>
+        </format>
+        <format type="number" field="Traffic Out">
+          <option name="unit">KB</option>
+        </format>
+      </table>
+    </panel>
   </row>
 </form>
