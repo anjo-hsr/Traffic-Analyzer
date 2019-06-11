@@ -25,6 +25,7 @@ addons:
 before_install:
   - sudo apt-get update
   - sudo apt-get install dos2unix
+  - dos2unix ./app_deployer.sh
 
 jobs:
   include:
@@ -32,10 +33,11 @@ jobs:
       script:
         - cd ./backend
         - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml bin/test
+
     - stage: build
       script:
-        - dos2unix ./app_deployer.sh
         - ./app_deployer.sh recreate
+
     - stage: sonar
       script:
         - cd ./backend
@@ -43,3 +45,14 @@ jobs:
         - mv ./coverage.xml ./bin/test/
         - cd ..
         - sonar-scanner
+
+    - stage: publish docker container
+      if: branch = master AND type = push AND fork = false
+      script:
+        - ./app_deployer.sh generate-tar
+        - cd ./docker
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t traffic-analyzer -f ./Dockerfile-Production .
+        - docker images
+        - docker tag traffic-analyzer $DOCKER_USERNAME/traffic-analyzer
+        - docker push $DOCKER_USERNAME/traffic-analyzer

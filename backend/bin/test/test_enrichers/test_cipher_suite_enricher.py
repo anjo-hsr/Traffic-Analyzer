@@ -8,20 +8,19 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.cipher_suite_enricher = CipherSuiteEnricher()
-        cls.information_dict = {}
+        cls.information_dict = {
+            "traffic_analyzer_stream": 1
+        }
         cls.packets = {
             "client_hello": {
                 "tls.handshake.type": "1",
-                "tls.handshake.ciphersuite": "49200",
-                "tcp.stream": 1
+                "tls.handshake.ciphersuite": "49200"
             }, "server_hello": {
                 "tls.handshake.type": "2",
-                "tls.handshake.ciphersuite": "49200",
-                "tcp.stream": 1
+                "tls.handshake.ciphersuite": "49200"
             }, "first_packet": {
                 "tls.handshake.type": "",
-                "tls.handshake.ciphersuite": "",
-                "tcp.stream": 1
+                "tls.handshake.ciphersuite": ""
             }}
 
     def test_header(self) -> None:
