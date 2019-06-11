@@ -1,12 +1,12 @@
 import subprocess
 from os import path
 
-import main.helpers.tshark_helper as tshark_helper
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_name_helper, file_path_helper, file_read_helper, file_write_helper
 from main.helpers.file.file_name_helper import get_new_filename
 from main.helpers.platform_detection_helper import PlatformDetectionHelper
 from main.helpers.print_helper import PrintHelper
+from main.helpers.tshark_helper import get_arguments
 
 
 def run_tshark(filename, pcap_file_path, csv_file_path) -> None:
@@ -26,7 +26,7 @@ def run_tshark(filename, pcap_file_path, csv_file_path) -> None:
 
 
 def start_tshark(pcap_file, csv_file, program_path) -> None:
-    arguments = tshark_helper.get_arguments(pcap_file)
+    arguments = get_arguments(pcap_file)
     subprocess.run([program_path] + arguments, stdout=csv_file)
 
 

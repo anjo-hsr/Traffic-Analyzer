@@ -45,7 +45,8 @@ class TestPrintHelperMethods(unittest.TestCase):
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_print_enrichers(self, mock_stdout) -> None:
-        print_text = "Nothing to print for location enricher.\n" \
+        print_text = "Nothing to print for ip address combine enricher.\n" \
+                     "Nothing to print for location enricher.\n" \
                      "Nothing to print for name resolve enricher.\n" \
                      "Print out for all 0 streams to cipher suites entries\n\n\n\n" \
                      "Print out for 0 streams to tls version entries\n\n\n\n" \

@@ -5,6 +5,7 @@ from main.dicts.enrichers_dict import get_enricher_dict
 from main.enrichers.ad_enricher import AdEnricher
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
+from main.enrichers.ip_address_combine_enricher import IpAddressCombineEnricher
 from main.enrichers.ip_type_enricher import IpTypeEnricher
 from main.enrichers.location_enricher import LocationEnricher
 from main.enrichers.name_resolve_enricher import NameResolverEnricher
@@ -12,13 +13,13 @@ from main.enrichers.server_type_enricher import ServerTypeEnricher
 from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.threat_info_enricher import ThreatInfoEnricher
 from main.enrichers.tls_enricher import TlsEnricher
-from test.test_dicts.keys import id_keys
 
 
 class TestEnrichmentClassesMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.enricher_keys = [
+            "ip_address_combine_enricher",
             "location_enricher",
             "fqdn_resolve_enricher",
             "cipher_suite_enricher",
@@ -36,7 +37,10 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
 
     def test_create_enrichers_classes(self) -> None:
         for key in self.enricher_dict:
-            if key == "location_enricher":
+            if key == "ip_address_combine_enricher":
+                self.assertTrue(isinstance(self.enricher_dict[key], IpAddressCombineEnricher))
+
+            elif key == "location_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], LocationEnricher))
 
             elif key == "fqdn_resolve_enricher":
@@ -75,9 +79,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
         self.assertEqual(list(self.enricher_dict), self.enricher_keys)
 
     def test_enricher_dict_keys(self) -> None:
-        id_index = 0
-        enricher_classes_key_ids = [key.split("_")[id_index] for key in self.enricher_dict]
-        self.assertListEqual(enricher_classes_key_ids, id_keys)
+        self.assertListEqual(list(self.enricher_dict), self.enricher_keys)
 
 
 if __name__ == "__main__":

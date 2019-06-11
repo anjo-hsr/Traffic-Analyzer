@@ -1,9 +1,9 @@
 from main.enrichers.enricher import Enricher
-from main.helpers.ip_helper import IpHelper
+from main.helpers.ip_address_helper import IpAddressHelper
 
 
 class IpTypeEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "ip type enricher"
         header = "dst_is_private_ip,src_is_private_ip"
         Enricher.__init__(self, enricher_type, header)
@@ -21,6 +21,6 @@ class IpTypeEnricher(Enricher):
     def is_private(ip_address) -> str:
         is_private = False
         if ip_address != "":
-            is_private = IpHelper.is_private_ip(ip_address)
+            is_private = IpAddressHelper.is_private_ip(ip_address)
 
         return "1" if is_private else "0"

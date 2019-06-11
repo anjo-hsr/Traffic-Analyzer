@@ -9,7 +9,10 @@ class TestStreamEnricherMethods(unittest.TestCase):
         cls.stream_enricher = StreamEnricher()
         cls.source_ip_address = "10.0.0.1"
         cls.destination_ip_address = "8.8.8.8"
-        cls.information_dict = {}
+        cls.information_dict = {
+            "ip_dst_combined": "152.96.36.100",
+            "ip_src_combined": "10.0.0.1"
+        }
 
         cls.public_packet = {
             "ip.dst": "152.96.36.100",
@@ -42,11 +45,17 @@ class TestStreamEnricherMethods(unittest.TestCase):
 
     def test_get_combined_strings_public_packet(self) -> None:
         expected_string = "10.0.0.1,152.96.36.100,52012,443,,,6;152.96.36.100,10.0.0.1,443,52012,,,6"
-        self.assertEqual(StreamEnricher.get_combined_strings(self.public_packet), expected_string)
+        self.assertEqual(
+            StreamEnricher.get_combined_strings(self.public_packet, self.information_dict),
+            expected_string
+        )
 
     def test_get_combined_strings_private_packet(self) -> None:
         expected_string = ""
-        self.assertEqual(StreamEnricher.get_combined_strings(self.private_packet), expected_string)
+        self.assertEqual(
+            StreamEnricher.get_combined_strings(self.private_packet, self.information_dict),
+            expected_string
+        )
 
     def test_get_stream_id_public_packet(self) -> None:
         expected_size = 1

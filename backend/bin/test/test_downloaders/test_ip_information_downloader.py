@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from main.downloaders.ip_information_downloader import IpInformationDownloader
+from test.mock_classes.mock_response import MockResponse
 
 
 class TestIpInformationDownloader(unittest.TestCase):
@@ -37,6 +38,15 @@ class TestIpInformationDownloader(unittest.TestCase):
             "longitude": -97.822,
         }
 
+        cls.ip_data_public_failed = {
+            "ip_address": cls.public_ip,
+            "rdns": cls.public_ip,
+            "asn": "",
+            "isp": "",
+            "latitude": "",
+            "longitude": "",
+        }
+
     def setUp(self) -> None:
         self.ip_information_downloader = IpInformationDownloader()
 
@@ -49,7 +59,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         ip_address = self.public_ip
         self.assert_ip_data(ip_address, self.ip_data_public)
 
-    @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
+    @patch("dns.resolver.Resolver.query", MagicMock(return_value=["router.hsr.ch"]))
     def test_get_ip_information_private(self) -> None:
         ip_address = self.private_ip
         self.assert_ip_data(ip_address, self.ip_data_private)
@@ -58,7 +68,7 @@ class TestIpInformationDownloader(unittest.TestCase):
         ip_address = self.multicast_ip
         self.assert_ip_data(ip_address, self.ip_data_multicast)
 
-    @patch("socket.getfqdn", MagicMock(return_value="router.hsr.ch"))
+    @patch("dns.resolver.Resolver.query", MagicMock(return_value=["router.hsr.ch"]))
     def test_get_ip_information_twice(self) -> None:
         ip_address = self.private_ip
         length = 1
@@ -67,6 +77,11 @@ class TestIpInformationDownloader(unittest.TestCase):
 
         self.assert_ip_data(ip_address, self.ip_data_private)
         self.assertEqual(len(self.ip_information_downloader.ip_information), length)
+
+    @patch("requests.get", MagicMock(return_value=MockResponse(status_code=500, content="{}")))
+    def test_get_ip_information_failing(self) -> None:
+        ip_address = self.public_ip
+        self.assert_ip_data(ip_address, self.ip_data_public_failed)
 
 
 if __name__ == "__main__":

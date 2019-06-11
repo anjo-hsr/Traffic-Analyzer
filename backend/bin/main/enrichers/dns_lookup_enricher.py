@@ -1,14 +1,14 @@
 from typing import Dict, Union, List
 
+from main.combiners.field_combiner import FieldCombiner
 from main.enrichers.enricher import Enricher
-from main.helpers.combine_helper import CombineHelper
-from main.helpers.ip_helper import IpHelper
+from main.helpers.ip_address_helper import IpAddressHelper
 from main.helpers.response_helper import ResponseHelper
 from main.helpers.string_helper import enclose_with_quotes
 
 
 class DnsLookupEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "dns lookup enricher"
         header = "dst_query_name,dst_hostnames,src_query_name,src_hostnames"
         Enricher.__init__(self, enricher_type, header)
@@ -28,8 +28,8 @@ class DnsLookupEnricher(Enricher):
         if ResponseHelper.is_dns_response(packet):
             self.save_dns_query(packet)
 
-        src_ip = packet["ip.src"]
-        dst_ip = packet["ip.dst"]
+        src_ip = information_dict["ip_src_combined"]
+        dst_ip = information_dict["ip_dst_combined"]
 
         information_dict["dst_query_name"] = self.get_dns_query(dst_ip)
         information_dict["dst_hostnames"] = self.get_hostnames(dst_ip)
@@ -37,14 +37,14 @@ class DnsLookupEnricher(Enricher):
         information_dict["src_query_name"] = self.get_dns_query(src_ip)
         information_dict["src_hostnames"] = self.get_hostnames(src_ip)
 
-        information_dict["domains"] = CombineHelper.join_list_elements([
+        information_dict["domains"] = FieldCombiner.join_list_elements([
             information_dict["dst_query_name"],
             information_dict["dst_hostnames"],
             information_dict["src_query_name"],
             information_dict["src_hostnames"]
         ], True)
 
-        information_dict["src_domains"] = CombineHelper.join_list_elements([
+        information_dict["src_domains"] = FieldCombiner.join_list_elements([
             information_dict["src_query_name"],
             information_dict["src_hostnames"]
         ], True)
@@ -55,11 +55,11 @@ class DnsLookupEnricher(Enricher):
 
     def get_hostnames(self, ip) -> str:
         ip_information = self.dns_responses.get(ip, self.get_empty_dict())
-        return CombineHelper.join_with_quotes(ip_information["hostnames"])
+        return FieldCombiner.join_with_quotes(ip_information["hostnames"])
 
     def save_dns_query(self, packet) -> None:
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")
-        filtered_dns_reponse_ips = list(filter(IpHelper.is_ip, dns_response_ips))
+        filtered_dns_reponse_ips = list(filter(IpAddressHelper.is_ip, dns_response_ips))
         if not filtered_dns_reponse_ips:
             return
 

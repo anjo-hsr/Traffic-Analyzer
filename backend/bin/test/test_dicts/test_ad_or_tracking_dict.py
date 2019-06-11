@@ -1,12 +1,14 @@
 import unittest
+from unittest.mock import MagicMock, patch
 
-from main.dicts.blacklist_dict import BlacklistDict
+from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
+from test.mock_classes.mock_response import MockResponse
 
 
-class TestBlacklistDictMethods(unittest.TestCase):
+class TestAdOrTrackingDictMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.blacklist_domains = [
+        cls.ad_or_tracking_domains = [
             "adserver.news.com.au",
             "yab-adimages.s3.amazonaws.com",
             "analytics.google.com",
@@ -26,9 +28,9 @@ class TestBlacklistDictMethods(unittest.TestCase):
             "",
         ]
 
-        cls.blacklist_dict = BlacklistDict(cls.blacklist_domains)
+        cls.ad_or_tracking_dict = AdOrTrackingDict(cls.ad_or_tracking_domains)
 
-    def test_create_blacklist_dict(self) -> None:
+    def test_create_ad_or_tracking_dict(self) -> None:
         expected_dict = {
             "au": {"com": {"news": {
                 "adserver": "adserver.news.com.au"
@@ -48,9 +50,13 @@ class TestBlacklistDictMethods(unittest.TestCase):
                 "webtrends": "webtrends.telegraph.co.uk"
             }}},
         }
-        self.assertDictEqual(self.blacklist_dict.blacklist_dict, expected_dict)
+        self.assertDictEqual(self.ad_or_tracking_dict.ad_or_tracking_dict, expected_dict)
+
+    @patch("requests.get", MagicMock(return_value=MockResponse(status_code=500, content="[]")))
+    def test_get_ad_or_tracking_domains_failed(self) -> None:
+        self.assertListEqual(self.ad_or_tracking_dict.get_ad_or_tracking_domains(), [])
 
 
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestBlacklistDictMethods)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestAdOrTrackingDictMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)

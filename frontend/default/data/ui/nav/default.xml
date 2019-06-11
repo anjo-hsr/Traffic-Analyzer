@@ -1,18 +1,28 @@
-<nav search_view="search" color="3C444C">
+<nav search_view="search" color="20C028">
   <view name="overview" default="true"/>
+
   <collection label="Endpoints">
     <view name="serverTypes"/>
     <view name="internalDevices"/>
     <view name="externalDevices"/>
   </collection>
+
   <collection label="Traffic">
     <view name="trafficTypes"/>
     <view name="streamInformation"/>
     <view name="adLocations"/>
+    <view name="socialNetworkLocations"/>
     <view name="threatLocations"/>
   </collection>
+
   <view name="protocols"/>
-  <view name="security"/>
+
+  <collection label="Security">
+    <view name="ipv6Security"/>
+    <view name="tlsSecurity"/>
+  </collection>
+
   <view name="locations"/>
-  <a href="/manager/traffic-analyzer/apps/local/traffic-analyzer/setup?action=edit">Settings</a>
+  
+  <a href="/manager/traffic-analyzer/apps/local/traffic-analyzer/setup?action=edit&amp;redirect_override=%2Fapp%2Ftraffic-analyzer%2Foverview;">Settings</a>
 </nav>

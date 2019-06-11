@@ -6,7 +6,7 @@ from main.helpers.environment_helper import EnvironmentHelper
 
 
 class Process:
-    def __init__(self, name):
+    def __init__(self, name) -> None:
         self.info = {"name": name}
 
 

@@ -1,13 +1,18 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Overview</label>
+  <description>Provides an overview of information from different analysis.</description>
   <search id="source_overview">
     <query>
       $source_token$
       | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
-      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _*
+        traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
+        src_is_private_ip, linecount, _*
       | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
-      traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src, ip_dst, src_is_private_ip, linecount, _time
+        traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
+        src_is_private_ip, linecount, _time
     </query>
+    <earliest>$datetimepicker.earliest$</earliest>
+    <latest>$datetimepicker.latest$</latest>
   </search>
   <search base="source_overview" id="recommended_cipher_suites">
     <query>
@@ -26,14 +31,15 @@
   </search>
   <search base="source_overview" id="bytes_transfered">
     <query>
-      | dedup ip_src
+      | dedup ip_src_combined
       | eval src_is_private_extended=if(
-        cidrmatch(&quot;$custom_ip_range$&quot;, ip_src) OR
+        cidrmatch("$custom_ipv4_range$", ip_src_combined) OR
+        cidrmatch("$custom_ipv6_range$", ip_src_combined) OR
         src_is_private_ip == "1", "True", "False")
       | where src_is_private_extended == "True"
-      | where ip_src!="" AND ip_src!="0.0.0.0"
-      | table ip_src
-      | rename ip_src as ip
+      | where ip_src_combined!="" AND ip_src_combined!="0.0.0.0"
+      | table ip_src_combined
+      | rename ip_src_combined as ip
     </query>
     <done>
       <condition>
@@ -47,7 +53,7 @@
       <default>*</default>
       <prefix>(sourcetype=capture </prefix>
       <suffix>)</suffix>
-      <valuePrefix>source="*/</valuePrefix>
+      <valuePrefix>source="*/capture-</valuePrefix>
       <valueSuffix>"</valueSuffix>
       <delimiter> OR </delimiter>
       <choice value="*">ALL</choice>
@@ -57,37 +63,66 @@
         <query>
           sourcetype=capture
           | dedup source
-          | rex field=source "\S*\/(?&lt;shortSource&gt;[^\)].*)"
+          | rex field=source "\S*\/capture\-(?&lt;shortSource&gt;[^\)].*)"
           | table shortSource
           | sort shortSource
         </query>
       </search>
     </input>
     <input type="text" searchWhenChanged="true" token="filteredMAC">
-      <label>Show for following  Device (MAC):</label>
+      <label>Show for following Device (MAC):</label>
       <default>*</default>
     </input>
-    <input type="dropdown" token="ip_range" searchWhenChanged="false">
-      <label>Define internal IP range</label>
+    <input type="dropdown" token="ipv4_range" searchWhenChanged="false">
+      <label>Define internal IPv4 range</label>
       <choice value="default">Default (RFC 1918)</choice>
       <choice value="custom">Custom</choice>
       <change>
         <condition label="Default (RFC 1918)">
-          <set token="use_default_ip_range">true</set>
-          <unset token="use_custom_ip_range"/>
-          <set token="custom_ip_range">203.0.113.0/24</set>
-          <set token="form.custom_ip_range">203.0.113.0/24</set>
+          <set token="use_default_ipv4_range">true</set>
+          <unset token="use_custom_ipv4_range"></unset>
+          <set token="custom_ipv4_range">203.0.113.0/24</set>
+          <set token="form.custom_ipv4_range">203.0.113.0/24</set>
         </condition>
         <condition label="Custom">
-          <unset token="use_default_ip_range"/>
-          <set token="use_custom_ip_range">true</set>
+          <unset token="use_default_ipv4_range"></unset>
+          <set token="use_custom_ipv4_range">true</set>
         </condition>
       </change>
       <default>default</default>
     </input>
-    <input type="text" token="custom_ip_range" depends="$use_custom_ip_range$">
-      <label>Internal IP range:</label>
-      <default/>
+    <input type="text" token="custom_ipv4_range" depends="$use_custom_ipv4_range$">
+      <label>Internal IPv4 range:</label>
+      <default></default>
+    </input>
+    <input type="dropdown" token="ipv6_range" searchWhenChanged="false">
+      <label>Define internal IPv6 range</label>
+      <choice value="default">Default (RFC 4291)</choice>
+      <choice value="custom">Custom</choice>
+      <change>
+        <condition label="Default (RFC 4291)">
+          <set token="use_default_ipv6_range">true</set>
+          <unset token="use_custom_ipv6_range"></unset>
+          <set token="custom_ipv6_range">2001:db8::/32</set>
+          <set token="form.custom_ipv6_range">2001:db8::/32</set>
+        </condition>
+        <condition label="Custom">
+          <unset token="use_default_ipv6_range"></unset>
+          <set token="use_custom_ipv6_range">true</set>
+        </condition>
+      </change>
+      <default>default</default>
+    </input>
+    <input type="text" token="custom_ipv6_range" depends="$use_custom_ipv6_range$">
+      <label>Internal IPv6 range:</label>
+      <default></default>
+    </input>
+    <input type="time" token="datetimepicker">
+      <label>Date &amp; Time Picker</label>
+      <default>
+        <earliest>0</earliest>
+        <latest></latest>
+      </default>
     </input>
   </fieldset>
   <row>
@@ -239,9 +274,10 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(frame_len) as bytes_in_per_ip by ip_dst
-                | rename ip_dst as ip ]
+                | stats sum(frame_len) as bytes_in_per_ip by ip_dst_combined
+                | rename ip_dst_combined as ip ]
             | stats sum(bytes_in_per_ip) as sum_bytes
+            | eval sum_bytes=sum_bytes/1024
             | table sum_bytes
             | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
           </query>
@@ -249,10 +285,10 @@
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
+        <option name="numberPrecision">0.00</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
-        <option name="unit">Bytes</option>
+        <option name="unit">KB</option>
         <option name="unitPosition">after</option>
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
@@ -263,8 +299,8 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(linecount) as "# of packets" by ip_dst
-                | rename ip_dst as ip ]
+                | stats sum(linecount) as "# of packets" by ip_dst_combined
+                | rename ip_dst_combined as ip ]
             | stats sum("# of packets") as sum_packets
             | table sum_packets
             | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]
@@ -290,9 +326,10 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(frame_len) as bytes_out_per_ip by ip_src
-                | rename ip_src as ip ]
+                | stats sum(frame_len) as bytes_out_per_ip by ip_src_combined
+                | rename ip_src_combined as ip ]
             | stats sum(bytes_out_per_ip) as sum_bytes
+            | eval sum_bytes=sum_bytes/1024
             | table sum_bytes
             | appendpipe [stats count | where count=0 | eval sum_bytes=0 | table sum_bytes]
           </query>
@@ -300,10 +337,10 @@
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
         <option name="drilldown">none</option>
-        <option name="numberPrecision">0</option>
+        <option name="numberPrecision">0.00</option>
         <option name="showSparkline">0</option>
         <option name="showTrendIndicator">0</option>
-        <option name="unit">Bytes</option>
+        <option name="unit">KB</option>
         <option name="unitPosition">after</option>
         <option name="useColors">0</option>
         <option name="useThousandSeparators">1</option>
@@ -314,8 +351,8 @@
           <query>
             | join type=left ip
               [ | loadjob $subsearch_id_bytes_transfered$
-                | stats sum(linecount) as "# of packets" by ip_src
-                | rename ip_src as ip ]
+                | stats sum(linecount) as "# of packets" by ip_src_combined
+                | rename ip_src_combined as ip ]
             | stats sum("# of packets") as sum_packets
             | table sum_packets
             | appendpipe [stats count | where count=0 | eval sum_packets=0 | table sum_packets]

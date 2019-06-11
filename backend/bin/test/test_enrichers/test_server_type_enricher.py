@@ -8,6 +8,9 @@ class TestServerTypeEnricher(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.server_type_enricher = ServerTypeEnricher()
+        cls.information_dict = {
+            "ip_src_combined": "10.0.0.1"
+        }
         cls.dhcp_packet = {
             "ip.src": "10.0.0.1",
             "ip.dst": "10.0.0.2",
@@ -30,21 +33,25 @@ class TestServerTypeEnricher(unittest.TestCase):
         self.server_type_enricher.server_type_dict = {"dns": set(), "dhcp": set()}
 
     def test_header(self) -> None:
-        expected_header = "src_is_dhcp,src_is_dns,src_is_cdn"
+        expected_header = "src_is_dhcp,src_is_dns,src_is_cdn,src_is_social_network"
         self.assertEqual(self.server_type_enricher.header, expected_header)
 
     def test_detect_type_dhcp(self) -> None:
         expected_value = "1"
-        actual_value = self.server_type_enricher.detect_type(self.dhcp_packet, ResponseHelper.is_dhcp_response, "dhcp")
+        actual_value = self.server_type_enricher.detect_type(
+            self.dhcp_packet, self.information_dict, ResponseHelper.is_dhcp_response, "dhcp")
         self.assertEqual(actual_value, expected_value)
-        actual_value = self.server_type_enricher.detect_type(self.dns_packet, ResponseHelper.is_dhcp_response, "dhcp")
+        actual_value = self.server_type_enricher.detect_type(
+            self.dns_packet, self.information_dict, ResponseHelper.is_dhcp_response, "dhcp")
         self.assertNotEqual(actual_value, expected_value)
 
     def test_detect_type_dns(self) -> None:
         expected_value = "1"
-        actual_value = self.server_type_enricher.detect_type(self.dhcp_packet, ResponseHelper.is_dhcp_response, "dns")
+        actual_value = self.server_type_enricher.detect_type(
+            self.dhcp_packet, self.information_dict, ResponseHelper.is_dhcp_response, "dns")
         self.assertEqual(actual_value, expected_value)
-        actual_value = self.server_type_enricher.detect_type(self.dns_packet, ResponseHelper.is_dhcp_response, "dns")
+        actual_value = self.server_type_enricher.detect_type(
+            self.dns_packet, self.information_dict, ResponseHelper.is_dhcp_response, "dns")
         self.assertNotEqual(actual_value, expected_value)
 
     def test_save_entry_dhcp(self) -> None:
@@ -52,10 +59,10 @@ class TestServerTypeEnricher(unittest.TestCase):
         key = "dhcp"
         self.assertEqual(len(self.server_type_enricher.server_type_dict[key]), set_size)
 
-        self.server_type_enricher.save_entry(key, self.dhcp_packet)
+        self.server_type_enricher.save_entry(key, self.information_dict)
         set_size += 1
         self.assertEqual(len(self.server_type_enricher.server_type_dict[key]), set_size)
-        self.server_type_enricher.save_entry(key, self.dhcp_packet)
+        self.server_type_enricher.save_entry(key, self.information_dict)
         self.assertEqual(len(self.server_type_enricher.server_type_dict[key]), set_size)
 
     def test_save_entry_dns(self) -> None:
@@ -63,10 +70,10 @@ class TestServerTypeEnricher(unittest.TestCase):
         key = "dns"
         self.assertEqual(len(self.server_type_enricher.server_type_dict[key]), set_size)
 
-        self.server_type_enricher.save_entry(key, self.dhcp_packet)
+        self.server_type_enricher.save_entry(key, self.information_dict)
         set_size += 1
         self.assertEqual(len(self.server_type_enricher.server_type_dict[key]), set_size)
-        self.server_type_enricher.save_entry(key, self.dhcp_packet)
+        self.server_type_enricher.save_entry(key, self.information_dict)
         self.assertEqual(len(self.server_type_enricher.server_type_dict[key]), set_size)
 
 

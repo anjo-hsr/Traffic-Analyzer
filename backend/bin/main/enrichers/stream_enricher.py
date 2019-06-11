@@ -6,7 +6,7 @@ from main.helpers.print_helper import PrintHelper
 
 
 class StreamEnricher(Enricher):
-    def __init__(self):
+    def __init__(self) -> None:
         enricher_type = "stream enricher"
         header = "traffic_analyzer_stream"
         Enricher.__init__(self, enricher_type, header)
@@ -18,7 +18,7 @@ class StreamEnricher(Enricher):
         PrintHelper.print_dict(self.stream_ids, print_text)
 
     def get_information(self, packet, information_dict) -> None:
-        inbound_outbound_string = self.get_combined_strings(packet)
+        inbound_outbound_string = self.get_combined_strings(packet, information_dict)
         if inbound_outbound_string in self.stream_ids:
             information_dict["traffic_analyzer_stream"] = self.stream_ids[inbound_outbound_string]
             return
@@ -29,9 +29,9 @@ class StreamEnricher(Enricher):
         information_dict["traffic_analyzer_stream"] = stream_entry["stream_id"]
 
     @staticmethod
-    def get_combined_strings(packet) -> str:
-        dst_ip = packet["ip.dst"]
-        src_ip = packet["ip.src"]
+    def get_combined_strings(packet, information_dict) -> str:
+        dst_ip = information_dict["ip_dst_combined"]
+        src_ip = information_dict["ip_src_combined"]
         protocol = packet["ip.proto"]
         tcp_dst_port = packet["tcp.dstport"]
         tcp_src_port = packet["tcp.srcport"]

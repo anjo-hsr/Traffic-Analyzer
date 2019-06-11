@@ -1,3 +1,4 @@
-./init_files/**/*.pcap
-./init_files/**/*.pcapng
 ./init_files/**/.gitignore
+
+./init_files/pcaps_processed
+./init_files/pcaps/*
