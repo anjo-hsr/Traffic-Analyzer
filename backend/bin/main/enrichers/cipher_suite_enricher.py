@@ -18,7 +18,7 @@ class CipherSuiteEnricher(Enricher):
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
         handshake_cipher_suite = packet["tls.handshake.ciphersuite"]
-        stream = packet["tcp.stream"]
+        stream = information_dict["traffic_analyzer_stream"]
 
         cipher_suite_number = '""'
 
