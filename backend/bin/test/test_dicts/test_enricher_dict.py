@@ -12,7 +12,8 @@ from main.enrichers.name_resolve_enricher import NameResolverEnricher
 from main.enrichers.server_type_enricher import ServerTypeEnricher
 from main.enrichers.stream_enricher import StreamEnricher
 from main.enrichers.threat_info_enricher import ThreatInfoEnricher
-from main.enrichers.tls_enricher import TlsEnricher
+from main.enrichers.tls_established_enricher import TlsEstablishedEnricher
+from main.enrichers.tls_version_enricher import TlsVersionEnricher
 
 
 class TestEnrichmentClassesMethods(unittest.TestCase):
@@ -24,6 +25,7 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "fqdn_resolve_enricher",
             "stream_enricher",
             "tls_ssl_version_enricher",
+            "tls_established_enricher",
             "cipher_suite_enricher",
             "ip_type_enricher",
             "dns_lookup_enricher",
@@ -50,7 +52,10 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
                 self.assertTrue(isinstance(self.enricher_dict[key], CipherSuiteEnricher))
 
             elif key == "tls_ssl_version_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], TlsEnricher))
+                self.assertTrue(isinstance(self.enricher_dict[key], TlsVersionEnricher))
+
+            elif key == "tls_established_enricher":
+                self.assertTrue(isinstance(self.enricher_dict[key], TlsEstablishedEnricher))
 
             elif key == "ip_type_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], IpTypeEnricher))
