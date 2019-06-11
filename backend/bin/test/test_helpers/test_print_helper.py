@@ -50,8 +50,8 @@ class TestPrintHelperMethods(unittest.TestCase):
                      "Nothing to print for name resolve enricher.\n" \
                      "Print out for 1 tcp stream entries\n" \
                      " --> \n\n\n\n" \
-                     "Print out for 0 streams to tls is established entries\n\n\n\n" \
                      "Print out for 0 streams to tls version entries\n\n\n\n" \
+                     "Print out for 0 streams to tls is established entries\n\n\n\n" \
                      "Print out for all 0 streams to cipher suites entries\n\n\n\n" \
                      "Nothing to print for ip type enricher.\n" \
                      "Nothing to print for dns lookup enricher.\n" \
