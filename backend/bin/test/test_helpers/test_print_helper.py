@@ -48,11 +48,11 @@ class TestPrintHelperMethods(unittest.TestCase):
         print_text = "Nothing to print for ip address combine enricher.\n" \
                      "Nothing to print for location enricher.\n" \
                      "Nothing to print for name resolve enricher.\n" \
-                     "Print out for all 0 streams to cipher suites entries\n\n\n\n" \
-                     "Print out for 0 streams to tls version entries\n\n\n\n" \
-                     "Nothing to print for ip type enricher.\n" \
                      "Print out for 1 tcp stream entries\n" \
                      " --> \n\n\n\n" \
+                     "Print out for 0 streams to tls version entries\n\n\n\n" \
+                     "Print out for all 0 streams to cipher suites entries\n\n\n\n" \
+                     "Nothing to print for ip type enricher.\n" \
                      "Nothing to print for dns lookup enricher.\n" \
                      "Nothing to print for server type enricher.\n" \
                      "Nothing to print for ad enricher.\n" \
