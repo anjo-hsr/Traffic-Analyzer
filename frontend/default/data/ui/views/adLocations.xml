@@ -1,6 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Ad Locations</label>
-  <description>Provides information about the geographical location of server providing services in regards to ads or tracking.</description>
+  <description>
+    Provides information about the geographical location of server providing services in regards to ads or tracking.
+  </description>
   <search id="source_ad_locations">
     <query>
       $source_token$
