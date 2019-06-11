@@ -1,6 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Stream Information</label>
-  <description>Provides information about streams and whether a contacted external endpoint might serve ads or malicious content.</description>
+  <description>
+    Provides information about streams and whether a contacted external endpoint might serve ads or malicious content.
+  </description>
   <search id="source_stream_information">
     <query>
       $source_token$
