@@ -115,9 +115,9 @@
             | table traffic_analyzer_stream, "Bytes transfered", Timespan, ws_col_Protocol,
               ip_src_combined, ip_dst_combined, adcategory, threatcategory
             | mvcombine threatcategory
-            | rename traffic_analyzer_stream as "Stream ID", ws_col_Protocol as "Protocol",
-              ip_src_combined as "Source IP", ip_dst_combined as "Destination IP",
-              adcategory as "Ad Category", threatcategory as "Threat Category"
+            | rename traffic_analyzer_stream as "Stream ID", Timespan as "Timespan [s]", ws_col_Protocol as "Protocol",
+              ip_src_combined as "Source IP", ip_dst_combined as "Destination IP", adcategory as "Ad Category",
+              threatcategory as "Threat Category"
           </query>
         </search>
       </table>
