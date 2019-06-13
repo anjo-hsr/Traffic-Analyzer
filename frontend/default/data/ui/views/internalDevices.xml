@@ -7,9 +7,9 @@
     <query>
       $source_token$
       | fields ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
-        tls_handshake_type, traffic_analyzer_stream, tcp_stream,  _*
+        tls_handshake_type, traffic_analyzer_stream,  _*
       | table ip_src_combined, ip_dst_combined, src_query_name, frame_len, src_is_private_ip, eth_src,
-        tls_handshake_type, traffic_analyzer_stream, tcp_stream, _time
+        tls_handshake_type, traffic_analyzer_stream, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -154,7 +154,7 @@
     </panel>
     <panel>
       <single>
-        <title>Complete incoming traffic to internal devices</title>
+        <title>Total incoming traffic to internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
             | join type=left ip
@@ -171,7 +171,7 @@
         <option name="unit">KB</option>
       </single>
       <single>
-        <title>Complete outgoing traffic to internal devices</title>
+        <title>Complete outgoing traffic from internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
             | join type=left ip
@@ -205,8 +205,8 @@
                 | rename ip_dst_combined as ip ]
             | join type=left ip
               [ | loadjob $subsearch_id_internal_endpoints$
-                | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined, tcp_stream
-                | where tcp_stream!=""
+                | table traffic_analyzer_stream, ip_src_combined, ip_dst_combined
+                | where traffic_analyzer_stream!=""
                 | untable traffic_analyzer_stream, type, ip
                 | dedup traffic_analyzer_stream, type
                 | stats count(traffic_analyzer_stream) as "# of Connections" by ip
