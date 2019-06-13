@@ -154,7 +154,7 @@
     </panel>
     <panel>
       <single>
-        <title>Complete incoming traffic to internal devices</title>
+        <title>Total incoming traffic to internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
             | join type=left ip
@@ -171,7 +171,7 @@
         <option name="unit">KB</option>
       </single>
       <single>
-        <title>Complete outgoing traffic to internal devices</title>
+        <title>Complete outgoing traffic from internal devices</title>
         <search base="source_deduped_internal_endpoints">
           <query>
             | join type=left ip
