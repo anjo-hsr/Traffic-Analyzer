@@ -6,12 +6,12 @@
   <search id="source_overview">
     <query>
       $source_token$
-      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
+      | fields frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number,
         traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
-        src_is_private_ip, linecount, _*
-      | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number, tcp_stream,
+        src_is_private_ip, linecount, tls_is_established, _*
+      | table frame_time, ip_proto, ws_col_Protocol, frame_len, cipher_suite_number,
         traffic_analyzer_stream, tls_ssl_version_negotiated, ip_src_combined, ip_dst_combined,
-        src_is_private_ip, linecount, _time
+        src_is_private_ip, linecount, tls_is_established, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -26,9 +26,8 @@
   </search>
   <search base="source_overview" id="is_secure">
     <query>
-      | eval issecure=if(cipher_suite_number=="","no","yes")
-      | table issecure
-      | top issecure
+      | table tls_is_established
+      | top tls_is_established
     </query>
   </search>
   <search base="source_overview" id="bytes_transfered">
@@ -159,11 +158,11 @@
   </row>
   <row>
     <panel>
-      <title>Total number of tcp streams</title>
+      <title>Total number of tcp and udp streams</title>
       <single>
         <search base="source_overview">
           <query>
-            | where tcp_stream!=""
+            | where traffic_analyzer_stream!=""
             | dedup traffic_analyzer_stream
             | stats count as "# of streams"
           </query>
@@ -230,7 +229,7 @@
         <title>Absolute</title>
         <search base="is_secure">
           <query>
-            | where issecure="no"
+            | where tls_is_established="0"
             | table count
             | appendpipe [stats count | where count=0 | eval count=0 | table count]
           </query>
@@ -249,7 +248,7 @@
         <title>Percent</title>
         <search base="is_secure">
           <query>
-            | where issecure="no"
+            | where tls_is_established="0"
             | table percent
             | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
           </query>

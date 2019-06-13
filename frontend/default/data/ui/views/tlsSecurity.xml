@@ -6,8 +6,10 @@
   <search id="source_tls_security">
     <query>
       $source_token$
-      | fields cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, _*
-      | table cipher_suite_number, tcp_stream,traffic_analyzer_stream, tls_ssl_version_negotiated, _time
+      | fields cipher_suite_number, traffic_analyzer_stream, tls_ssl_version_negotiated,
+        tls_is_established, _*
+      | table cipher_suite_number, traffic_analyzer_stream, tls_ssl_version_negotiated,
+        tls_is_established, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -22,9 +24,8 @@
   </search>
   <search base="source_tls_security" id="is_secure">
     <query>
-      | eval issecure=if(cipher_suite_number=="","no","yes")
-      | table issecure
-      | top issecure
+      | table tls_is_established
+      | top tls_is_established
     </query>
   </search>
   <fieldset submitButton="true" autoRun="true">
@@ -107,11 +108,11 @@
   </fieldset>
   <row>
     <panel>
-      <title>Total number of tcp streams</title>
+      <title>Total number of tcp and udp streams</title>
       <single>
         <search base="source_tls_security">
           <query>
-            | where tcp_stream!=""
+            | where traffic_analyzer_stream!=""
             | dedup traffic_analyzer_stream
             | stats count as "# of streams"
           </query>
@@ -178,7 +179,7 @@
         <title>Absolute</title>
         <search base="is_secure">
           <query>
-            | where issecure="no"
+            | where tls_is_established="0"
             | table count
             | appendpipe [stats count | where count=0 | eval count=0 | table count]
           </query>
@@ -197,7 +198,7 @@
         <title>Percent</title>
         <search base="is_secure">
           <query>
-            | where issecure="no"
+            | where tls_is_established="0"
             | table percent
             | appendpipe [stats count | where count=0 | eval percent=0 | table percent]
           </query>
@@ -235,7 +236,7 @@
           <colorPalette type="map">{"N":#FC4737}</colorPalette>
         </format>
         <drilldown>
-          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ipv4_range$%22,%20ip_src_combined)%20OR%20cidrmatch(%22$custom_ipv6_range$%22,%20ip_src_combined)%20%7C%20dedup%20ip_dst_combined%20cipher_suite_number%20ip_src_combined%20%7C%20join%20cipher_suite_number%0A%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst_combined,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src_combined%20%7C%20sort%20ip_dst_combined%20%7C%20mvcombine%20ip_src_combined%20%7C%20rename%20ip_dst_combined%20as%20%22Target%20IP%22,%20dst_fqdn%20as%20%22DNS%20Name%22,%20cipher_suite_number%20as%20%22Nr.%22,%20description%20as%20%22Description%22,%20recommended%20as%20%22Recommended%22,%20ip_src_combined%20as%20%22Source%20IP%22&amp;earliest=$earliest$&amp;latest=$latest$</link>
+          <link target="_blank">search?q=$source_token$%20%7C%20dedup%20traffic_analyzer_stream%20%7C%20where%20cipher_suite_number=$click.value$%20%7C%20where%20src_is_private_ip=%221%22%20OR%20cidrmatch(%22$custom_ipv4_range$%22,%20ip_src_combined)%20OR%20cidrmatch(%22$custom_ipv6_range$%22,%20ip_src_combined)%20%7C%20dedup%20ip_dst_combined%20cipher_suite_number%20ip_src_combined%20%7C%20join%20cipher_suite_number%20%5B%20search%20sourcetype=list%20source=%22*cipher_suites.csv%22%20%5D%20%7C%20table%20ip_dst_combined,%20dst_query_name,%20dst_fqdn,%20cipher_suite_number,%20description,%20recommended,%20ip_src_combined%20%7C%20sort%20ip_dst_combined%20%7C%20mvcombine%20ip_src_combined%20%7C%20rename%20ip_dst_combined%20as%20%22Target%20IP%22,%20dst_fqdn%20as%20%22Reverse%20Lookup%22,%20dst_query_name%20as%20%22DNS%20Name%22,%20cipher_suite_number%20as%20%22Nr.%22,%20description%20as%20%22Description%22,%20recommended%20as%20%22Recommended%22,%20ip_src_combined%20as%20%22Source%20IP%22&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>
       </table>
     </panel>
