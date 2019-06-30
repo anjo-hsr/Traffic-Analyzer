@@ -63,7 +63,7 @@ class DnsHelper:
 
             self.reset_dns_resolver()
 
-        except (resolver.NXDOMAIN, resolver.NoNameservers):
+        except (resolver.NXDOMAIN, resolver.NoNameservers, resolver.NoAnswer):
             # Let pass if the server has no reverse lookup zone for the specified ip address or the ip was
             # not found in the reverse lookup zone.
             pass
