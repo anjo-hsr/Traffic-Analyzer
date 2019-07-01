@@ -30,7 +30,7 @@ class TestNameResolveEnricherMethods(unittest.TestCase):
         cls.information_dict_public = {
             "dst_src_information": {
                 "dst": {
-                    "rdns": "google-public-dns-a.google.com",
+                    "rdns": "dns.google",
                     "asn": "15169",
                     "isp": "Google LLC",
                     "latitude": "37.751",
@@ -59,7 +59,7 @@ class TestNameResolveEnricherMethods(unittest.TestCase):
 
     def test_extract_location_public_connection(self) -> None:
         self.name_resolver_enricher.get_information(self.packet, self.information_dict_public)
-        dst_fqdns = enclose_with_quotes("google-public-dns-a.google.com")
+        dst_fqdns = enclose_with_quotes("dns.google")
         src_fqdns = enclose_with_quotes("10.0.0.1")
         self.assertEqual(self.information_dict_public["dst_fqdn"], dst_fqdns)
         self.assertEqual(self.information_dict_public["src_fqdn"], src_fqdns)
