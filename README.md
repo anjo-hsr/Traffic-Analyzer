@@ -4,7 +4,7 @@
 [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg?logo=python)](https://www.python.org/)
 [![PEP8](https://img.shields.io/badge/code%20style-pep8-yellow.svg?logo=python)](https://www.python.org/dev/peps/pep-0008/)
 [![IP Location Finder](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanjo-hsr%2FTraffic-Analyzer%2Fmaster%2FbadgeEndpoint%2Fkeycdn.json)](https://tools.keycdn.com/geo)
-[![Docker Hub](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanjo-hsr%2FTraffic-Analyzer%2Fupdate-readme%2FbadgeEndpoint%2Fdockerhub.json)](https://hub.docker.com/r/anjohsr/traffic-analyzer)
+[![Docker Hub](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanjo-hsr%2FTraffic-Analyzer%2Fmaster%2FbadgeEndpoint%2Fdockerhub.json)](https://hub.docker.com/r/anjohsr/traffic-analyzer)
 
 ## Deployment script
 Start using traffic analyzer as an developer with the given 
