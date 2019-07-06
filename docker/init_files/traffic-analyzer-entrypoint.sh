@@ -38,7 +38,7 @@ function fix_line_endings(){
 
 if [[ -z "$SPLUNK_PASSWORD" ]]; then
     echo -e "No Password for Splunk login set. Please try again. Example:\n" \
-        "docker run -p 8000:8000 -p 8089:8089 -e SPLUNK_PASSWORD=AnJo-HSR traffic-analyzer"
+        "docker run -p 8000:8000 -p 8089:8089 -e SPLUNK_PASSWORD=AnJo-HSR anjohsr/traffic-analyzer"
     exit 1
 fi
 
