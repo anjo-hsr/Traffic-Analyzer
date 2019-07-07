@@ -21,8 +21,9 @@ def download() -> None:
     # will follow the order of the list sys.path to check for packages. Because the package reprlib is also located in
     # the splunk specified lib folder, but cannot be used, an ImportError exception with the description 'This package
     # should not be accessible on Python 3.' will be raised.
-    sys.path.remove(path.join("/opt", "splunk", "lib", "python2.7", "site-packages"))
-    sys.path.append(path.join("/opt", "splunk", "lib", "python2.7", "site-packages"))
+    splunk_site_packages = path.join("/opt", "splunk", "lib", "python2.7", "site-packages")
+    sys.path.remove(splunk_site_packages)
+    sys.path.append(splunk_site_packages)
 
     import main.downloaders.cipher_downloader as get_ciphers
     import main.downloaders.mac_vendor_downloader as get_mac
