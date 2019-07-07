@@ -127,7 +127,7 @@ function test_splunk_app() {
     seconds=$1
     trafficAnalyzer=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk package app ${appName} -auth admin:AnJo-HSR"`
 
-    echo -e "\nSleep for $seconds seconds till the lists are imported"
+    echo -e "\nSleep for $seconds seconds till the additional lists are downloaded and all lists are imported."
     sleep ${seconds}
     tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
     tcpString="6,TCP,Transmission Control,,[RFC793]"
