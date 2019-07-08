@@ -17,7 +17,7 @@ class TestFieldCombinerMethods(unittest.TestCase):
         cls.destination = "8.8.8.8"
 
         cls.row = "number,name,description"
-        cls.fqdns = {cls.destination: "google-public-dns-a.google.com", cls.source: ""}
+        cls.fqdns = {cls.destination: "dns.google", cls.source: ""}
         cls.locations = {cls.destination: "[8.1551, 47.144901]", cls.source: ""}
 
     def test_delimiter(self) -> None:

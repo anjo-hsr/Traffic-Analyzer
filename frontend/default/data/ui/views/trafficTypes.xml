@@ -1,17 +1,21 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Traffic Types</label>
-  <description>Provides information about the type of traffic (e.g. ad or malicious).</description>
+  <description>
+    Provides information about the type of traffic (e.g. ad or malicious).
+  </description>
   <search id="source_traffic_types">
     <query>
       $source_token$
-      | fields dst_fqdn, dst_query_name, threat_category, dst_latitude, dst_longitude, _*
-      | dedup dst_fqdn
+      | fields src_fqdn, src_query_name, threat_category, ad_category, src_is_social_network,
+        src_latitude, src_longitude, _*
+      | dedup src_fqdn
       | eval threat_category=if(threat_category="",0,split(threat_category,","))
       | mvexpand threat_category
       | sort threat_category desc
-      | dedup dst_fqdn
-      | rename dst_latitude as latitude, dst_longitude as longitude
-      | table dst_fqdn, dst_query_name, threat_category, dst_latitude, dst_longitude, _time
+      | dedup src_fqdn
+      | rename src_latitude as latitude, src_longitude as longitude
+      | table src_fqdn, src_query_name, threat_category, ad_category, src_is_social_network,
+        latitude, longitude, _time
     </query>
     <earliest>$datetimepicker.earliest$</earliest>
     <latest>$datetimepicker.latest$</latest>
@@ -101,8 +105,9 @@
         <search base="source_traffic_types">
           <query>
             | eval traffic_type=case(
-                threat_category&lt;ad_category, "ad",
-                threat_category&gt;ad_category, "threat",
+                ad_category=1, "ad",
+                src_is_social_network=1, "social network",
+                threat_category!=0, "threat",
                 true(), "normal"
               )
             | table latitude, longitude, traffic_type
@@ -110,9 +115,10 @@
           </query>
         </search>
         <option name="mapping.fieldColors">
-          {"normal": #2BC3FF,
-          "ad": #FFF029,
-          "threat": #FF2850}
+          {"normal": #2BFF44,
+          "ad": #FFDC2B,
+          "threat": #FF2B2F,
+          "social network": #2B67FF}
         </option>
         <option name="drilldown">all</option>
         <option name="mapping.type">marker</option>
@@ -134,11 +140,12 @@
           <query>
             | search latitude&gt;=$lat_min$ latitude&lt;$lat_max$ longitude&gt;=$long_min$ longitude&lt;$long_max$
             | eval traffic_type=case(
-                threat_category&lt;ad_category, "ad",
-                threat_category&gt;ad_category, "threat",
+                ad_category=1, "ad",
+                src_is_social_network=1, "social network",
+                threat_category!=0, "threat",
                 true(), "normal"
               )
-            | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup", traffic_type as "Traffic Type"
+            | rename src_query_name as "DNS Query", src_fqdn as "Reverse Lookup", traffic_type as "Traffic Type"
             | table "DNS Query", "Reverse Lookup", "Traffic Type"
           </query>
         </search>

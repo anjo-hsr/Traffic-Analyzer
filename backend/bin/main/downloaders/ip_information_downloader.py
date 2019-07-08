@@ -46,10 +46,10 @@ class IpInformationDownloader:
                 geo_data = response_json["data"]["geo"]
                 return self.extract_data(geo_data, ip_addr)
 
-        except socket.gaierror:
+        except (socket.gaierror, requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
             if counter < 5:
                 time.sleep(2)
-                IpInformationDownloader.get_ip_data(ip_addr, counter + 1)
+                return self.get_ip_data(ip_addr, counter + 1)
 
         return self.get_private_ip_data(ip_addr)
 

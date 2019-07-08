@@ -1,6 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Server Types</label>
-  <description>Provides an overview of server that provide cdn, dhcp or dns services.</description>
+  <description>
+    Provides an overview of server that provide cdn, dhcp or dns services.
+  </description>
   <search id="source_server_types">
     <query>
       $source_token$

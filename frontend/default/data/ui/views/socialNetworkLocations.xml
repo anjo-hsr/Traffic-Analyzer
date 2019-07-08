@@ -1,6 +1,8 @@
 <form stylesheet="customStyle.css" script="tokenStorer.js">
   <label>Social Network Locations</label>
-  <description>Provides information about the geographical location of server providing services in regards to social networks.</description>
+  <description>
+    Provides information about the geographical location of server providing services in regards to social networks.
+  </description>
   <search id="source_social_network">
     <query>
       $source_token$
@@ -129,7 +131,9 @@
           <query>
             | lookup geo_countries longitude, latitude
             | $selectedCountryFilter$
-            | rename src_query_name as "DNS Query", src_fqdn as "Reverse Lookup"
+            | eventstats count(traffic_analyzer_stream) as "# of connections" by "Reverse Lookup", "DNS Query"
+            | table "DNS Query", "Reverse Lookup", category, "# of connections"
+            | rename src_fqdn as "Reverse Lookup"
             | table "DNS Query", "Reverse Lookup"
           </query>
         </search>

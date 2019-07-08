@@ -31,7 +31,7 @@ class TestIpInformationDownloader(unittest.TestCase):
 
         cls.ip_data_public = {
             "ip_address": cls.public_ip,
-            "rdns": "google-public-dns-a.google.com",
+            "rdns": "dns.google",
             "asn": 15169,
             "isp": "Google LLC",
             "latitude": 37.751,
