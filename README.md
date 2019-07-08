@@ -6,7 +6,7 @@
 [![IP Location Finder](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanjo-hsr%2FTraffic-Analyzer%2Fmaster%2FbadgeEndpoint%2Fkeycdn.json)](https://tools.keycdn.com/geo)
 [![Docker Hub](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fanjo-hsr%2FTraffic-Analyzer%2Fmaster%2FbadgeEndpoint%2Fdockerhub.json)](https://hub.docker.com/r/anjohsr/traffic-analyzer)
 
-## Deployment script
+## Development script
 Start using traffic analyzer as an developer with the given 
     [app_deployer.sh](https://github.com/anjo-hsr/Traffic-Analyzer/blob/master/app_deployer.sh) script.
 - Use the parameter *create* to use the existing docker image and deploy it on port 8000 on the docker host system.
