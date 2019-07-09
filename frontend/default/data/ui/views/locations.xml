@@ -15,7 +15,7 @@
   </search>
   <search base="source_locations" id="destinations_by_country">
     <query>
-      | dedup traffic_analyzer_stream
+      | where dst_latitude!= "" AND dst_longitude != ""
       | rename dst_query_name as "DNS Query", dst_fqdn as "Reverse Lookup",
         dst_latitude as latitude, dst_longitude as longitude
       | lookup geo_countries longitude, latitude
@@ -155,7 +155,8 @@
         <title>Click on a country for detailed information about destinations</title>
         <search base="source_locations">
           <query>
-            | dedup dst_fqdn
+            | where dst_latitude!= "" AND dst_longitude != ""
+            | dedup dst_fqdn, dst_query_name
             | table dst_fqdn, dst_latitude, dst_longitude
             | rename dst_fqdn as destination, dst_latitude as latitude, dst_longitude as longitude
             | lookup geo_countries longitude, latitude
