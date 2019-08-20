@@ -12,10 +12,16 @@ class TestMacVendorDownloaderMethods(unittest.TestCase):
             "Organization Name": "Hewlett Packard"
         }
         cls.vendor_mac = "3c:d9:2b"
-        cls.expected_line = '3c:d9:2b,"Hewlett Packard"'
+        cls.locally_administered_mac = "3e:d9:2b"
+
+        cls.expected_universal_line = r'3c:d9:2b,"Hewlett Packard"'
+        cls.expected_locally_line = r'3e:d9:2b,"Locally administered - Hewlett Packard"'
 
     def test_convert_to_vendor_mac(self) -> None:
         self.assertEqual(get_mac.convert_mac_address(self.row_dict), self.vendor_mac)
+
+    def test_get_local_mac_address(self) -> None:
+        self.assertEqual(get_mac.get_local_mac_address(self.vendor_mac), self.locally_administered_mac)
 
     def test_write_row_successful(self) -> None:
         test_file_path = path.join(".", "test.csv")
@@ -23,7 +29,9 @@ class TestMacVendorDownloaderMethods(unittest.TestCase):
             get_mac.write_row(test_file, self.row_dict)
 
         with open(test_file_path) as test_file:
-            self.assertEqual(test_file.read(), self.expected_line + "\n")
+            file_content = test_file.read()
+            self.assertRegex(file_content, self.expected_universal_line)
+            self.assertRegex(file_content, self.expected_locally_line)
 
         remove(test_file_path)
 
