@@ -43,7 +43,9 @@ jobs:
         - cd ./backend
         - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml bin/test
         - mv ./coverage.xml ./bin/test/
-        - cd ..
+        - cd ../backend/bin
+        - pylint main -r n --rcfile=.pylintrc > .pylint_report
+        - cd ../..
         - sonar-scanner
 
     - stage: publish docker container
