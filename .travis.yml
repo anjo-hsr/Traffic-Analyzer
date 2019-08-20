@@ -32,7 +32,8 @@ jobs:
     - stage: test
       script:
         - cd ./backend
-        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml bin/test
+        - mkdir reports
+        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=60 --cover-inclusive --cover-erase --with-xcoverage --xcoverage-file=./reports/coverage.xml bin/test
 
     - stage: build
       script:
@@ -41,10 +42,10 @@ jobs:
     - stage: sonar
       script:
         - cd ./backend
-        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=50 --cover-inclusive --cover-erase --with-xcoverage --cover-xml bin/test
-        - mv ./coverage.xml ./bin/test/
-        - cd ../backend/bin
-        - pylint main -r n --rcfile=.pylintrc > .pylint_report
+        - mkdir reports
+        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=60 --cover-inclusive --cover-erase --with-xcoverage --xcoverage-file=./reports/coverage.xml bin/test
+        - cd ./bin
+        - pylint -r n --rcfile=.pylintrc main test > ../reports/pylint_report.txt
         - cd ../..
         - sonar-scanner
 
