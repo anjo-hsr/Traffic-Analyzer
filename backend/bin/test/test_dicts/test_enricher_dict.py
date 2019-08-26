@@ -30,8 +30,8 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
             "ip_type_enricher": IpTypeEnricher(),
             "dns_lookup_enricher": DnsLookupEnricher(),
             "server_type_enricher": ServerTypeEnricher(),
-                "ad_enricher": AdEnricher(),
-                "threat_info_enricher": ThreatInfoEnricher()
+            "ad_enricher": AdEnricher(),
+            "threat_info_enricher": ThreatInfoEnricher()
         }
 
     def setUp(self) -> None:
