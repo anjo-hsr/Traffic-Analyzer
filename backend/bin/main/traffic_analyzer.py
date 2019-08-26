@@ -22,8 +22,11 @@ def download() -> None:
     # the splunk specified lib folder, but cannot be used, an ImportError exception with the description 'This package
     # should not be accessible on Python 3.' will be raised.
     splunk_site_packages = path.join("/opt", "splunk", "lib", "python2.7", "site-packages")
-    sys.path.remove(splunk_site_packages)
-    sys.path.append(splunk_site_packages)
+    try:
+        sys.path.remove(splunk_site_packages)
+        sys.path.append(splunk_site_packages)
+    except ValueError:
+        pass
 
     import main.downloaders.cipher_downloader as get_ciphers
     import main.downloaders.mac_vendor_downloader as get_mac
