@@ -74,8 +74,9 @@ class TestEnrichmentClassesMethods(unittest.TestCase):
 
             elif key == "threat_info_enricher":
                 self.assertTrue(isinstance(self.enricher_dict[key], ThreatInfoEnricher))
+
             else:
-                self.assertTrue(False)
+                self.fail()
 
     def test_create_enrichers_is_dict(self) -> None:
         self.assertTrue(isinstance(self.enricher_dict, OrderedDict))
