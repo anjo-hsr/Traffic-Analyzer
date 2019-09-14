@@ -63,8 +63,9 @@ jobs:
     - stage: generate exe file and add to tar
 #     if: branch = master AND type = push AND fork = false
       script:
+        - ls -laR ./
         - docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows "pyinstaller --onefile ./backend/bin/main/traffic_analyzer.py"
-        - mv dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
+        - ls -laR ./
+        - mv ./dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
         - ls -la ./backend/bin/main/traffic_analyzer.exe
         - ./app_deployer.sh generate-tar
-        - tar -tvf ./docker/init_files/traffic-analyzer/traffic-analyzer.tar.gz
