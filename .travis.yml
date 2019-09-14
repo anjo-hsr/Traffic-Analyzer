@@ -29,33 +29,42 @@ before_install:
 
 jobs:
   include:
-    - stage: test
-      script:
-        - cd ./backend
-        - mkdir reports
-        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=60 --cover-inclusive --cover-erase --with-xcoverage --xcoverage-file=./reports/coverage.xml bin/test
+#    - stage: test
+#      script:
+#        - cd ./backend
+#        - mkdir reports
+#        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=60 --cover-inclusive --cover-erase --with-xcoverage --xcoverage-file=./reports/coverage.xml bin/test
+#
+#    - stage: build
+#      script:
+#        - ./app_deployer.sh recreate
+#
+#    - stage: sonar
+#      script:
+#        - cd ./backend
+#        - mkdir reports
+#        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=60 --cover-inclusive --cover-erase --with-xcoverage --xcoverage-file=./reports/coverage.xml bin/test
+#        - cd ./bin
+#        - pylint -r n --exit-zero --rcfile=../.pylintrc main test > ../reports/pylint_report.txt
+#        - cd ../..
+#        - sonar-scanner
+#
+#    - stage: publish docker container
+#      if: branch = master AND type = push AND fork = false
+#      script:
+#        - ./app_deployer.sh generate-tar
+#        - cd ./docker
+#        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#        - docker build -t traffic-analyzer -f ./Dockerfile-Production .
+#        - docker images
+#        - docker tag traffic-analyzer $DOCKER_USERNAME/traffic-analyzer
+#        - docker push $DOCKER_USERNAME/traffic-analyzer
 
-    - stage: build
+    - stage: generate exe file and add to tar
+#     if: branch = master AND type = push AND fork = false
       script:
-        - ./app_deployer.sh recreate
-
-    - stage: sonar
-      script:
-        - cd ./backend
-        - mkdir reports
-        - nosetests -v --match="^(?:|[\b_\.\-])[Tt]est" --cover-package=bin --cover-min-percentage=60 --cover-inclusive --cover-erase --with-xcoverage --xcoverage-file=./reports/coverage.xml bin/test
-        - cd ./bin
-        - pylint -r n --exit-zero --rcfile=../.pylintrc main test > ../reports/pylint_report.txt
-        - cd ../..
-        - sonar-scanner
-
-    - stage: publish docker container
-      if: branch = master AND type = push AND fork = false
-      script:
+        - docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows "pyinstaller --onefile ./backend/bin/main/traffic_analyzer.py"
+        - mv dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
+        - ls -la ./backend/bin/main/traffic_analyzer.exe
         - ./app_deployer.sh generate-tar
-        - cd ./docker
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t traffic-analyzer -f ./Dockerfile-Production .
-        - docker images
-        - docker tag traffic-analyzer $DOCKER_USERNAME/traffic-analyzer
-        - docker push $DOCKER_USERNAME/traffic-analyzer
+        - tar -tvf ./docker/init_files/traffic-analyzer/traffic-analyzer.tar.gz
