@@ -64,8 +64,6 @@ jobs:
 #     if: branch = master AND type = push AND fork = false
       script:
         - docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows "pyinstaller --onefile ./backend/bin/main/traffic_analyzer.py"
-        - ls -laR ./dist
-        - ls -laR ./build
-        - mv ./dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
+        - sudo mv ./dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
         - ls -la ./backend/bin/main/traffic_analyzer.exe
         - ./app_deployer.sh generate-tar
