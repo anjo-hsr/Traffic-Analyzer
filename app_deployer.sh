@@ -55,10 +55,8 @@ function create_normal_tar() {
     tar --exclude="./docker" --exclude="bin/files/*" --exclude="*.gitignore" --exclude="bin/test" \
         --exclude="*/.*" --exclude="*/__pycache__" \
         -zcvf "${tarPath}/traffic-analyzer.tar.gz" \
-        -C ./ requirements.txt \
         -C backend/ bin \
         -C ../frontend/ appserver default local lookups metadata static \
-        --transform "s,requirements.txt,bin/requirements.txt," \
         --transform "s,^,traffic-analyzer/,"
 }
 
