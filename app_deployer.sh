@@ -153,7 +153,7 @@ function build_splunk() {
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
-        test_splunk_app 30
+        test_splunk_app 60
 }
 
 containerName="splunk_traffic-analyzer"
