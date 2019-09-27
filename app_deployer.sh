@@ -129,14 +129,18 @@ function test_splunk_app() {
 
     echo -e "\nSleep for $seconds seconds till the additional lists are downloaded and all lists are imported."
     sleep ${seconds}
+
     tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
     tcpString="6,TCP,Transmission Control,,[RFC793]"
+    echo -e "${tcpEntry}"
 
     macEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" eth_short=\"00:00:0c\"' -auth admin:AnJo-HSR"`
     macString='00:00:0c,"Cisco Systems, Inc"'
+    echo -e "${macEntry}"
 
     cipherSuiteEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" cipher_suite_number=\"49200\"' -auth admin:AnJo-HSR"`
     cipherSuiteString="49200,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,Y"
+    echo -e "${cipherSuiteEntry}"
 
     if [[ "${trafficAnalyzer}" == *"App '${appName}' is packaged."* ]] && [[ "${tcpEntry}" == "${tcpString}" ]] && [[ "${macEntry}" == "${macString}" ]] && [[ "${cipherSuiteEntry}" == "${cipherSuiteString}" ]]; then
         echo "App test was successful."
@@ -153,7 +157,7 @@ function build_splunk() {
         wait_till_container_is_running
         install_requirements
         update_traffic-analyzer
-        test_splunk_app 60
+        test_splunk_app 30
 }
 
 containerName="splunk_traffic-analyzer"
