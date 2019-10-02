@@ -23,8 +23,8 @@ addons:
       secure: $SONAR_TOKEN
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install dos2unix
+  - sudo apt update
+  - sudo apt install dos2unix
   - dos2unix ./app_deployer.sh
 
 jobs:
@@ -66,5 +66,5 @@ jobs:
         - docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows:python3-32bit "pyinstaller --onefile ./backend/bin/main/traffic_analyzer.py"
         - sudo mv ./dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
         - ./app_deployer.sh generate-tar ./
-        - sudo apt intall lftp -y
+        - sudo apt install lftp -y
         - lftp -c "open -u $FTP_USER,$FTP_PASSOWRD $FTP_SITE; set ssl:verify-certificate false; put -O files/ ./traffic-analyzer.tar.gz; quit"
