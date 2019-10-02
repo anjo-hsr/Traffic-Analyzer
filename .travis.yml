@@ -30,7 +30,6 @@ before_install:
 jobs:
   include:
     - stage: test
-      if: branch = master AND type = push AND fork = false
       script:
         - cd ./backend
         - mkdir reports
@@ -41,7 +40,6 @@ jobs:
         - ./app_deployer.sh recreate
 
     - stage: sonar
-      if: branch = master AND type = push AND fork = false
       script:
         - cd ./backend
         - mkdir reports
@@ -63,7 +61,7 @@ jobs:
         - docker push $DOCKER_USERNAME/traffic-analyzer
 
     - stage: generate .tar.gz file
-      if: branch = master AND type = push AND fork = false
+      # if: branch = master AND type = push AND fork = false
       script:
         - docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows:python3-32bit "pyinstaller --onefile ./backend/bin/main/traffic_analyzer.py"
         - sudo mv ./dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
