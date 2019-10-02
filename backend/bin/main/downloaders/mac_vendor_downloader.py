@@ -18,7 +18,7 @@ def get_local_mac_address(universal_mac_address) -> str:
 
     local_identifier = 0x020000
     local_mac_int_value = mac_int_value | local_identifier
-    local_mac_hex_value = hex(local_mac_int_value)
+    local_mac_hex_value = format(local_mac_int_value, "06x")
 
     mac_address_array = re.findall("..?", local_mac_hex_value.replace("0x", ""))
     return ":".join(mac_address_array)
