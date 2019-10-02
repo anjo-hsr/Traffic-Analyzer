@@ -130,10 +130,15 @@ function test_splunk_app() {
     echo -e "\nSleep for $seconds seconds till the additional lists are downloaded and all lists are imported."
     sleep ${seconds}
 
+    echo -e "===============OUTPUT LS COMMANDS==============="
+    docker exec ${containerName} bash -c "sudo ls -laR /opt/splunk/etc/apps/traffic-analyzer/bin/files"
+    docker exec ${containerName} bash -c "sudo ls -laR /opt/splunk/etc/apps/traffic-analyzer/lookups"
+    echo -e "==========END OF OUTPUT OF LS COMMANDS==========\n"
+
     echo -e "============OUTPUT OF IMPORTED LISTS============"
     listEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\"' -auth admin:AnJo-HSR"`
     echo -e "${listEntry}"
-    echo -e "========END OF OUTPUT OF IMPORTED LISTS========="
+    echo -e "========END OF OUTPUT OF IMPORTED LISTS=========\n"
 
     echo "App test failed purposely."
     return 1
