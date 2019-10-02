@@ -68,4 +68,4 @@ jobs:
         - ./app_deployer.sh generate-tar ./
         - sudo apt install lftp -y
         - ssh-keyscan -p 2121 $FTP_SITE > ~/.ssh/known_hosts
-        - lftp -c "open -u $FTP_USER,$FTP_PASSOWRD sftp://$FTP_SITE:2121; put -O files/ ./traffic-analyzer.tar.gz; quit"
+        - lftp -c "open -u $FTP_USER,$FTP_PASSWORD sftp://$FTP_SITE:2121; put -O files/ ./traffic-analyzer.tar.gz; quit"
