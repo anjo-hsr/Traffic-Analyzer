@@ -130,19 +130,24 @@ function test_splunk_app() {
     echo -e "\nSleep for $seconds seconds till the additional lists are downloaded and all lists are imported."
     sleep ${seconds}
 
-    echo -e "===============OUTPUT LS COMMANDS==============="
-    docker exec ${containerName} bash -c "sudo ls -laR /opt/splunk/etc/apps/traffic-analyzer/bin/files"
-    docker exec ${containerName} bash -c "sudo ls -laR /opt/splunk/etc/apps/traffic-analyzer/lookups"
-    echo -e "==========END OF OUTPUT OF LS COMMANDS==========\n"
+    tcpEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" Decimal=\"6\" Keyword=\"TCP\"' -auth admin:AnJo-HSR"`
+    tcpString="6,TCP,Transmission Control,,[RFC793]"
+    echo -e "${tcpEntry}"
 
-    echo -e "============OUTPUT OF IMPORTED LISTS============"
-    listEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\"' -auth admin:AnJo-HSR"`
-    echo -e "${listEntry}"
-    echo -e "========END OF OUTPUT OF IMPORTED LISTS=========\n"
+    macEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" eth_short=\"00:00:0c\"' -auth admin:AnJo-HSR"`
+    macString='00:00:0c,"Cisco Systems, Inc"'
+    echo -e "${macEntry}"
 
-    echo "App test failed purposely."
-    return 1
+    cipherSuiteEntry=`docker exec ${containerName} bash -c "sudo /opt/splunk/bin/splunk search 'sourcetype=\"list\" cipher_suite_number=\"49200\"' -auth admin:AnJo-HSR"`
+    cipherSuiteString="49200,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,Y"
+    echo -e "${cipherSuiteEntry}"
 
+    if [[ "${trafficAnalyzer}" == *"App '${appName}' is packaged."* ]] && [[ "${tcpEntry}" == "${tcpString}" ]] && [[ "${macEntry}" == "${macString}" ]] && [[ "${cipherSuiteEntry}" == "${cipherSuiteString}" ]]; then
+        echo "App test was successful."
+    else
+        echo "App test failed."
+        return 1
+    fi
 }
 
 function build_splunk() {
