@@ -67,4 +67,5 @@ jobs:
         - sudo mv ./dist/traffic_analyzer.exe ./backend/bin/main/traffic_analyzer.exe
         - ./app_deployer.sh generate-tar ./
         - sudo apt install lftp -y
-        - lftp -c "open -u $FTP_USER,$FTP_PASSWORD $FTP_SITE; set ssl:verify-certificate false; put -O files/ ./traffic-analyzer.tar.gz; quit"
+        - ssh-keyscan -p 2121 $FTP_SITE > ~/.ssh/known_hosts
+        - lftp -c "open -u $FTP_USER,$FTP_PASSOWRD sftp://$FTP_SITE:2121; put -O files/ ./traffic-analyzer.tar.gz; quit"
