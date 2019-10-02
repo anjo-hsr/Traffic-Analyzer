@@ -19,72 +19,40 @@ from main.enrichers.tls_version_enricher import TlsVersionEnricher
 class TestEnrichmentClassesMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.enricher_keys = [
-            "ip_address_combine_enricher",
-            "location_enricher",
-            "fqdn_resolve_enricher",
-            "stream_enricher",
-            "tls_ssl_version_enricher",
-            "tls_established_enricher",
-            "cipher_suite_enricher",
-            "ip_type_enricher",
-            "dns_lookup_enricher",
-            "server_type_enricher",
-            "ad_enricher",
-            "threat_info_enricher"
-        ]
+        cls.enricher_types = {
+            "ip_address_combine_enricher": IpAddressCombineEnricher(),
+            "location_enricher": LocationEnricher(),
+            "fqdn_resolve_enricher": NameResolverEnricher(),
+            "stream_enricher": StreamEnricher(),
+            "tls_ssl_version_enricher": TlsVersionEnricher(),
+            "tls_established_enricher": TlsEstablishedEnricher(),
+            "cipher_suite_enricher": CipherSuiteEnricher(),
+            "ip_type_enricher": IpTypeEnricher(),
+            "dns_lookup_enricher": DnsLookupEnricher(),
+            "server_type_enricher": ServerTypeEnricher(),
+            "ad_enricher": AdEnricher(),
+            "threat_info_enricher": ThreatInfoEnricher()
+        }
 
     def setUp(self) -> None:
         self.enricher_dict = get_enricher_dict()
 
     def test_create_enrichers_classes(self) -> None:
         for key in self.enricher_dict:
-            if key == "ip_address_combine_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], IpAddressCombineEnricher))
+            if key in self.enricher_types.keys():
+                self.assertTrue(isinstance(self.enricher_dict[key], self.enricher_types[key].__class__))
 
-            elif key == "location_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], LocationEnricher))
-
-            elif key == "fqdn_resolve_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], NameResolverEnricher))
-
-            elif key == "cipher_suite_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], CipherSuiteEnricher))
-
-            elif key == "tls_ssl_version_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], TlsVersionEnricher))
-
-            elif key == "tls_established_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], TlsEstablishedEnricher))
-
-            elif key == "ip_type_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], IpTypeEnricher))
-
-            elif key == "stream_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], StreamEnricher))
-
-            elif key == "dns_lookup_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], DnsLookupEnricher))
-
-            elif key == "server_type_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], ServerTypeEnricher))
-
-            elif key == "ad_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], AdEnricher))
-
-            elif key == "threat_info_enricher":
-                self.assertTrue(isinstance(self.enricher_dict[key], ThreatInfoEnricher))
             else:
-                self.assertTrue(False)
+                self.fail()
 
     def test_create_enrichers_is_dict(self) -> None:
         self.assertTrue(isinstance(self.enricher_dict, OrderedDict))
 
     def test_create_enrichers_keys(self) -> None:
-        self.assertEqual(list(self.enricher_dict), self.enricher_keys)
+        self.assertEqual(list(self.enricher_dict), list(self.enricher_types))
 
     def test_enricher_dict_keys(self) -> None:
-        self.assertListEqual(list(self.enricher_dict), self.enricher_keys)
+        self.assertListEqual(list(self.enricher_dict), list(self.enricher_types))
 
 
 if __name__ == "__main__":
