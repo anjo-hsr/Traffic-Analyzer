@@ -33,7 +33,7 @@ class TestIpInformationDownloader(unittest.TestCase):
             "ip_address": cls.public_ip,
             "rdns": "dns.google",
             "asn": 15169,
-            "isp": "Google LLC",
+            "isp": "Google",
             "latitude": 37.751,
             "longitude": -97.822,
         }
