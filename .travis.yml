@@ -19,8 +19,7 @@ services:
 addons:
   sonarcloud:
     organization: "anjo-hsr"
-    token:
-      secure: $SONAR_TOKEN
+    token: $SONAR_TOKEN
 
 before_install:
   - sudo apt-get update
