@@ -51,7 +51,8 @@ class DnsHelper(object):
         except exception.Timeout:
             return False
 
-    def get_fqdn(self, fqdn, ip_address, counter=0) -> str:
+    def get_fqdn(self, ip_address, counter=0) -> str:
+        fqdn = ip_address
         try:
             in_addr_arpa_address = reversename.from_address(ip_address)
             fqdn = str(self.dns_resolver.query(in_addr_arpa_address, "PTR")[0])
@@ -59,7 +60,7 @@ class DnsHelper(object):
         except exception.Timeout:
             if counter < 5:
                 time.sleep(2)
-                self.get_fqdn(fqdn, ip_address, counter + 1)
+                self.get_fqdn(ip_address, counter + 1)
 
             self.reset_dns_resolver()
 

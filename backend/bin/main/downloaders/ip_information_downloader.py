@@ -67,7 +67,7 @@ class IpInformationDownloader(object):
     def get_private_ip_data(self, ip_address) -> Dict[str, str]:
         fqdn = ip_address
         if ip_address != "" and IpAddressHelper.is_private_ip(ip_address):
-            fqdn = self.dns_helper.get_fqdn(fqdn, ip_address)
+            fqdn = self.dns_helper.get_fqdn(ip_address)
 
         return {
             "ip_address": ip_address,
