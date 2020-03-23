@@ -13,7 +13,6 @@ RUN sudo mkdir -p $INIT_DIR
 ADD init_files $INIT_DIR
 
 RUN sudo cat /etc/*release
-RUN sudo rpm -U
 RUN sudo rpm -ivh dos2unix
 RUN sudo rpm -ivh tshark
 RUN sudo rpm -ivh python3 python3-pip
