@@ -4,16 +4,15 @@ import time
 from typing import Dict
 
 import requests
+from ratelimit import limits, sleep_and_retry
 
 from main.helpers.dns_helper import DnsHelper
 from main.helpers.ip_address_helper import IpAddressHelper
-from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
 class IpInformationDownloader:
-    def __init__(self, limiter=TrafficLimitHelper(2, 1)) -> None:
+    def __init__(self) -> None:
         self.ip_information = {}
-        self.limiter = limiter
         self.dns_helper = DnsHelper()
 
     def get_dst_src_information(self, dst_src) -> Dict[str, str]:
@@ -34,9 +33,10 @@ class IpInformationDownloader:
             self.ip_information[ip_address] = self.get_private_ip_data(ip_address)
             return
 
-        self.limiter.check_request_load()
         self.ip_information[ip_address] = self.get_ip_data(ip_address)
 
+    @sleep_and_retry
+    @limits(calls=3, period=1)
     def get_ip_data(self, ip_addr, counter=0) -> Dict[str, str]:
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)

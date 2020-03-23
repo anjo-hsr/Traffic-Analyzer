@@ -7,19 +7,17 @@ from main.dicts.enrichers_dict import get_enricher_dict
 from main.dicts.social_network_dict import social_network_providers
 from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.domain_dict_helper import DomainDictHelper
-from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
 class EnricherJar:
-    def __init__(self, limiter=TrafficLimitHelper(2, 1)) -> None:
-        self.limiter = limiter
+    def __init__(self) -> None:
         self.enricher_classes = get_enricher_dict()
         self.enricher_headers = []
-        self.ip_information_downloader = IpInformationDownloader(limiter)
+        self.ip_information_downloader = IpInformationDownloader()
 
     def reset_variables(self) -> None:
         self.enricher_classes = get_enricher_dict()
-        self.ip_information_downloader = IpInformationDownloader(self.limiter)
+        self.ip_information_downloader = IpInformationDownloader()
 
     def get_information_dict(self, packet) -> OrderedDict:
         information_dict = self.create_information_dict(packet)
