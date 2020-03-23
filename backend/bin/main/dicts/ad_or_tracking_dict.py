@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class AdOrTrackingDict:
+class AdOrTrackingDict(object):
     def __init__(self, ad_or_tracking_domains) -> None:
         self.ad_or_tracking_dict = {}
 

@@ -10,7 +10,7 @@ from main.helpers.dns_helper import DnsHelper
 from main.helpers.ip_address_helper import IpAddressHelper
 
 
-class IpInformationDownloader:
+class IpInformationDownloader(object):
     def __init__(self) -> None:
         self.ip_information = {}
         self.dns_helper = DnsHelper()

@@ -9,7 +9,7 @@ from main.downloaders.ip_information_downloader import IpInformationDownloader
 from main.helpers.domain_dict_helper import DomainDictHelper
 
 
-class EnricherJar:
+class EnricherJar(object):
     def __init__(self) -> None:
         self.enricher_classes = get_enricher_dict()
         self.enricher_headers = []

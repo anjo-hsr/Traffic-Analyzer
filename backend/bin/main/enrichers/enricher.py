@@ -1,7 +1,7 @@
 from main.helpers.print_helper import PrintHelper
 
 
-class Enricher:
+class Enricher(object):
     def __init__(self, enricher_type, header) -> None:
         self.enricher_type = enricher_type
         self.header = header

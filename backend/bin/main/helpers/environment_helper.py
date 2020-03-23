@@ -4,7 +4,7 @@ from typing import Dict
 import psutil
 
 
-class EnvironmentHelper:
+class EnvironmentHelper(object):
     def __init__(self) -> None:
         self.production_process_name = "splunkd"
 

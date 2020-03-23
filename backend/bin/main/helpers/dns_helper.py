@@ -7,7 +7,7 @@ from main.helpers.ip_address_helper import IpAddressHelper
 from main.helpers.string_helper import remove_spaces
 
 
-class DnsHelper:
+class DnsHelper(object):
     def __init__(self) -> None:
         self.dns_resolver = resolver.Resolver()
         self.dns_resolver_tester = resolver.Resolver()

@@ -1,4 +1,4 @@
-class ResponseHelper:
+class ResponseHelper(object):
     @staticmethod
     def is_dns_response(packet) -> bool:
         dns_response_type_key = "1"

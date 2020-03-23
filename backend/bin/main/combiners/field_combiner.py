@@ -1,7 +1,7 @@
 from main.helpers.string_helper import enclose_with_quotes
 
 
-class FieldCombiner:
+class FieldCombiner(object):
     delimiter = ","
 
     @staticmethod
