@@ -12,6 +12,7 @@ EXPOSE $REST_API_PORT
 RUN sudo mkdir -p $INIT_DIR
 ADD init_files $INIT_DIR
 
+RUN sudo cat /etc/*release
 RUN sudo yum update
 RUN sudo yum install dos2unix -y
 RUN sudo yum install tshark -y
