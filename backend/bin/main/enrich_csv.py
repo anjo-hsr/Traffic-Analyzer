@@ -8,7 +8,6 @@ from main.helpers.file import file_move_helper, file_name_helper, file_read_help
     file_path_helper
 from main.helpers.file.file_name_helper import get_new_filename
 from main.helpers.print_helper import PrintHelper
-from main.helpers.traffic_limit_helper import TrafficLimitHelper
 
 
 def enrich_file(dirpath, file, new_file, enricher_jar) -> None:
@@ -73,8 +72,7 @@ def main() -> None:
 def run(environment_variables, print_enrichers=False) -> None:
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
-    limiter = TrafficLimitHelper(3, 1)
-    enricher_jar = EnricherJar(limiter)
+    enricher_jar = EnricherJar()
 
     for file_path in file_path_helper.get_file_paths(csv_tmp_path, file_name_helper.is_normal_csv_file):
         original_filename = file_path["filename"]
