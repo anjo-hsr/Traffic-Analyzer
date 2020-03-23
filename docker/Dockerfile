@@ -12,11 +12,10 @@ EXPOSE $REST_API_PORT
 RUN sudo mkdir -p $INIT_DIR
 ADD init_files $INIT_DIR
 
-RUN sudo cat /etc/*release
-RUN sudo apt update
-RUN sudo apt install dos2unix -y
-RUN sudo apt install tshark -y
-RUN sudo apt install python3 python3-pip -y
+RUN sudo yum update
+RUN sudo yum install dos2unix -y
+RUN sudo yum install tshark -y
+RUN sudo yum install python3 python3-pip -y
 
 ENV SPLUNK_PASSWORD $SPLUNK_PASSWORD
 ENV SPLUNK_START_ARGS $SPLUNK_START_ARGS
