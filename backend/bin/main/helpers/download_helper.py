@@ -5,7 +5,7 @@ from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_read_helper, file_write_helper
 
 
-class DownloadHelper:
+class DownloadHelper(object):
 
     @staticmethod
     def download_file(destination_file, url, header, write_row) -> str:

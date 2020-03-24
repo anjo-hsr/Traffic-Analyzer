@@ -1,7 +1,7 @@
 from main.helpers.string_helper import remove_quotations
 
 
-class DomainDictHelper:
+class DomainDictHelper(object):
     def __init__(self, provider_domain_dict) -> None:
         self.provider_domain_dict = provider_domain_dict
         self.domain_provider_dict = {}

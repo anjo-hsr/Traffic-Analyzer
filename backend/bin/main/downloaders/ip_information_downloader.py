@@ -10,7 +10,7 @@ from main.helpers.dns_helper import DnsHelper
 from main.helpers.ip_address_helper import IpAddressHelper
 
 
-class IpInformationDownloader:
+class IpInformationDownloader(object):
     def __init__(self) -> None:
         self.ip_information = {}
         self.dns_helper = DnsHelper()
@@ -67,7 +67,7 @@ class IpInformationDownloader:
     def get_private_ip_data(self, ip_address) -> Dict[str, str]:
         fqdn = ip_address
         if ip_address != "" and IpAddressHelper.is_private_ip(ip_address):
-            fqdn = self.dns_helper.get_fqdn(fqdn, ip_address)
+            fqdn = self.dns_helper.get_fqdn(ip_address)
 
         return {
             "ip_address": ip_address,
