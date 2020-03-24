@@ -5,7 +5,7 @@ from typing import Optional
 from main.helpers import tshark_helper
 
 
-class PlatformDetectionHelper:
+class PlatformDetectionHelper(object):
     @staticmethod
     def detect_tshark() -> Optional[str]:
         program_path = None

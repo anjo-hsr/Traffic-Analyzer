@@ -5,7 +5,7 @@ from unittest.mock import patch
 from main.helpers.environment_helper import EnvironmentHelper
 
 
-class Process:
+class Process(object):
     def __init__(self, name) -> None:
         self.info = {"name": name}
 

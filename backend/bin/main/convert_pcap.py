@@ -22,7 +22,6 @@ def run_tshark(filename, pcap_file_path, csv_file_path) -> None:
     full_csv_filename = path.join(csv_file_path, csv_filename)
     with open(full_csv_filename, "w") as csv_file:
         start_tshark(full_pcap_filename, csv_file, program_path)
-        return
 
 
 def start_tshark(pcap_file, csv_file, program_path) -> None:

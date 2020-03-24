@@ -8,7 +8,7 @@ import requests
 from main.helpers.file import file_read_helper
 
 
-class SafeBrowsingApiDownloader:
+class SafeBrowsingApiDownloader(object):
     def __init__(self) -> None:
         self.api_key = self.get_api_key()
         self.is_api_key_correct = self.api_key != ""

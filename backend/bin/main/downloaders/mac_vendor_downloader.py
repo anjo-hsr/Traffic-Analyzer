@@ -42,6 +42,7 @@ def main() -> None:
 
 
 def run(destination_file) -> None:
+    # Yes IEEE uses still simple, unencrypted http...
     url = "http://standards-oui.ieee.org/oui/oui.csv"
     header = "eth_short,vendor"
     filename = DownloadHelper.download_file(destination_file, url, header, write_row)

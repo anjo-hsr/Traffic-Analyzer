@@ -1,7 +1,7 @@
 import ipaddress
 
 
-class IpAddressHelper:
+class IpAddressHelper(object):
     @staticmethod
     def is_global_ip(ip_address) -> bool:
         try:
