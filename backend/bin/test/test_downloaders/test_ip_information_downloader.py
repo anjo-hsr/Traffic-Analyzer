@@ -34,8 +34,8 @@ class TestIpInformationDownloader(unittest.TestCase):
             "rdns": "dns.google",
             "asn": 15169,
             "isp": "GOOGLE",
-            "latitude": 37.751,
-            "longitude": -97.822,
+            "latitude": 38.7936,
+            "longitude": -90.7854,
         }
 
         cls.ip_data_public_failed = {
