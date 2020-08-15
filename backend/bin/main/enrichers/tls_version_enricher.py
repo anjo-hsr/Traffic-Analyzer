@@ -1,3 +1,5 @@
+from typing import Dict, Union
+
 from main.enrichers.enricher import Enricher
 from main.helpers.print_helper import PrintHelper
 
@@ -14,7 +16,8 @@ class TlsVersionEnricher(Enricher):
         print_text = "Print out for {} streams to tls version entries"
         PrintHelper.print_dict(self.stream_to_handshake_version, print_text)
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str],
+                        information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
         stream = information_dict["traffic_analyzer_stream"]

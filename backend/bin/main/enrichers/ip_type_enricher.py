@@ -1,3 +1,5 @@
+from typing import Dict, Union, Optional
+
 from main.enrichers.enricher import Enricher
 from main.helpers.ip_address_helper import IpAddressHelper
 
@@ -10,7 +12,8 @@ class IpTypeEnricher(Enricher):
 
         self.ip_dict = {}
 
-    def get_information(self, _, information_dict) -> None:
+    def get_information(self, _: Optional[Dict[str, str]],
+                        information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         dst_ip = information_dict["dst_src_information"]["dst"]["ip_address"]
         src_ip = information_dict["dst_src_information"]["src"]["ip_address"]
 
@@ -18,7 +21,7 @@ class IpTypeEnricher(Enricher):
         information_dict["src_is_private_ip"] = IpTypeEnricher.is_private(src_ip)
 
     @staticmethod
-    def is_private(ip_address) -> str:
+    def is_private(ip_address: str) -> str:
         is_private = False
         if ip_address != "":
             is_private = IpAddressHelper.is_private_ip(ip_address)

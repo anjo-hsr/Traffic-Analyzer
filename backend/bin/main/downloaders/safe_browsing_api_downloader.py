@@ -19,7 +19,7 @@ class SafeBrowsingApiDownloader(object):
         key = "safe_browsing_api_key"
         return file_read_helper.get_config_value(config_name, key)
 
-    def get_domains_threat_information(self, domains, counter=0) -> \
+    def get_domains_threat_information(self, domains: List[str], counter: int = 0) -> \
             Dict[str, List[Dict[str, Union[str, Dict[str, str]]]]]:
         if self.is_api_key_correct and domains and self.api_key != "":
             request_url = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + self.api_key
@@ -38,7 +38,7 @@ class SafeBrowsingApiDownloader(object):
                     return self.get_domains_threat_information(domains, counter + 1)
         return {}
 
-    def generate_request_data(self, domains) -> Dict[str, Dict[str, Union[List[str], str]]]:
+    def generate_request_data(self, domains: List[str]) -> Dict[str, Dict[str, Union[List[str], str]]]:
         domain_entries = self.get_domain_entries(domains)
         return {
             "threatInfo": {
@@ -51,5 +51,5 @@ class SafeBrowsingApiDownloader(object):
         }
 
     @staticmethod
-    def get_domain_entries(filtered_domains) -> List[Dict[str, str]]:
+    def get_domain_entries(filtered_domains: List[str]) -> List[Dict[str, str]]:
         return list(map(lambda domain: {"url": domain}, filtered_domains))

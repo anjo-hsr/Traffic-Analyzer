@@ -1,5 +1,6 @@
 import subprocess
 from os import path
+from typing import Dict, TextIO
 
 from main.helpers.environment_helper import EnvironmentHelper
 from main.helpers.file import file_name_helper, file_path_helper, file_read_helper, file_write_helper
@@ -9,7 +10,7 @@ from main.helpers.print_helper import PrintHelper
 from main.helpers.tshark_helper import get_arguments
 
 
-def run_tshark(filename, pcap_file_path, csv_file_path) -> None:
+def run_tshark(filename: str, pcap_file_path: str, csv_file_path: str) -> None:
     program_path = PlatformDetectionHelper.detect_tshark()
     if program_path is None:
         error_text = "No wireshark folder found. Please install Wireshark into the standard folder"
@@ -24,7 +25,7 @@ def run_tshark(filename, pcap_file_path, csv_file_path) -> None:
         start_tshark(full_pcap_filename, csv_file, program_path)
 
 
-def start_tshark(pcap_file, csv_file, program_path) -> None:
+def start_tshark(pcap_file: str, csv_file: TextIO, program_path: str) -> None:
     arguments = get_arguments(pcap_file)
     subprocess.run([program_path] + arguments, stdout=csv_file)
 
@@ -34,7 +35,7 @@ def main() -> None:
     run(environment_helper.get_environment())
 
 
-def run(environment_variables) -> None:
+def run(environment_variables: Dict[str, str]) -> None:
     config_name = "traffic-analyzer.conf"
     key = "pcap_location"
     pcap_path = file_read_helper.get_config_value(config_name, key)

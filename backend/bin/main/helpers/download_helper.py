@@ -1,4 +1,5 @@
 from os import path
+from typing import TextIO
 from urllib import request
 
 from main.helpers.environment_helper import EnvironmentHelper
@@ -8,7 +9,7 @@ from main.helpers.file import file_read_helper, file_write_helper
 class DownloadHelper(object):
 
     @staticmethod
-    def download_file(destination_file, url, header, write_row) -> str:
+    def download_file(destination_file: str, url: str, header: str, write_row) -> str:
         filename = DownloadHelper.store_file(url)
 
         with \
@@ -19,7 +20,7 @@ class DownloadHelper(object):
         return filename
 
     @staticmethod
-    def store_file(url) -> str:
+    def store_file(url: str) -> str:
         environment_helper = EnvironmentHelper()
         environment_variables = environment_helper.get_environment()
 
@@ -29,7 +30,7 @@ class DownloadHelper(object):
         return path.join(".", filename)
 
     @staticmethod
-    def write_download_file(write_row, csv_file, output_file, header) -> None:
+    def write_download_file(write_row, csv_file: TextIO, output_file: TextIO, header: str) -> None:
         file_write_helper.write_line(output_file, header)
         csv_reader = file_read_helper.get_csv_dict_reader(csv_file)
         for row in csv_reader:

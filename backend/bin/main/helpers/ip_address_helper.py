@@ -14,7 +14,7 @@ class IpAddressHelper(object):
             return False
 
     @staticmethod
-    def is_multicast_ip(ip_address) -> bool:
+    def is_multicast_ip(ip_address: str) -> bool:
         try:
             ip = ipaddress.ip_address(ip_address)
             return ip.is_multicast
@@ -22,7 +22,7 @@ class IpAddressHelper(object):
             return False
 
     @staticmethod
-    def is_private_ip(ip_address) -> bool:
+    def is_private_ip(ip_address: str) -> bool:
         try:
             ip = ipaddress.ip_address(ip_address)
             return ip.is_private
@@ -30,7 +30,7 @@ class IpAddressHelper(object):
             return False
 
     @staticmethod
-    def is_ip(ip_address) -> bool:
+    def is_ip(ip_address: str) -> bool:
         try:
             ipaddress.ip_address(ip_address)
             return True

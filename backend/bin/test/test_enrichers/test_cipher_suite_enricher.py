@@ -1,4 +1,5 @@
 import unittest
+from typing import Dict, Union
 
 from main.enrichers.cipher_suite_enricher import CipherSuiteEnricher
 from main.helpers.string_helper import enclose_with_quotes
@@ -27,7 +28,7 @@ class TestCipherSuiteEnricherMethods(unittest.TestCase):
         expected_header = "cipher_suite_number"
         self.assertEqual(self.cipher_suite_enricher.header, expected_header)
 
-    def run_test_packet(self, expected_value, packet) -> None:
+    def run_test_packet(self, expected_value: Union[str, int], packet: Dict[str, str]) -> None:
         if expected_value == "":
             expected_cipher_suite = enclose_with_quotes(expected_value)
         else:

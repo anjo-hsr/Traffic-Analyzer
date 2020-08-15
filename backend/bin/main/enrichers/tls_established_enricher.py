@@ -1,3 +1,5 @@
+from typing import Dict, Union
+
 from main.enrichers.enricher import Enricher
 from main.helpers.print_helper import PrintHelper
 
@@ -14,7 +16,8 @@ class TlsEstablishedEnricher(Enricher):
         print_text = "Print out for {} streams to tls is established entries"
         PrintHelper.print_dict(self.stream_to_tls_is_established_dict, print_text)
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str],
+                        information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         change_cipher_spec_identifier = "20"
         content_types = packet["tls.record.content_type"].split(",")
         is_change_cipher_spec = change_cipher_spec_identifier in content_types

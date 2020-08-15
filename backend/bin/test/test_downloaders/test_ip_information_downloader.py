@@ -1,4 +1,5 @@
 import unittest
+from typing import Dict
 from unittest.mock import patch, MagicMock
 
 from main.downloaders.ip_information_downloader import IpInformationDownloader
@@ -50,7 +51,7 @@ class TestIpInformationDownloader(unittest.TestCase):
     def setUp(self) -> None:
         self.ip_information_downloader = IpInformationDownloader()
 
-    def assert_ip_data(self, ip_address, expected_ip_data) -> None:
+    def assert_ip_data(self, ip_address: str, expected_ip_data: Dict[str, str]) -> None:
         self.ip_information_downloader.get_ip_information(ip_address)
         ip_data = self.ip_information_downloader.ip_information[ip_address]
         self.assertEqual(ip_data, expected_ip_data)

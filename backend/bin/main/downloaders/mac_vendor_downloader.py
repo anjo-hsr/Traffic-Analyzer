@@ -1,5 +1,6 @@
 import re
 from os import path
+from typing import Dict, TextIO
 
 from main.helpers.download_helper import DownloadHelper
 from main.helpers.environment_helper import EnvironmentHelper
@@ -7,13 +8,13 @@ from main.helpers.file import file_move_helper, file_write_helper
 from main.helpers.string_helper import get_mac_address_line
 
 
-def convert_mac_address(row) -> str:
+def convert_mac_address(row: Dict[str, str]) -> str:
     vendor_part = row["Assignment"].lower()
     mac_address_array = re.findall("..?", vendor_part)
     return ":".join(mac_address_array)
 
 
-def get_local_mac_address(universal_mac_address) -> str:
+def get_local_mac_address(universal_mac_address: str) -> str:
     mac_int_value = int(universal_mac_address.replace(":", ""), 16)
 
     local_identifier = 0x020000
@@ -24,7 +25,7 @@ def get_local_mac_address(universal_mac_address) -> str:
     return ":".join(mac_address_array)
 
 
-def write_row(output_file, row) -> None:
+def write_row(output_file: TextIO, row: Dict[str, str]) -> None:
     universal_mac_address = convert_mac_address(row)
     universal_line = get_mac_address_line(universal_mac_address, row["Organization Name"], False)
 
@@ -41,7 +42,7 @@ def main() -> None:
     run(destination_mac_csv)
 
 
-def run(destination_file) -> None:
+def run(destination_file: str) -> None:
     # Yes IEEE uses still simple, unencrypted http...
     url = "http://standards-oui.ieee.org/oui/oui.csv"
     header = "eth_short,vendor"

@@ -1,13 +1,13 @@
 import socket
 import time
-from typing import List
+from typing import List, Dict
 
 import requests
 from bs4 import BeautifulSoup
 
 
 class AdOrTrackingDict(object):
-    def __init__(self, ad_or_tracking_domains) -> None:
+    def __init__(self, ad_or_tracking_domains: List[str]) -> None:
         self.ad_or_tracking_dict = {}
 
         if ad_or_tracking_domains is None:
@@ -16,7 +16,7 @@ class AdOrTrackingDict(object):
         self.generate_ad_or_tracking_dict(ad_or_tracking_domains)
 
     @staticmethod
-    def get_ad_or_tracking_domains(counter=0) -> List[str]:
+    def get_ad_or_tracking_domains(counter: int = 0) -> List[str]:
         try:
             url = "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
             response = requests.get(url, timeout=5)
@@ -31,14 +31,15 @@ class AdOrTrackingDict(object):
 
         return []
 
-    def generate_ad_or_tracking_dict(self, ad_or_tracking_domains) -> None:
+    def generate_ad_or_tracking_dict(self, ad_or_tracking_domains: List[str]) -> None:
         for domain in ad_or_tracking_domains:
             domain_parts = domain.split(".")
             start_index = len(domain_parts) - 1
             dict_to_write = self.ad_or_tracking_dict
             self.write_domain_into_dict(dict_to_write, domain_parts, domain, start_index)
 
-    def write_domain_into_dict(self, dict_to_write, domain_parts, domain, index) -> None:
+    def write_domain_into_dict(self, dict_to_write: Dict[str, str], domain_parts: List[str], domain: str,
+                               index: int) -> None:
         if index < 1:
             return
 

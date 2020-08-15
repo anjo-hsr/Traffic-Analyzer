@@ -1,4 +1,5 @@
 import unittest
+from typing import Dict
 
 from main.enrichers.tls_version_enricher import TlsVersionEnricher
 from main.helpers.string_helper import enclose_with_quotes
@@ -49,7 +50,7 @@ class TestTlsVersionEnricherMethods(unittest.TestCase):
         expected_header = "tls_ssl_version_negotiated"
         self.assertEqual(self.tls_version_enricher.header, expected_header)
 
-    def run_test_packet(self, expected_value, packet, information_dict) -> None:
+    def run_test_packet(self, expected_value: str, packet: Dict[str, str], information_dict) -> None:
         if expected_value == "":
             expected_tls_ssl_version = enclose_with_quotes(expected_value)
         else:

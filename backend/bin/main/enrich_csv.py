@@ -1,5 +1,7 @@
 import re
+from csv import DictReader
 from os import path, remove
+from typing import Tuple, List, Dict, TextIO
 
 from main.combiners.field_combiner import FieldCombiner
 from main.enricher_jar import EnricherJar
@@ -10,7 +12,7 @@ from main.helpers.file.file_name_helper import get_new_filename
 from main.helpers.print_helper import PrintHelper
 
 
-def enrich_file(dirpath, file, new_file, enricher_jar) -> None:
+def enrich_file(dirpath: str, file: str, new_file: str, enricher_jar: EnricherJar) -> None:
     with \
             open(path.join(dirpath, file), encoding="utf-8") as capture, \
             open(path.join(dirpath, new_file), "w", encoding="utf-8") as output_file:
@@ -19,7 +21,7 @@ def enrich_file(dirpath, file, new_file, enricher_jar) -> None:
         loop_through_lines(csv_reader, enricher_jar, output_file)
 
 
-def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
+def loop_through_lines(csv_reader: DictReader, enricher_jar: EnricherJar, output_file: TextIO) -> None:
     for index, packet in enumerate(csv_reader):
         if file_read_helper.is_header(index):
             default_header = csv_reader.fieldnames
@@ -39,7 +41,7 @@ def loop_through_lines(csv_reader, enricher_jar, output_file) -> None:
         file_write_helper.write_line(output_file, line)
 
 
-def fix_thsark_fields(line) -> str:
+def fix_thsark_fields(line: str) -> str:
     # Delete this line if debian has deployed wireshark v3.x In wireshark / tshark v2.x ssl is the search key for
     # encrypted and bootp is the search key for dhcp traffic. ssl.* and bootp.* could be deprecated in future releases
     # https://tracker.debian.org/pkg/wireshark
@@ -51,7 +53,7 @@ def fix_thsark_fields(line) -> str:
     return substitute_line(line, search_replace_touples)
 
 
-def substitute_line(line, search_replace_touples) -> str:
+def substitute_line(line, search_replace_touples: List[Tuple]) -> str:
     for touple in search_replace_touples:
         line = re.sub(touple[0], touple[1], line)
     return line
@@ -69,7 +71,7 @@ def main() -> None:
     run(EnvironmentHelper().get_environment())
 
 
-def run(environment_variables, print_enrichers=False) -> None:
+def run(environment_variables: Dict[str, str], print_enrichers: bool = False) -> None:
     csv_tmp_path = environment_variables["csv_tmp_path"]
     csv_capture_path = environment_variables["csv_capture_path"]
     enricher_jar = EnricherJar()

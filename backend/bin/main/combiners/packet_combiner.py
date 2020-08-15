@@ -1,7 +1,7 @@
 from typing import Dict
 
 
-def get_dst_src(packet) -> Dict[str, str]:
+def get_dst_src(packet: Dict[str, str]) -> Dict[str, str]:
     ip_enumerate_character = ","
     ip_dst_key = "ip.dst"
     ip_src_key = "ip.src"

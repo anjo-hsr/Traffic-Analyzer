@@ -38,6 +38,6 @@ class EnvironmentHelper(object):
         return environment_variables
 
     @staticmethod
-    def is_process_running(process_name) -> bool:
+    def is_process_running(process_name: str) -> bool:
         return any(process.info["name"] in process_name
                    for process in psutil.process_iter(attrs=["name"]))
