@@ -10,7 +10,7 @@ class TestIpInformationDownloader(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.private_ip = "10.0.0.1"
         cls.multicast_ip = "224.0.0.1"
-        cls.public_ip = "8.8.8.8"
+        cls.public_ip = "62.2.156.89"
         cls.ip_data_private = {
             "ip_address": cls.private_ip,
             "rdns": "router.hsr.ch",
@@ -31,11 +31,11 @@ class TestIpInformationDownloader(unittest.TestCase):
 
         cls.ip_data_public = {
             "ip_address": cls.public_ip,
-            "rdns": "dns.google",
-            "asn": 15169,
-            "isp": "GOOGLE",
-            "latitude": 38.7936,
-            "longitude": -90.7854,
+            "rdns": "ns.cnlab.ch",
+            "asn": 6830,
+            "isp": "Liberty Global B.V.",
+            "latitude": 47.3667,
+            "longitude": 8.55,
         }
 
         cls.ip_data_public_failed = {
