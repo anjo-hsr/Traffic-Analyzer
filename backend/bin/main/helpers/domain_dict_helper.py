@@ -1,8 +1,10 @@
+from typing import Dict
+
 from main.helpers.string_helper import remove_quotations
 
 
 class DomainDictHelper(object):
-    def __init__(self, provider_domain_dict) -> None:
+    def __init__(self, provider_domain_dict: Dict[str, str]) -> None:
         self.provider_domain_dict = provider_domain_dict
         self.domain_provider_dict = {}
         self.get_domains_to_provider_dict()
@@ -12,12 +14,12 @@ class DomainDictHelper(object):
             for domain in self.provider_domain_dict[key]:
                 self.domain_provider_dict[domain] = key
 
-    def check_domains(self, domains) -> bool:
+    def check_domains(self, domains: str) -> bool:
         domain_list = domains.split(",")
         domain_list = list(map(remove_quotations, domain_list))
         return any(self.check_domain(domain) for domain in domain_list)
 
-    def check_domain(self, domain) -> bool:
+    def check_domain(self, domain: str) -> bool:
         for domain_key in self.domain_provider_dict:
             if domain_key in domain:
                 return self.test_for_wildcard(domain, domain_key)
@@ -25,12 +27,12 @@ class DomainDictHelper(object):
         return False
 
     @staticmethod
-    def test_for_wildcard(domain, domain_key) -> bool:
+    def test_for_wildcard(domain: str, domain_key: str) -> bool:
         if domain_key.endswith("."):
             return True
 
         return DomainDictHelper.test_domain_ending(domain, domain_key)
 
     @staticmethod
-    def test_domain_ending(domain, domain_key) -> bool:
+    def test_domain_ending(domain: str, domain_key: str) -> bool:
         return domain.endswith(domain_key)

@@ -1,4 +1,5 @@
 import unittest
+from typing import Dict
 
 from main.enrichers.dns_lookup_enricher import DnsLookupEnricher
 
@@ -35,7 +36,7 @@ class TestDnsLookupEnricherMethods(unittest.TestCase):
     def setUp(self) -> None:
         self.dns_lookup_enricher.dns_responses = {}
 
-    def set_information_dict(self, packet) -> None:
+    def set_information_dict(self, packet: Dict[str, str]) -> None:
         self.information_dict["ip_src_combined"] = packet["ip.src"]
         self.information_dict["ip_dst_combined"] = packet["ip.dst"]
 

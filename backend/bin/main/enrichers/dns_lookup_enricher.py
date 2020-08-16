@@ -24,7 +24,7 @@ class DnsLookupEnricher(Enricher):
             "hostnames": {""}
         }
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str], information_dict) -> None:
         if ResponseHelper.is_dns_response(packet):
             self.save_dns_query(packet)
 
@@ -49,15 +49,15 @@ class DnsLookupEnricher(Enricher):
             information_dict["src_hostnames"]
         ], True)
 
-    def get_dns_query(self, ip) -> str:
+    def get_dns_query(self, ip: str) -> str:
         ip_information = self.dns_responses.get(ip, self.get_empty_dict())
         return enclose_with_quotes(ip_information["query_name"])
 
-    def get_hostnames(self, ip) -> str:
+    def get_hostnames(self, ip: str) -> str:
         ip_information = self.dns_responses.get(ip, self.get_empty_dict())
         return FieldCombiner.join_with_quotes(ip_information["hostnames"])
 
-    def save_dns_query(self, packet) -> None:
+    def save_dns_query(self, packet: Dict[str, str]) -> None:
         dns_response_ips = packet["dns.a"].split(",") + packet["dns.aaaa"].split(",")
         filtered_dns_reponse_ips = list(filter(IpAddressHelper.is_ip, dns_response_ips))
         if not filtered_dns_reponse_ips:
@@ -67,7 +67,8 @@ class DnsLookupEnricher(Enricher):
         dns_query_name = packet["dns.qry.name"]
         self.write_dns_response_entry(dns_query_name, filtered_dns_reponse_ips, dns_response_names)
 
-    def write_dns_response_entry(self, dns_query_name, dns_response_ips, dns_hostnames) -> None:
+    def write_dns_response_entry(self, dns_query_name: str, dns_response_ips: List[str],
+                                 dns_hostnames: List[str]) -> None:
         for dns_response_ip in dns_response_ips:
             self.dns_responses[dns_response_ip] = {
                 "query_name": dns_query_name,

@@ -17,7 +17,7 @@ def get_windows_defaults() -> Dict[str, str]:
     return windows_defaults
 
 
-def get_arguments(filename) -> List[str]:
+def get_arguments(filename: str) -> List[str]:
     file_argumnets = ["-r", filename]
     export_arguments = " -T fields" \
                        " -e frame.time -e frame.len" \

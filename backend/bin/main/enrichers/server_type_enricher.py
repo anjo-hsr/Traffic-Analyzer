@@ -1,4 +1,7 @@
+from typing import Dict, Union
+
 from main.enrichers.enricher import Enricher
+from main.helpers.domain_dict_helper import DomainDictHelper
 from main.helpers.response_helper import ResponseHelper
 
 
@@ -15,7 +18,8 @@ class ServerTypeEnricher(Enricher):
             "social_network": set()
         }
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str],
+                        information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         information_dict["src_is_dhcp"] = self.detect_type(
             packet, information_dict, ResponseHelper.is_dhcp_response, "dhcp")
         information_dict["src_is_dns"] = self.detect_type(
@@ -26,7 +30,8 @@ class ServerTypeEnricher(Enricher):
         information_dict["src_is_social_network"] = self.test_category(
             information_dict, "social_network")
 
-    def detect_type(self, packet, information_dict, response_check, dict_key) -> str:
+    def detect_type(self, packet: Dict[str, str], information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]],
+                    response_check, dict_key) -> str:
         is_type = False
         if response_check(packet):
             self.save_entry(dict_key, information_dict)
@@ -34,7 +39,9 @@ class ServerTypeEnricher(Enricher):
 
         return "1" if is_type else "0"
 
-    def test_category(self, information_dict, key) -> str:
+    def test_category(self,
+                      information_dict: Dict[str, Union[str, Dict[str, Union[str, Dict[str, str], DomainDictHelper]]]],
+                      key: str) -> str:
         domains = information_dict["src_domains"]
         domain_is_in_dict = information_dict["domain_dict_helpers"][key].check_domains(domains)
         if domain_is_in_dict:
@@ -42,6 +49,6 @@ class ServerTypeEnricher(Enricher):
 
         return "1" if domain_is_in_dict else "0"
 
-    def save_entry(self, dict_key, information_dict) -> None:
+    def save_entry(self, dict_key: str, information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         server_address = information_dict["ip_src_combined"]
         self.server_type_dict[dict_key].add(server_address)

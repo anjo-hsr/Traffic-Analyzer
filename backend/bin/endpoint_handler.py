@@ -1,3 +1,5 @@
+from typing import List
+
 import splunk.admin as admin
 
 '''
@@ -53,7 +55,7 @@ class ConfigApp(admin.MConfigHandler):
 
                     configuration_information[stanza].append(key, value)
 
-    def is_tuple_empty(self, key, value, field_name_list):
+    def is_tuple_empty(self, key: str, value: str, field_name_list: List[str]):
         return key in field_name_list and self.is_empty(value)
 
     '''
@@ -80,7 +82,7 @@ class ConfigApp(admin.MConfigHandler):
             self.callerArgs.data[field][0] = ""
 
     @staticmethod
-    def is_empty(value):
+    def is_empty(value: str):
         return value in [None, ""]
 
 

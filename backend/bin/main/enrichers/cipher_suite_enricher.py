@@ -1,3 +1,5 @@
+from typing import Dict
+
 from main.enrichers.enricher import Enricher
 from main.helpers.print_helper import PrintHelper
 
@@ -14,7 +16,7 @@ class CipherSuiteEnricher(Enricher):
         print_text = "Print out for all {} streams to cipher suites entries"
         PrintHelper.print_dict(self.stream_to_suites, print_text)
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str], information_dict) -> None:
         server_hello_identifier = "2"
         is_server_hello = packet["tls.handshake.type"] == server_hello_identifier
         handshake_cipher_suite = packet["tls.handshake.ciphersuite"]

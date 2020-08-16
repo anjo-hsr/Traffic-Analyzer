@@ -15,7 +15,7 @@ class IpInformationDownloader(object):
         self.ip_information = {}
         self.dns_helper = DnsHelper()
 
-    def get_dst_src_information(self, dst_src) -> Dict[str, str]:
+    def get_dst_src_information(self, dst_src: Dict[str, str]) -> Dict[str, str]:
         dst = dst_src["dst"]
         src = dst_src["src"]
         self.get_ip_information(dst)
@@ -25,7 +25,7 @@ class IpInformationDownloader(object):
             "src": self.ip_information[src]
         }
 
-    def get_ip_information(self, ip_address) -> None:
+    def get_ip_information(self, ip_address: str) -> None:
         if ip_address in self.ip_information:
             return
 
@@ -37,7 +37,7 @@ class IpInformationDownloader(object):
 
     @sleep_and_retry
     @limits(calls=3, period=1)
-    def get_ip_data(self, ip_addr, counter=0) -> Dict[str, str]:
+    def get_ip_data(self, ip_addr: str, counter=0) -> Dict[str, str]:
         try:
             search_url = "https://tools.keycdn.com/geo.json?host={}".format(ip_addr)
             response = requests.get(search_url, timeout=5)
@@ -54,7 +54,7 @@ class IpInformationDownloader(object):
         return self.get_private_ip_data(ip_addr)
 
     @staticmethod
-    def extract_data(geo_data, ip_addr) -> Dict[str, str]:
+    def extract_data(geo_data: Dict[str, str], ip_addr: str) -> Dict[str, str]:
         return {
             "ip_address": ip_addr,
             "rdns": geo_data["rdns"],
@@ -64,7 +64,7 @@ class IpInformationDownloader(object):
             "longitude": geo_data["longitude"],
         }
 
-    def get_private_ip_data(self, ip_address) -> Dict[str, str]:
+    def get_private_ip_data(self, ip_address: str) -> Dict[str, str]:
         fqdn = ip_address
         if ip_address != "" and IpAddressHelper.is_private_ip(ip_address):
             fqdn = self.dns_helper.get_fqdn(ip_address)

@@ -17,7 +17,8 @@ class StreamEnricher(Enricher):
         print_text = "Print out for {} tcp stream entries"
         PrintHelper.print_dict(self.stream_ids, print_text)
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str],
+                        information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         inbound_outbound_string = self.get_combined_strings(packet, information_dict)
         if inbound_outbound_string in self.stream_ids:
             information_dict["traffic_analyzer_stream"] = self.stream_ids[inbound_outbound_string]
@@ -29,7 +30,8 @@ class StreamEnricher(Enricher):
         information_dict["traffic_analyzer_stream"] = stream_entry["stream_id"]
 
     @staticmethod
-    def get_combined_strings(packet, information_dict) -> str:
+    def get_combined_strings(packet: Dict[str, str],
+                             information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> str:
         dst_ip = information_dict["ip_dst_combined"]
         src_ip = information_dict["ip_src_combined"]
         protocol = packet["ip.proto"]
@@ -51,7 +53,7 @@ class StreamEnricher(Enricher):
         return ";".join(inbound_outbound_list)
 
     @staticmethod
-    def generate_stream_id(combined_string) -> Dict[str, Union[str, int]]:
+    def generate_stream_id(combined_string: str) -> Dict[str, Union[str, int]]:
         hash_value = hashlib.sha256(combined_string.encode())
         stream_id = int(hash_value.hexdigest(), 16) % 100000000
         return {

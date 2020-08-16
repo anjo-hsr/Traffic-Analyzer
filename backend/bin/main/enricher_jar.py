@@ -19,7 +19,7 @@ class EnricherJar(object):
         self.enricher_classes = get_enricher_dict()
         self.ip_information_downloader = IpInformationDownloader()
 
-    def get_information_dict(self, packet) -> OrderedDict:
+    def get_information_dict(self, packet: Dict[str, str]) -> OrderedDict:
         information_dict = self.create_information_dict(packet)
 
         if not information_dict and not packet:
@@ -30,7 +30,7 @@ class EnricherJar(object):
 
         return information_dict
 
-    def create_information_dict(self, packet) -> OrderedDict:
+    def create_information_dict(self, packet: Dict[str, str]) -> OrderedDict:
         ip_information_downloader = self.ip_information_downloader
         dst_src = get_dst_src(packet)
         information_dict = OrderedDict([

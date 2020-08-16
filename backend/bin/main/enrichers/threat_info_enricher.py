@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Dict, Union, List
 
 from main.combiners.field_combiner import FieldCombiner
 from main.downloaders.safe_browsing_api_downloader import SafeBrowsingApiDownloader
@@ -23,7 +23,8 @@ class ThreatInfoEnricher(Enricher):
         }
         self.safe_browsing_api_downloader = SafeBrowsingApiDownloader()
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str],
+                        information_dict: Dict[str, Union[str, Dict[str, Dict[str, str]]]]) -> None:
         domain_array = information_dict["domains"].split(",")
         domain_array = list(map(remove_quotations, domain_array))
 
@@ -42,7 +43,7 @@ class ThreatInfoEnricher(Enricher):
         threat_numbers = list(map(self.get_threat_number, matched_threat_types))
         information_dict["threat_category"] = FieldCombiner.join_with_quotes(threat_numbers)
 
-    def update_threat_dict(self, response_dict) -> None:
+    def update_threat_dict(self, response_dict: Dict[str, List[Dict[str, Union[str, Dict[str, str]]]]]) -> None:
         if not response_dict:
             return
 
@@ -51,7 +52,7 @@ class ThreatInfoEnricher(Enricher):
             threat_type = match["threatType"]
             self.threat_dict[domain] = threat_type
 
-    def reduce_threat_information(self, domains) -> Set[str]:
+    def reduce_threat_information(self, domains: List[str]) -> Set[str]:
         reduced_list = set()
         for domain in domains:
             if domain != "" and domain in self.threat_dict:
@@ -60,5 +61,5 @@ class ThreatInfoEnricher(Enricher):
 
         return reduced_list
 
-    def get_threat_number(self, threat_string_entry) -> str:
+    def get_threat_number(self, threat_string_entry: str) -> str:
         return self.threat_type_dict[threat_string_entry]

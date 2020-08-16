@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from main.dicts.ad_or_tracking_dict import AdOrTrackingDict
 from main.enrichers.enricher import Enricher
 from main.helpers.ip_address_helper import IpAddressHelper
@@ -5,7 +7,7 @@ from main.helpers.string_helper import remove_quotations
 
 
 class AdEnricher(Enricher):
-    def __init__(self, ad_or_tracking_domains=None) -> None:
+    def __init__(self, ad_or_tracking_domains: List[str] = None) -> None:
         enricher_type = "ad enricher"
         header = "ad_category"
         Enricher.__init__(self, enricher_type, header)
@@ -14,7 +16,7 @@ class AdEnricher(Enricher):
         self.ad_or_tracking_dict = AdOrTrackingDict(ad_or_tracking_domains)
         self.domain_to_ad_dict = {}
 
-    def get_information(self, packet, information_dict) -> None:
+    def get_information(self, packet: Dict[str, str], information_dict: Dict[str, str]) -> None:
         domain_list = information_dict["domains"].split(",")
         is_ad = False
         for domain in domain_list:
@@ -26,7 +28,7 @@ class AdEnricher(Enricher):
 
         information_dict["ad_category"] = "1" if is_ad else "0"
 
-    def is_ad_domain(self, domain) -> bool:
+    def is_ad_domain(self, domain: str) -> bool:
         if domain in self.domain_to_ad_dict:
             return self.domain_to_ad_dict[domain]
 
@@ -37,7 +39,7 @@ class AdEnricher(Enricher):
         self.domain_to_ad_dict[domain] = is_ad
         return is_ad
 
-    def is_domain_in_dict(self, domain, dict_to_test) -> bool:
+    def is_domain_in_dict(self, domain: str, dict_to_test: Dict[str, str]) -> bool:
         return_value = False
 
         if IpAddressHelper.is_ip(domain):

@@ -13,11 +13,11 @@ class DnsHelper(object):
         self.dns_resolver_tester = resolver.Resolver()
         self.set_dns_resolver()
 
-    def set_dns_resolver(self, dns_lifetime=2) -> None:
+    def set_dns_resolver(self, dns_lifetime: int = 2) -> None:
         self.set_lifetime(dns_lifetime)
         self.set_dns_server()
 
-    def set_lifetime(self, dns_lifetime) -> None:
+    def set_lifetime(self, dns_lifetime: int) -> None:
         self.dns_resolver.lifetime = dns_lifetime
         self.dns_resolver_tester.lifetime = dns_lifetime
 
@@ -30,17 +30,17 @@ class DnsHelper(object):
             if self.check_dns_server_entry(dns_server):
                 self.dns_resolver.nameservers.append(dns_server)
 
-    def check_dns_server_entry(self, dns_server) -> bool:
+    def check_dns_server_entry(self, dns_server: str) -> bool:
         if dns_server == "":
             return False
 
         return self.is_dns_server_available(dns_server)
 
-    def reset_dns_resolver(self, dns_lifetime=2) -> None:
+    def reset_dns_resolver(self, dns_lifetime: int = 2) -> None:
         self.dns_resolver.__init__()
         self.set_lifetime(dns_lifetime)
 
-    def is_dns_server_available(self, dns_server_address) -> bool:
+    def is_dns_server_available(self, dns_server_address: str) -> bool:
         self.dns_resolver_tester.nameservers = [dns_server_address]
         try:
             if IpAddressHelper.is_ip(dns_server_address):
@@ -51,7 +51,7 @@ class DnsHelper(object):
         except exception.Timeout:
             return False
 
-    def get_fqdn(self, ip_address, counter=0) -> str:
+    def get_fqdn(self, ip_address: str, counter: int = 0) -> str:
         fqdn = ip_address
         try:
             in_addr_arpa_address = reversename.from_address(ip_address)
